@@ -17,20 +17,19 @@ Projeto acadêmico, desenvolvido por uma equipe de 7 integrantes.
 
 O sistema é dividido em camadas:
 
-1. **Extração de dados** (`/extracao`) — lê o cardápio publicado pelo RU em PDF ou imagem e estrutura essa informação (parsing de texto ou OCR, dependendo do formato). Componente isolado por ser o ponto mais frágil do sistema: mudanças no formato do RU exigem ajuste apenas aqui.
-2. **Backend / API** (`/backend`) — recebe os dados extraídos, aplica regras de negócio (filtros, avaliações) e expõe endpoints para o frontend.
+1. **Extração de dados** (`/extracao` — ajustar caminho quando definido) — lê o cardápio publicado pelo RU em PDF ou imagem e estrutura essa informação (parsing de texto ou OCR, dependendo do formato). Componente isolado por ser o ponto mais frágil do sistema: mudanças no formato do RU exigem ajuste apenas aqui.
+2. **Backend / API** (`/backend` — ajustar caminho quando definido) — recebe os dados extraídos, aplica regras de negócio (filtros, avaliações) e expõe endpoints para o frontend.
 3. **Banco de dados** — armazena cardápio, avaliações e (Release 2) histórico de check-ins.
-4. **Frontend** (`/frontend`) — consome a API e exibe cardápio, filtros e interface de avaliação para o usuário.
+4. **Frontend** (`/frontend` — ajustar caminho quando definido) — consome a API e exibe cardápio, filtros e interface de avaliação para o usuário.
 
 ## Stack técnica
 
-- Extração de dados: Python (requests + BeautifulSoup para navegar a página do RU, pdfplumber para extrair texto do PDF do cardápio).
-- Backend: Python + FastAPI, SQLAlchemy como ORM.
-- Banco de dados: PostgreSQL.
-- Frontend: React + Vite.
-- Orquestração local: Docker Compose (`docker-compose.yml` na raiz sobe banco, backend e frontend).
-- Testes: pytest (backend e extração) com cobertura via pytest-cov, conforme RNF05 do documento de requisitos.
-- Lint: ruff (Python), oxlint (frontend, já configurado pelo scaffold do Vite).
+> A completar assim que o grupo definir linguagens, frameworks e ferramentas de cada camada.
+
+- Extração de dados:
+- Backend:
+- Banco de dados:
+- Frontend:
 
 ## Convenções do projeto
 
@@ -42,43 +41,7 @@ O sistema é dividido em camadas:
 
 ## Comandos úteis
 
-Com Docker (recomendado — sobe banco, backend e frontend juntos):
-
-```
-cp backend/.env.example backend/.env
-docker compose up --build
-```
-
-- Backend (FastAPI): http://localhost:8000 — docs automáticas em `/docs`.
-- Frontend (Vite): http://localhost:5173.
-
-Sem Docker, rodando cada camada localmente:
-
-```
-# Backend
-cd backend
-python -m venv .venv && .venv\Scripts\activate  # Windows
-pip install -r requirements.txt
-uvicorn app.main:app --reload
-
-# Extração
-cd extracao
-python -m venv .venv && .venv\Scripts\activate
-pip install -r requirements.txt
-python -m extracao.main
-
-# Frontend
-cd frontend
-npm install
-npm run dev
-```
-
-Testes:
-
-```
-cd backend && pytest
-cd extracao && pytest
-```
+> A completar assim que o setup do projeto estiver definido (ex: como instalar dependências, rodar o backend, rodar o frontend, rodar o script de extração).
 
 ## Fonte de dados do cardápio
 
