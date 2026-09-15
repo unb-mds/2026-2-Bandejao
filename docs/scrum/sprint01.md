@@ -32,7 +32,7 @@ Entidades definidas: `Campus`, `Cardapio`, `ItemCardapio`, `Avaliacao`, `CheckIn
 ## Papéis definidos até o momento
 
 - **Gustavo** — Scrum Master + Banco de dados + Extração
-- Demais papéis (Backend, Frontend) 
+- Demais papéis (Backend, Frontend)
 
 ## Pendências / próximos passos
 
@@ -41,6 +41,3 @@ Entidades definidas: `Campus`, `Cardapio`, `ItemCardapio`, `Avaliacao`, `CheckIn
 - Garantir que todos os integrantes tenham acesso efetivo ao repositório (problema identificado: parte do grupo não está na organização do GitHub)
 - Iniciar a extração real do cardápio (hoje a extração é um esqueleto, ainda sem implementação)
 - Backend e Frontend seguem sem endpoints/telas reais implementadas — dependem da extração/modelagem já estarem prontas
-
-
-Grupo com alguns integrantes ainda não engajados no Sprint 00/01; divisão de papéis foi ajustada para não depender de partes críticas do projeto (extração, banco de dados) de pessoas com baixo engajamento até o momento.
