@@ -6,6 +6,7 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.db.session import Base
 
+# A importação existe só para a checagem de tipos; a relação usa o nome da classe.
 if TYPE_CHECKING:
     from app.models.campus import Campus
 

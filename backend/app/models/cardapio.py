@@ -7,6 +7,7 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.db.session import Base
 from app.models.enums import TipoRefeicao
 
+# Mantém as anotações das relações sem importar modelos mutuamente em runtime.
 if TYPE_CHECKING:
     from app.models.avaliacao import Avaliacao
     from app.models.campus import Campus

@@ -6,6 +6,7 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.db.session import Base
 from app.models.enums import Categoria, TipoDieta
 
+# Evita importar Cardapio durante a execução apenas para satisfazer a tipagem.
 if TYPE_CHECKING:
     from app.models.cardapio import Cardapio
 
