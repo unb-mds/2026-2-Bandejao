@@ -7,6 +7,7 @@ from app.models import Campus, Cardapio, Categoria, ItemCardapio, TipoDieta, Tip
 
 
 def criar_cardapio_de_teste(db_session: Session) -> Cardapio:
+    # Esta massa combina item comum, item com alérgenos e opção vegetariana para os filtros.
     campus = Campus(nome="Gama")
     db_session.add(campus)
     db_session.flush()

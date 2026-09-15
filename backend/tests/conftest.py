@@ -12,6 +12,7 @@ from app.main import app
 
 @pytest.fixture()
 def db_session() -> Generator[Session, None, None]:
+    # StaticPool mantém a mesma conexão para o banco SQLite existir durante toda a requisição.
     engine = create_engine(
         "sqlite://",
         connect_args={"check_same_thread": False},
@@ -30,6 +31,7 @@ def db_session() -> Generator[Session, None, None]:
 
 @pytest.fixture()
 def client(db_session: Session) -> Generator[TestClient, None, None]:
+    # Faz as rotas usarem o banco isolado do teste, sem tocar no PostgreSQL configurado.
     def override_get_db() -> Generator[Session, None, None]:
         try:
             yield db_session

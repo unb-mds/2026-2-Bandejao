@@ -30,6 +30,7 @@ def test_seed_popula_dados_e_eh_idempotente(
     monkeypatch.setattr(seed, "SessionLocal", lambda: db_session)
 
     seed.seed()
+    # A segunda execução não pode duplicar o campus e seus dados dependentes.
     seed.seed()
 
     assert db_session.query(Campus).count() == 1
@@ -42,6 +43,7 @@ def test_seed_popula_dados_e_eh_idempotente(
 def test_seed_executa_como_modulo(db_session: Session, monkeypatch):
     monkeypatch.setattr(session_module, "SessionLocal", lambda: db_session)
 
+    # Garante que o atalho `python -m app.db.seed` também permanece funcional.
     runpy.run_module("app.db.seed", run_name="__main__")
 
     assert db_session.query(Campus).filter_by(nome="Gama").one_or_none() is not None
