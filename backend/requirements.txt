@@ -1,8 +1,9 @@
 fastapi==0.115.6
 uvicorn[standard]==0.32.1
-sqlalchemy==2.0.36
+sqlalchemy==2.0.52
 psycopg[binary]==3.2.10
 pydantic-settings==2.7.0
+alembic==1.14.0
 
 # dev / testes
 pytest==8.3.4
