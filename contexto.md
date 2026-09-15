@@ -1,4 +1,4 @@
-# CLAUDE.md — Contexto do Projeto Bandejão
+# contexto.md — Contexto do Projeto Bandejão
 
 Este arquivo dá contexto para ferramentas de IA (Claude Code e similares) trabalharem neste repositório. Mantenha atualizado conforme o projeto evolui.
 
@@ -19,7 +19,7 @@ O sistema é dividido em camadas:
 
 1. **Extração de dados** (`/extracao`) — lê o cardápio publicado pelo RU em PDF ou imagem e estrutura essa informação (parsing de texto ou OCR, dependendo do formato). Componente isolado por ser o ponto mais frágil do sistema: mudanças no formato do RU exigem ajuste apenas aqui.
 2. **Backend / API** (`/backend`) — recebe os dados extraídos, aplica regras de negócio (filtros, avaliações) e expõe endpoints para o frontend.
-3. **Banco de dados** — armazena cardápio, avaliações e (Release 2) histórico de check-ins.
+3. **Banco de dados** — armazena cardápio, avaliações e (Release 2) histórico de check-ins. Modelo já implementado em `backend/app/models/` (SQLAlchemy): `Campus`, `Cardapio`, `ItemCardapio`, `Avaliacao`, `CheckIn`, além dos enums `TipoRefeicao`, `Categoria` e `TipoDieta`. Migrações gerenciadas por Alembic (`backend/alembic/`), com uma migração inicial já criando essas tabelas.
 4. **Frontend** (`/frontend`) — consome a API e exibe cardápio, filtros e interface de avaliação para o usuário.
 
 ## Stack técnica
@@ -49,6 +49,12 @@ cp backend/.env.example backend/.env
 docker compose up --build
 ```
 
+Em outro terminal, aplique as migrações do banco de dados:
+
+```
+docker compose exec backend alembic upgrade head
+```
+
 - Backend (FastAPI): http://localhost:8000 — docs automáticas em `/docs`.
 - Frontend (Vite): http://localhost:5173.
 
@@ -57,8 +63,10 @@ Sem Docker, rodando cada camada localmente:
 ```
 # Backend
 cd backend
-python -m venv .venv && .venv\Scripts\activate  # Windows
+python -m venv venv && venv\Scripts\activate  # Windows
 pip install -r requirements.txt
+cp .env.example .env  # ajuste DATABASE_URL para seu PostgreSQL local
+alembic upgrade head
 uvicorn app.main:app --reload
 
 # Extração
