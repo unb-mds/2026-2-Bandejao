@@ -53,9 +53,9 @@ Cardápio (PDF)  →  Extração de dados  →  Backend / API  →  Banco de dad
 | Camada | Tecnologia |
 |---|---|
 | Extração de dados | *(a definir)* |
-| Backend / API | *(a definir)* |
-| Banco de dados | *(a definir)* |
-| Frontend | *(a definir)* |
+| Backend / API | *FastAPI* |
+| Banco de dados | *PostgreeSQL* |
+| Frontend | *React* |
 
 ---
 
