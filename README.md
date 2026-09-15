@@ -53,6 +53,12 @@ Aplicação para consulta ao cardápio semanal dos Restaurantes Universitários 
    - **Backend (API):** http://localhost:8000 — documentação interativa em http://localhost:8000/docs
    - **Frontend:** http://localhost:5173
 
+6. (Opcional) Popule o banco com dados de exemplo, para testar backend e frontend sem depender da extração real:
+   ```bash
+   docker-compose exec backend python -m app.db.seed
+   ```
+   Pode ser rodado quantas vezes for preciso — os dados de seed anteriores são removidos antes de inserir de novo.
+
 ### Rodando sem Docker (alternativa)
 
 **Backend**
@@ -63,6 +69,7 @@ python -m venv venv
 pip install -r requirements.txt
 cp .env.example .env  # ajuste DATABASE_URL para seu PostgreSQL local
 alembic upgrade head
+python -m app.db.seed  # opcional: popula o banco com dados de exemplo
 uvicorn app.main:app --reload
 ```
 
