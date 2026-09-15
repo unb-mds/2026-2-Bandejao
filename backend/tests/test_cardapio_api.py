@@ -57,6 +57,18 @@ def test_lista_campi_ordenados(client: TestClient, db_session: Session):
     assert [campus["nome"] for campus in response.json()] == ["Ceilândia", "Planaltina"]
 
 
+def test_obtem_campus_e_retorna_404_quando_nao_existe(client: TestClient, db_session: Session):
+    campus = Campus(nome="Darcy Ribeiro")
+    db_session.add(campus)
+    db_session.commit()
+
+    response = client.get(f"/campi/{campus.id}")
+
+    assert response.status_code == 200
+    assert response.json() == {"id": campus.id, "nome": "Darcy Ribeiro"}
+    assert client.get("/campi/999").status_code == 404
+
+
 def test_lista_cardapio_filtra_por_campus_dieta_e_alergeno(
     client: TestClient, db_session: Session
 ):
@@ -79,6 +91,26 @@ def test_lista_cardapio_filtra_por_campus_dieta_e_alergeno(
     assert [item["nome"] for item in resultado[0]["itens"]] == ["Banana"]
 
 
+def test_lista_e_obtem_cardapio_com_filtros_de_data_e_refeicao(
+    client: TestClient, db_session: Session
+):
+    cardapio = criar_cardapio_de_teste(db_session)
+
+    response = client.get(
+        "/cardapios/",
+        params={
+            "data_inicio": "2026-09-15",
+            "data_fim": "2026-09-15",
+            "tipo_refeicao": "almoco",
+        },
+    )
+
+    assert response.status_code == 200
+    assert [resultado["id"] for resultado in response.json()] == [cardapio.id]
+    assert client.get(f"/cardapios/{cardapio.id}").status_code == 200
+    assert client.get("/cardapios/999").status_code == 404
+
+
 def test_rejeita_alergeno_desconhecido(client: TestClient):
     response = client.get("/cardapios/", params={"excluir_alergenos": "amendoim"})
 
@@ -98,6 +130,8 @@ def test_cria_avaliacao_para_cardapio_existente(client: TestClient, db_session: 
     assert response.json()["cardapio_id"] == cardapio.id
     assert response.json()["nota"] == 5
     assert response.json()["comentario"] == "Ótima refeição."
+    assert client.get(f"/cardapios/{cardapio.id}/avaliacoes/").json()[0]["id"] == response.json()["id"]
+    assert client.get("/cardapios/999/avaliacoes/").status_code == 404
 
 
 def test_rejeita_nota_fora_do_intervalo(client: TestClient, db_session: Session):
@@ -106,3 +140,16 @@ def test_rejeita_nota_fora_do_intervalo(client: TestClient, db_session: Session)
     response = client.post(f"/cardapios/{cardapio.id}/avaliacoes/", json={"nota": 6})
 
     assert response.status_code == 422
+
+
+def test_registra_e_lista_checkins(client: TestClient, db_session: Session):
+    campus = Campus(nome="Fazenda Água Limpa")
+    db_session.add(campus)
+    db_session.commit()
+
+    response = client.post(f"/campi/{campus.id}/checkins/")
+
+    assert response.status_code == 201
+    assert response.json()["campus_id"] == campus.id
+    assert len(client.get(f"/campi/{campus.id}/checkins/").json()) == 1
+    assert client.post("/campi/999/checkins/").status_code == 404
