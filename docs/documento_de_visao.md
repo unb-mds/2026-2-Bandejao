@@ -34,7 +34,6 @@ Criar uma aplicação que centralize o cardápio semanal dos RUs da UnB, abrange
 
 - **Usuários finais:** alunos e servidores da UnB que utilizam os RUs de qualquer um dos campi.
 - **Stakeholder indireto:** administração do RU, que pode se beneficiar dos dados de avaliação e uso agregados pela ferramenta.
-- **Avaliação acadêmica:** a professora da disciplina, que acompanha o progresso do projeto por meio das issues no repositório do GitHub.
 
 ## 5. Visão Geral da Solução
 
