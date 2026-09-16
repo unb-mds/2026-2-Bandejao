@@ -40,10 +40,5 @@
 - O cardápio não possui API oficial; a extração depende do PDF publicado em `ru.unb.br/cardapio-refeitorio`, cujo link muda semanalmente e é sujeito a alterações sem aviso prévio.
 - A previsão de fila (RF07) depende de volume suficiente de check-ins (RF06) registrados; nas fases iniciais os dados podem ser insuficientes para gerar estimativas confiáveis.
 
-## 4. Rastreabilidade
-
-Cada requisito deste documento deve ser referenciado nas issues que o implementam (ex: "Implementa RF03"), de forma que seja possível rastrear issue → PR → teste.
-
----
 
 *Documento sujeito a revisão pela equipe conforme o projeto evolui.*
