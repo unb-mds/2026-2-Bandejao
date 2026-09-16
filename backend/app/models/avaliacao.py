@@ -1,9 +1,14 @@
 from datetime import datetime
+from typing import TYPE_CHECKING
 
 from sqlalchemy import CheckConstraint, DateTime, ForeignKey, Integer, String, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.db.session import Base
+
+# Importado apenas na análise estática para não criar um ciclo entre modelos em runtime.
+if TYPE_CHECKING:
+    from app.models.cardapio import Cardapio
 
 
 class Avaliacao(Base):

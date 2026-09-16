@@ -1,7 +1,14 @@
+from typing import TYPE_CHECKING
+
 from sqlalchemy import String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.db.session import Base
+
+# As relações são resolvidas pelo SQLAlchemy pelo nome; os imports servem só à tipagem.
+if TYPE_CHECKING:
+    from app.models.cardapio import Cardapio
+    from app.models.checkin import CheckIn
 
 
 class Campus(Base):

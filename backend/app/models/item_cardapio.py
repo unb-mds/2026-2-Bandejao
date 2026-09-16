@@ -1,8 +1,14 @@
+from typing import TYPE_CHECKING
+
 from sqlalchemy import Boolean, Enum, ForeignKey, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.db.session import Base
 from app.models.enums import Categoria, TipoDieta
+
+# Evita importar Cardapio durante a execução apenas para satisfazer a tipagem.
+if TYPE_CHECKING:
+    from app.models.cardapio import Cardapio
 
 
 class ItemCardapio(Base):
