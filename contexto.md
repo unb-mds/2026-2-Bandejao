@@ -18,7 +18,11 @@ Projeto acadêmico, desenvolvido por uma equipe de 7 integrantes.
 O sistema é dividido em camadas:
 
 1. **Extração de dados** (`/extracao`) — lê o cardápio publicado pelo RU em PDF ou imagem e estrutura essa informação (parsing de texto ou OCR, dependendo do formato). Componente isolado por ser o ponto mais frágil do sistema: mudanças no formato do RU exigem ajuste apenas aqui.
-2. **Backend / API** (`/backend`) — recebe os dados extraídos, aplica regras de negócio (filtros, avaliações) e expõe endpoints para o frontend.
+2. **Backend / API** (`/backend`) — recebe os dados extraídos, aplica regras de negócio (filtros, avaliações) e expõe endpoints para o frontend. Endpoints já implementados (`backend/app/api/routes/`):
+   - `GET /campi/`, `GET /campi/{campus_id}`
+   - `GET /cardapios/` (filtros: `campus_id`, `data_inicio`/`data_fim`, `tipo_refeicao`, `tipo_dieta`, `excluir_alergenos` — implementa o filtro por restrição alimentar do RF03), `GET /cardapios/{cardapio_id}`
+   - `GET /cardapios/{cardapio_id}/avaliacoes`, `POST /cardapios/{cardapio_id}/avaliacoes` (RF04/RF05)
+   - `GET /campi/{campus_id}/checkins`, `POST /campi/{campus_id}/checkins` (RF06, base da Release 2)
 3. **Banco de dados** — armazena cardápio, avaliações e (Release 2) histórico de check-ins. Modelo já implementado em `backend/app/models/` (SQLAlchemy): `Campus`, `Cardapio`, `ItemCardapio`, `Avaliacao`, `CheckIn`, além dos enums `TipoRefeicao`, `Categoria` e `TipoDieta`. Migrações gerenciadas por Alembic (`backend/alembic/`), com uma migração inicial já criando essas tabelas.
 4. **Frontend** (`/frontend`) — consome a API e exibe cardápio, filtros e interface de avaliação para o usuário.
 
