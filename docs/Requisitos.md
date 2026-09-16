@@ -33,8 +33,7 @@
 | RNF02 | O processo de extração do cardápio deve ser atualizado semanalmente, acompanhando a publicação do RU. |
 | RNF03 | O processo de extração deve ser resiliente a pequenas variações no formato de publicação do PDF, e deve ser possível ajustá-lo rapidamente caso o formato mude. |
 | RNF04 | O sistema deve estar disponível e implantado (deploy) de forma acessível para avaliação, conforme exigido pela disciplina. |
-| RNF05 | O código deve manter cobertura de testes mínima de 70% no módulo de domínio e escore de mutação mínimo de 50% nos módulos críticos, conforme critérios da disciplina. |
-| RNF06 | O sistema não deve apresentar vulnerabilidades críticas ou altas em aberto na varredura de segurança estática (SAST). |
+| RNF05 | O sistema não deve apresentar vulnerabilidades críticas ou altas em aberto na varredura de segurança estática (SAST). |
 
 ## 3. Restrições
 
