@@ -27,26 +27,26 @@ Cardápio (PDF)  →  Extração de dados  →  Backend / API  →  Banco de dad
 ### 2.2 Backend / API
 
 - **Responsabilidade:** receber os dados extraídos e persistir no banco; aplicar regras de negócio (filtros alimentares, cálculo de avaliação); expor endpoints para o frontend consumir.
-- **Principais funcionalidades (Release 1):** listar cardápio por campus, filtrar por restrição alimentar, registrar e listar avaliações de refeições.
-- **Principais funcionalidades (Release 2):** registrar check-ins, calcular e expor estimativa de horário de pico.
+- **Principais funcionalidades (Release 1):** listar cardápio por campus, filtrar por restrição alimentar, registrar e listar avaliações de refeições e receber reclamações de forma independente das avaliações por nota.
+- **Principais funcionalidades (Release 2):** registrar o planejamento semanal dos usuários e calcular e expor a estimativa de horário de pico por dia, refeição e campus.
 
 ### 2.3 Banco de dados
 
-- **Responsabilidade:** armazenar cardápio (por campus e semana), refeições, avaliações e, na Release 2, histórico de check-ins.
-- **Entidades principais (a detalhar em ADR):** Campus, Cardápio/Semana, Refeição, Avaliação, Check-in.
+- **Responsabilidade:** armazenar cardápio (por campus e semana), refeições, avaliações, reclamações e, na Release 2, planejamentos de ida ao RU.
+- **Entidades principais (a detalhar em ADR):** Campus, Cardápio/Semana, Refeição, Avaliação, Reclamação e Planejamento.
 
 ### 2.4 Frontend
 
-- **Responsabilidade:** consumir a API e apresentar ao usuário o cardápio, os filtros alimentares e a interface de avaliação.
-- **Principais telas (Release 1):** seleção de campus, listagem do cardápio da semana com filtros, avaliação de refeição.
-- **Principais telas (Release 2):** indicador de horário de pico da fila.
+- **Responsabilidade:** consumir a API e apresentar ao usuário o cardápio, os filtros alimentares, as interfaces de avaliação e reclamação e o planejamento semanal.
+- **Principais telas (Release 1):** seleção de campus, listagem do cardápio da semana com filtros, avaliação de refeição e seção independente de reclamações.
+- **Principais telas (Release 2):** planejamento semanal de dias e refeições e indicador de horário de pico da fila.
 
 ## 3. Fluxo de dados
 
 1. A extração roda periodicamente (semanalmente, acompanhando a publicação do RU), buscando o PDF de cada campus.
 2. Os dados extraídos são enviados ao backend, que os persiste no banco de dados.
-3. O frontend consulta a API do backend para exibir o cardápio, aplicar filtros e enviar avaliações.
-4. (Release 2) O backend registra check-ins enviados pelo frontend e calcula a estimativa de pico a partir do histórico armazenado.
+3. O frontend consulta a API do backend para exibir o cardápio, aplicar filtros e enviar avaliações e reclamações.
+4. (Release 2) O backend registra os planejamentos semanais enviados pelo frontend e calcula a estimativa de pico a partir do volume por dia, refeição e campus.
 
 ## 4. Stack técnica
 

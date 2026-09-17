@@ -17,13 +17,14 @@
 | RF03 | O sistema deve permitir filtrar as refeições exibidas por restrição alimentar (ex: vegetariano, alergias/itens como leite, ovos, glúten, soja, oleaginosas, carne suína, frutos do mar). |
 | RF04 | O usuário deve poder avaliar uma refeição já servida. |
 | RF05 | O sistema deve armazenar e exibir o histórico de avaliações de uma refeição. |
+| RF08 | O sistema deve permitir que o usuário registre reclamações sobre a refeição servida (ex: qualidade, higiene, atendimento), de forma independente da avaliação por nota. |
 
 ### Release 2
 
 | ID | Descrição |
 |---|---|
-| RF06 | O sistema deve registrar check-ins de usuários no RU (para compor o histórico usado na previsão de fila). |
-| RF07 | O sistema deve estimar e exibir o horário de maior movimento (pico de fila) com base no histórico de check-ins. |
+| RF06 | O sistema deve permitir que o usuário, ao visualizar o cardápio semanal, marque os dias e refeições em que pretende comer no RU. |
+| RF07 | O sistema deve estimar o horário de maior movimento com base no volume de planejamentos registrados por dia, refeição e campus. |
 
 ## 2. Requisitos Não Funcionais (RNF)
 
@@ -38,7 +39,8 @@
 ## 3. Restrições
 
 - O cardápio não possui API oficial; a extração depende do PDF publicado em `ru.unb.br/cardapio-refeitorio`, cujo link muda semanalmente e é sujeito a alterações sem aviso prévio.
-- A previsão de fila (RF07) depende de volume suficiente de check-ins (RF06) registrados; nas fases iniciais os dados podem ser insuficientes para gerar estimativas confiáveis.
+- A previsão de fila (RF07) depende de um volume suficiente de planejamentos (RF06) registrados; nas fases iniciais, os dados podem ser insuficientes para gerar estimativas confiáveis.
+- A abordagem de check-in no momento da refeição foi substituída pelo planejamento antecipado, pois reduz a fricção de uso ao permitir que o usuário marque suas intenções uma vez por semana, em vez de precisar lembrar de registrar um check-in diariamente.
 
 
 *Documento sujeito a revisão pela equipe conforme o projeto evolui.*

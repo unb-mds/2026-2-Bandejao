@@ -4,14 +4,14 @@ Este arquivo dá contexto para ferramentas de IA (Claude Code e similares) traba
 
 ## Visão geral
 
-**Bandejão** é uma aplicação que centraliza o cardápio semanal dos Restaurantes Universitários (RU) da UnB, abrangendo todos os campi (Darcy Ribeiro, Ceilândia, Gama, Planaltina e Fazenda Água Limpa), permite filtrar refeições por restrição alimentar, permite avaliação de refeições pelos usuários e, em uma segunda etapa, estima horários de pico de fila com base em histórico de check-ins.
+**Bandejão** é uma aplicação que centraliza o cardápio semanal dos Restaurantes Universitários (RU) da UnB, abrangendo todos os campi (Darcy Ribeiro, Ceilândia, Gama, Planaltina e Fazenda Água Limpa), permite filtrar refeições por restrição alimentar, avaliar refeições e registrar reclamações. Em uma segunda etapa, permite que os usuários planejem antecipadamente os dias e refeições em que pretendem comer no RU e estima os horários de pico com base nesses planejamentos.
 
 Projeto acadêmico, desenvolvido por uma equipe de 7 integrantes.
 
 ## Escopo por release
 
-- **Release 1:** cardápio da semana, filtros alimentares (vegetariano, alergias), avaliação de refeições.
-- **Release 2:** previsão de horário de pico de fila, a partir do histórico de check-ins dos usuários.
+- **Release 1:** cardápio da semana, filtros alimentares (vegetariano, alergias), avaliação de refeições e registro independente de reclamações.
+- **Release 2:** planejamento semanal de dias e refeições no RU e estimativa de horário de pico a partir do volume de planejamentos por dia, refeição e campus.
 
 ## Arquitetura
 
@@ -22,9 +22,10 @@ O sistema é dividido em camadas:
    - `GET /campi/`, `GET /campi/{campus_id}`
    - `GET /cardapios/` (filtros: `campus_id`, `data_inicio`/`data_fim`, `tipo_refeicao`, `tipo_dieta`, `excluir_alergenos` — implementa o filtro por restrição alimentar do RF03), `GET /cardapios/{cardapio_id}`
    - `GET /cardapios/{cardapio_id}/avaliacoes`, `POST /cardapios/{cardapio_id}/avaliacoes` (RF04/RF05)
-   - `GET /campi/{campus_id}/checkins`, `POST /campi/{campus_id}/checkins` (RF06, base da Release 2)
-3. **Banco de dados** — armazena cardápio, avaliações e (Release 2) histórico de check-ins. Modelo já implementado em `backend/app/models/` (SQLAlchemy): `Campus`, `Cardapio`, `ItemCardapio`, `Avaliacao`, `CheckIn`, além dos enums `TipoRefeicao`, `Categoria` e `TipoDieta`. Migrações gerenciadas por Alembic (`backend/alembic/`), com uma migração inicial já criando essas tabelas.
-4. **Frontend** (`/frontend`) — consome a API e exibe cardápio, filtros e interface de avaliação para o usuário.
+   - `GET /campi/{campus_id}/checkins`, `POST /campi/{campus_id}/checkins` (implementação anterior da Release 2; deverá ser substituída pelo planejamento semanal definido nos RF06 e RF07)
+   - O RF08 e a nova abordagem dos RF06/RF07 ainda não estão implementados no backend.
+3. **Banco de dados** — armazena cardápio e avaliações. O modelo `CheckIn`, já implementado em `backend/app/models/`, pertence à abordagem anterior da Release 2 e deverá ser substituído por uma entidade de planejamento semanal. Os demais modelos SQLAlchemy são `Campus`, `Cardapio`, `ItemCardapio` e `Avaliacao`, além dos enums `TipoRefeicao`, `Categoria` e `TipoDieta`. Migrações são gerenciadas por Alembic (`backend/alembic/`).
+4. **Frontend** (`/frontend`) — deve consumir a API e oferecer cardápio, filtros, avaliação, seção de reclamações e planejamento semanal; atualmente ainda contém apenas o scaffold inicial do Vite.
 
 ## Stack técnica
 
@@ -103,4 +104,5 @@ cd extracao && pytest
 ## Pontos de atenção
 
 - O cardápio do RU não possui API oficial e é publicado apenas em PDF — o processo de extração é sensível a mudanças no formato de publicação. O site do RU avisa que o cardápio está sujeito a alterações sem aviso prévio.
-- A previsão de fila (Release 2) depende de volume suficiente de check-ins registrados; nas fases iniciais os dados podem ser insuficientes para gerar estimativas confiáveis.
+- A previsão de fila (Release 2) depende de volume suficiente de planejamentos registrados por dia, refeição e campus; nas fases iniciais os dados podem ser insuficientes para gerar estimativas confiáveis.
+- A abordagem de check-in no momento da refeição foi substituída pelo planejamento antecipado para reduzir a fricção de uso: o usuário registra suas intenções uma vez por semana, em vez de precisar lembrar de fazer check-in diariamente.
