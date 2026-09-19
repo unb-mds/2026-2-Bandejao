@@ -8,7 +8,7 @@ Este documento reune os principais conceitos sobre  **componentes** , **estado**
 
 ## 1. Componentes
 
-Um **componente** é uma unidade independente e reutilizável da interface. Em vez de construir uma página inteira em um único arquivo, o ideal é dividir a tela em blocos menores, cada um com sua própria responsibilidade.
+Um **componente** é uma unidade independente e reutilizável da interface. Em vez de construir uma página inteira em um único arquivo, o ideal é dividir a tela em blocos menores, cada um com sua própria responsabilidade.
 
 Cada componente:
 - Tem sua própria estrutura (HTML/JSK) 
@@ -47,7 +47,7 @@ Sempre com o mesmo visual e comportamento, mas com textos e ações diferentes.
 
 - **Reutilização:**  escreve uma vez, usa em vários lugares
 - **Organização:** o código fica dividido em blocos menores e mais fáceis de entender 
-- **Manutenção:** alterações em um componente podem ser feitas sem precisar modificar cada parte da aplicação individualmente
+- **Manutenção:** alterações em um componente podem ser feitas em um lugar só sem precisar modificar cada parte da aplicação individualmente
 
 - **Composição:** componentes podem ser combinados para formar componentes maiores
 
