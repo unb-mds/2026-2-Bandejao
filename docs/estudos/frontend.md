@@ -208,3 +208,42 @@ Isso é muito mais rápido do que reconstruir a tela inteira toda vez.
 | Velocidade de leitura | Lenta | Rápida |
 | Atualização | Direta, custosa | Calculada antes de aplicar |
 | Usado por | JavaScript puro, jQuery | React, Vue |
+
+## 4. Frameworks de frontend
+
+Existem vários frameworks/bibliotecas para desenvolvimento frontend.
+Os mais comuns são:
+
+### React
+- **Criado por:** Facebook (Meta)
+- **Linguagem:** JavaScript/TypeScript
+- **Característica principal:** componentes + JSX + Virtual DOM
+- **Curva de aprendizado:** média
+
+### Vue
+- **Criado por:** Evan You
+- **Linguagem:** JavaScript
+- **Característica principal:** sintaxe simples, reatividade nativa
+- **Curva de aprendizado:** baixa
+
+### Angular
+- **Criado por:** Google
+- **Linguagem:** TypeScript
+- **Característica principal:** framework completo (tudo incluso)
+- **Curva de aprendizado:** alta
+
+### Svelte
+- **Criado por:** Rich Harris
+- **Linguagem:** JavaScript
+- **Característica principal:** compila para JS puro, sem Virtual DOM
+- **Curva de aprendizado:** baixa
+
+### Comparação
+
+| Framework | Tipo | Linguagem | Curva | Diferencial |
+|-----------|------|-----------|-------|-------------|
+| React | Biblioteca | JS/TS | Média | Virtual DOM, maior comunidade |
+| Vue | Framework progressivo | JS | Baixa | Fácil de aprender, reativo |
+| Angular | Framework completo | TS | Alta | Solução "tudo em um" |
+| Svelte | Compilador | JS | Baixa | Sem Virtual DOM, muito rápido |
+
