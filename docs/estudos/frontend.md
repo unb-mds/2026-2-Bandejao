@@ -53,3 +53,28 @@ Sempre com o mesmo visual e comportamento, mas com textos e ações diferentes.
 
 - **Isolamento:** mudanças em um componente não afetam os outros diretamente
 
+
+## 2. Estado
+
+O **estado** é a informação que pode mudar ao longo do tempo dentro de um
+componente ou da aplicação. Quando o estado muda, a interface reage e se
+atualiza automaticamente.
+
+**Exemplos de estado:**
+- O texto digitado em um campo de busca
+- Se um menu está aberto ou fechado
+- Os itens dentro de um carrinho de compras
+- Se o usuário está logado ou não
+- O resultado de uma requisição à API
+
+### Estado vs. Props
+
+| Conceito | O que é | Pode mudar? |
+|----------|---------|-------------|
+| **Props** | Dados passados de um componente pai para um filho |  Não (são somente leitura) |
+| **Estado** | Dados que pertencem ao próprio componente | Sim |
+
+### Por que o estado importa
+
+Sem estado, a interface seria estática, sempre mostrando a mesma coisa.
+O estado é o que torna a aplicação **interativa** e **dinâmica**.
