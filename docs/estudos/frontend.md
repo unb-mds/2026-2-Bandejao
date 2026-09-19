@@ -78,3 +78,133 @@ atualiza automaticamente.
 
 Sem estado, a interface seria estática, sempre mostrando a mesma coisa.
 O estado é o que torna a aplicação **interativa** e **dinâmica**.
+
+## 3. Renderização
+
+A **renderização** é o processo de transformar dados e estado em elementos visuais na tela. É o que faz o usuário ver o resultado do que está acontecendo na aplicação.
+
+### O que significa renderizar
+
+Renderizar é, basicamente, **mostrar na tela**. Quando você tem dados (uma lista de receitas, o nome de um usuário, o texto de um botão) e esses dados aparecem para o usuário, isso é a renderização acontecendo.
+
+Uma analogia simples: é como imprimir um documento. Você escreve o texto no Word (os dados) e aperta Ctrl + P (a renderização). O papel que sai da impressora é o que o usuário vê (a tela).
+
+Sem renderização, os dados existiriam apenas na memória do computador, mas o usuário não veria nada.
+
+### Tipos de renderização
+
+Existem duas formas principais de renderizar uma interface: a **imperativa** e a **declarativa**.
+
+### Renderização imperativa
+
+Na renderização imperativa, o programador diz **passo a passo** o que o navegador deve fazer. É o estilo usado com JavaScript puro e jQuery.
+
+```javascript
+// Exemplo imperativo
+const botao = document.querySelector("#meuBotao");
+botao.textContent = "Cliquei!";
+botao.style.color = "red";
+```
+
+Traduzindo o código acima:
+
+- "Pega o botão que tem id meuBotao"
+
+- "Muda o texto dele para 'Cliquei!'"
+
+- "Muda a cor dele para vermelho"
+
+O programador está mandando o navegador fazer cada coisa, um passo por vez. Se esquecer um passo, a tela fica errada.
+
+ Problemas da abordagem imperativa:
+
+- Em aplicações grandes, fica difícil controlar todas as mudanças
+
+- É fácil esquecer de atualizar algo e a interface ficar inconsistente com os dados
+
+- O código fica cheio de comandos repetitivos
+
+- Manutenção se torna complicada
+
+### Renderização declarativa
+Na renderização declarativa, o programador descreve como a tela deve ficar e o framework cuida de atualizar o que for necessário. É o estilo usado por ***React, Vue e Svelte.***
+
+```jsx
+
+// Exemplo declarativo (React)
+function Botao({ clicado }) {
+  return (
+    <button style={{ color: clicado ? "red" : "black" }}>
+      {clicado ? "Cliquei!" : "Clique aqui"}
+    </button>
+  );
+}
+
+```
+
+Traduzindo o código acima:
+
+- "Se clicado for verdadeiro, a cor é vermelha; se não, é preta"
+
+- "Se clicado for verdadeiro, o texto é 'Cliquei!'; se não, é 'Clique aqui'"
+
+O programador não disse "muda a cor". Ele descreveu como deve ficar. O React cuida de mudar.
+
+### Vantagens da abordagem declarativa:
+
+- O código fica mais limpo e fácil de entender
+
+- O programador não precisa se preocupar com cada passo da atualização
+
+- O framework otimiza as mudanças automaticamente
+
+- Menos chances de erro
+
+### Comparação entre os dois tipos
+
+|  | **Imperativa** | **Declarativa** |
+|---|---|---|
+| Você diz | **Como** fazer (passo a passo) | **O que** deve aparecer |
+| Quem manda | Você | O framework |
+| Se errar | A tela fica errada | O framework corrige |
+| Usado por | JavaScript puro, jQuery | React, Vue, Svelte |
+| Código | Mais verboso | Mais enxuto |
+| Manutenção | Mais difícil | Mais fácil |
+
+
+### Re-renderização
+Quando o estado muda, a tela precisa ser atualizada. Isso é a re-renderização.
+
+Um exemplo prático: no Instagram, quando você clica no coração de um post:
+
+1. estado muda de "não curtido" para "curtido"
+
+2. O React percebe que o estado mudou
+
+3. O React re-renderiza o componente
+
+4. O coração fica vermelho
+
+Tudo isso acontece automaticamente. Você não precisa dizer "muda a cor do coração". Você só muda o estado, e o framework faz o resto.
+
+### Virtual DOM
+Em **React e Vue**, a re-renderização é otimizada pelo Virtual DOM.
+
+O Virtual DOM é uma cópia leve da interface, mantida na memória. Quando o estado muda, o framework:
+
+1. Cria uma nova versão do Virtual DOM com as mudanças
+
+2. Compara com a versão anterior (processo chamado diffing)
+
+3. Descobre exatamente o que mudou
+
+4. Aplica apenas essas mudanças no DOM real do navegador
+
+Isso é muito mais rápido do que reconstruir a tela inteira toda vez.
+
+|  | **DOM real** | **Virtual DOM** |
+|---|---|---|
+| O que é | A árvore de elementos que o navegador usa | Uma cópia leve em memória |
+| Velocidade de leitura | Lenta | Rápida |
+| Atualização | Direta, custosa | Calculada antes de aplicar |
+| Usado por | JavaScript puro, jQuery | React, Vue |
