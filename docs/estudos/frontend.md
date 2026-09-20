@@ -247,3 +247,18 @@ Os mais comuns são:
 | Angular | Framework completo | TS | Alta | Solução "tudo em um" |
 | Svelte | Compilador | JS | Baixa | Sem Virtual DOM, muito rápido |
 
+
+## Conclusão
+
+O frontend é responsável pela parte da aplicação que o usuário vê e usa. Os **componentes** ajudam a organizar e reutilizar o código, o **estado** permite que a tela mude conforme as ações do usuário e a **renderização** mostra essas mudanças na tela.
+
+
+ Esses conceitos formam uma base importante para trabalhar com desenvolvimento frontend e entender melhor como as aplicações web modernas funcionam.
+
+ ## Referências
+
+- [Documentação do React](https://pt-br.react.dev/learn)
+- [Documentação do Vue](https://vuejs.org/)
+- [Documentação do Angular](https://angular.io/docs)
+- [Documentação do Svelte](https://svelte.dev/docs)
+- [MDN Web Docs](https://developer.mozilla.org/pt-BR/docs/Learn)
