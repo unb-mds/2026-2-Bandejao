@@ -304,12 +304,16 @@ def estruturar_tabela(
         categoria, dieta = classificacao
 
         for coluna, data_cardapio in colunas.items():
+            coluna_valor = coluna
             if coluna >= len(linha) or not linha[coluna]:
+                # Almoço e jantar usam uma subcoluna à direita para o cabeçalho da data.
+                coluna_valor = coluna - 1
+            if coluna_valor < 0 or coluna_valor >= len(linha) or not linha[coluna_valor]:
                 continue
-            nome = re.sub(r"\s+", " ", linha[coluna]).strip()
+            nome = re.sub(r"\s+", " ", linha[coluna_valor]).strip()
             if "�" in nome and "Caracteres ilegíveis encontrados no PDF; considere OCR." not in avisos:
                 avisos.append("Caracteres ilegíveis encontrados no PDF; considere OCR.")
-            alergenos = alergenos_por_celula.get((indice_linha, coluna), frozenset())
+            alergenos = alergenos_por_celula.get((indice_linha, coluna_valor), frozenset())
             refeicoes[data_cardapio].itens.append(ItemExtraido(categoria, dieta, nome, alergenos))
 
     return list(refeicoes.values()), avisos

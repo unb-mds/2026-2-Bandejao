@@ -98,6 +98,19 @@ def test_estruturar_tabela_atribui_alergenos_da_celula():
     assert refeicoes[0].itens[0].alergenos == frozenset({"leite", "ovo"})
 
 
+def test_estruturar_tabela_aceita_data_em_subcoluna_separada_do_item():
+    tabela = [
+        ["COMPOSIÇÃO", None, "21/9/2026", None, "22/9/2026"],
+        ["SALADA 1", "Alface", None, "Tomate", None],
+    ]
+
+    refeicoes, _ = estruturar_tabela(tabela, "almoco", {(1, 1): frozenset({"soja"})})
+
+    assert [item.nome for item in refeicoes[0].itens] == ["Alface"]
+    assert refeicoes[0].itens[0].alergenos == frozenset({"soja"})
+    assert [item.nome for item in refeicoes[1].itens] == ["Tomate"]
+
+
 def test_extrair_cardapio_preserva_alergenos_detectados(monkeypatch):
     tabela = [["COMPOSIÇÃO", "21/9/2026"], ["SOBREMESA", "Pudim"]]
     pdf = PdfCardapio("Gama", "https://exemplo.test/gama.pdf", date(2026, 9, 21), date(2026, 9, 27))
