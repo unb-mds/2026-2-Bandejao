@@ -16,6 +16,7 @@ from urllib.parse import urljoin
 
 from bs4 import BeautifulSoup
 import pdfplumber
+from PIL import Image, ImageOps
 import requests
 
 URL_CARDAPIO = "https://ru.unb.br/cardapio-refeitorio/"
@@ -29,6 +30,19 @@ CAMPI = {
     "fazenda": "Fazenda Água Limpa",
 }
 TIPOS_REFEICAO = ("cafe_da_manha", "almoco", "jantar")
+ALERGENOS_LEGENDA = (
+    "cogumelo",
+    "leite",
+    "mel",
+    "pimenta",
+    "soja",
+    "gluten",
+    "amendoim",
+    "oleaginosas",
+    "ovo",
+    "carne_suina",
+)
+LIMIAR_DISTANCIA_ICONE = 25
 PADRAO_PERIODO = re.compile(
     r"semana-\d+-(?P<inicio_dia>\d{1,2})-(?P<inicio_mes>\d{1,2})-a-"
     r"(?P<fim_dia>\d{1,2})-(?P<fim_mes>\d{1,2})\.pdf$",
@@ -140,17 +154,79 @@ def baixar_pdf(url: str, sessao: requests.Session | None = None) -> bytes:
     return resposta.content
 
 
-def extrair_tabelas(pdf: bytes) -> list[list[list[str | None]]]:
-    """Extrai a maior tabela de cada página do PDF do RU."""
-    tabelas: list[list[list[str | None]]] = []
+def _imagem_do_stream(stream: object) -> Image.Image:
+    atributos = stream.attrs
+    return Image.frombytes("RGB", (atributos["Width"], atributos["Height"]), stream.get_data())
+
+
+def _assinatura_visual(imagem: Image.Image) -> list[bool]:
+    cinza = ImageOps.grayscale(imagem).resize((16, 16), Image.Resampling.LANCZOS)
+    pixels = list(cinza.get_flattened_data())
+    media = sum(pixels) / len(pixels)
+    return [pixel >= media for pixel in pixels]
+
+
+def _distancia_assinaturas(esquerda: list[bool], direita: list[bool]) -> int:
+    return sum(valor_esquerda != valor_direita for valor_esquerda, valor_direita in zip(esquerda, direita))
+
+
+def _alergenos_por_celula(pagina: object, tabela: object) -> dict[tuple[int, int], frozenset[str]]:
+    """Associa os ícones de alérgeno às células usando a legenda do próprio PDF."""
+    imagens = pagina.images
+    referencias = sorted(
+        (
+            imagem
+            for imagem in imagens
+            if imagem["top"] > pagina.height * 0.8 and imagem["width"] > 20
+        ),
+        key=lambda imagem: imagem["x0"],
+    )
+    if len(referencias) != len(ALERGENOS_LEGENDA):
+        return {}
+
+    assinaturas = [
+        (alergeno, _assinatura_visual(_imagem_do_stream(imagem["stream"])))
+        for alergeno, imagem in zip(ALERGENOS_LEGENDA, referencias)
+    ]
+    encontrados: dict[tuple[int, int], set[str]] = {}
+    for imagem in imagens:
+        if imagem["top"] > pagina.height * 0.8 or imagem["width"] > 20:
+            continue
+        assinatura = _assinatura_visual(_imagem_do_stream(imagem["stream"]))
+        distancia, alergeno = min(
+            (_distancia_assinaturas(assinatura, referencia), nome)
+            for nome, referencia in assinaturas
+        )
+        if distancia > LIMIAR_DISTANCIA_ICONE:
+            continue
+        centro_x = (imagem["x0"] + imagem["x1"]) / 2
+        centro_y = (imagem["top"] + imagem["bottom"]) / 2
+        for indice_linha, linha in enumerate(tabela.rows):
+            for indice_coluna, limites in enumerate(linha.cells):
+                if limites and limites[0] <= centro_x <= limites[2] and limites[1] <= centro_y <= limites[3]:
+                    encontrados.setdefault((indice_linha, indice_coluna), set()).add(alergeno)
+                    break
+    return {celula: frozenset(alergenos) for celula, alergenos in encontrados.items()}
+
+
+def _extrair_tabelas_com_alergenos(
+    pdf: bytes,
+) -> list[tuple[list[list[str | None]], dict[tuple[int, int], frozenset[str]]]]:
+    tabelas = []
     with pdfplumber.open(BytesIO(pdf)) as documento:
         for pagina in documento.pages:
-            encontradas = pagina.extract_tables()
+            encontradas = pagina.find_tables()
             if encontradas:
-                tabelas.append(max(encontradas, key=len))
+                tabela = max(encontradas, key=lambda encontrada: len(encontrada.rows))
+                tabelas.append((tabela.extract(), _alergenos_por_celula(pagina, tabela)))
     if not tabelas:
         raise ErroExtracao("Nenhuma tabela foi encontrada no PDF.")
     return tabelas
+
+
+def extrair_tabelas(pdf: bytes) -> list[list[list[str | None]]]:
+    """Extrai a maior tabela de cada página do PDF do RU."""
+    return [tabela for tabela, _ in _extrair_tabelas_com_alergenos(pdf)]
 
 
 def _categoria_e_dieta(rotulo: str) -> tuple[str, str] | None:
@@ -205,7 +281,11 @@ def _colunas_com_datas(tabela: list[list[str | None]]) -> dict[int, date]:
     return colunas
 
 
-def estruturar_tabela(tabela: list[list[str | None]], tipo_refeicao: str) -> tuple[list[RefeicaoExtraida], list[str]]:
+def estruturar_tabela(
+    tabela: list[list[str | None]],
+    tipo_refeicao: str,
+    alergenos_por_celula: dict[tuple[int, int], frozenset[str]] | None = None,
+) -> tuple[list[RefeicaoExtraida], list[str]]:
     """Transforma uma tabela semanal em refeições por data, preservando avisos de qualidade."""
     colunas = _colunas_com_datas(tabela)
     if not colunas:
@@ -215,7 +295,8 @@ def estruturar_tabela(tabela: list[list[str | None]], tipo_refeicao: str) -> tup
     avisos: list[str] = []
     primeira_coluna_data = min(colunas)
 
-    for linha in tabela:
+    alergenos_por_celula = alergenos_por_celula or {}
+    for indice_linha, linha in enumerate(tabela):
         rotulos = [celula for celula in linha[:primeira_coluna_data] if celula]
         classificacao = _categoria_e_dieta(" ".join(rotulos))
         if classificacao is None:
@@ -228,7 +309,8 @@ def estruturar_tabela(tabela: list[list[str | None]], tipo_refeicao: str) -> tup
             nome = re.sub(r"\s+", " ", linha[coluna]).strip()
             if "�" in nome and "Caracteres ilegíveis encontrados no PDF; considere OCR." not in avisos:
                 avisos.append("Caracteres ilegíveis encontrados no PDF; considere OCR.")
-            refeicoes[data_cardapio].itens.append(ItemExtraido(categoria, dieta, nome))
+            alergenos = alergenos_por_celula.get((indice_linha, coluna), frozenset())
+            refeicoes[data_cardapio].itens.append(ItemExtraido(categoria, dieta, nome, alergenos))
 
     return list(refeicoes.values()), avisos
 
@@ -236,13 +318,14 @@ def estruturar_tabela(tabela: list[list[str | None]], tipo_refeicao: str) -> tup
 def extrair_cardapio(pdf: PdfCardapio, conteudo_pdf: bytes) -> ResultadoExtracao:
     """Lê as páginas de café, almoço e jantar de um PDF já descoberto."""
     refeicoes: list[RefeicaoExtraida] = []
-    # A legenda do PDF não associa seus ícones a células na camada textual do arquivo.
-    avisos = ["Marcadores de alérgenos ainda exigem leitura visual/OCR do PDF."]
-    for indice, tabela in enumerate(extrair_tabelas(conteudo_pdf)):
+    avisos: list[str] = []
+    for indice, (tabela, alergenos_por_celula) in enumerate(_extrair_tabelas_com_alergenos(conteudo_pdf)):
         if indice >= len(TIPOS_REFEICAO):
             avisos.append(f"Página {indice + 1} ignorada: tipo de refeição desconhecido.")
             continue
-        resultado_tabela, avisos_tabela = estruturar_tabela(tabela, TIPOS_REFEICAO[indice])
+        resultado_tabela, avisos_tabela = estruturar_tabela(
+            tabela, TIPOS_REFEICAO[indice], alergenos_por_celula
+        )
         refeicoes.extend(resultado_tabela)
         avisos.extend(aviso for aviso in avisos_tabela if aviso not in avisos)
     return ResultadoExtracao(pdf.campus, pdf.url, refeicoes, avisos)

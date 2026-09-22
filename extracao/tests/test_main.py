@@ -3,7 +3,7 @@ from datetime import date
 import pytest
 
 from extracao import main
-from extracao.main import ErroExtracao, PdfCardapio, descobrir_pdfs, estruturar_tabela
+from extracao.main import ErroExtracao, PdfCardapio, baixar_pdf, descobrir_pdfs, estruturar_tabela
 
 
 HTML_CARDAPIOS = """
@@ -20,6 +20,37 @@ def test_descobrir_pdfs_seleciona_semana_atual_por_campus():
     assert encontrados["Gama"].url.endswith("Gama-Semana-01-21-9-a-27-9.pdf")
     assert encontrados["Gama"].inicio == date(2026, 9, 21)
     assert encontrados["Ceilândia"].fim == date(2026, 9, 27)
+
+
+def test_baixar_pdf_valida_conteudo_recebido():
+    class Resposta:
+        content = b"%PDF-arquivo-de-teste"
+
+        def raise_for_status(self):
+            return None
+
+    class Sessao:
+        def get(self, url, timeout):
+            assert url == "https://exemplo.test/cardapio.pdf"
+            assert timeout == 30
+            return Resposta()
+
+    assert baixar_pdf("https://exemplo.test/cardapio.pdf", Sessao()) == b"%PDF-arquivo-de-teste"
+
+
+def test_baixar_pdf_rejeita_resposta_que_nao_eh_pdf():
+    class Resposta:
+        content = b"<html>pagina indisponivel</html>"
+
+        def raise_for_status(self):
+            return None
+
+    class Sessao:
+        def get(self, *_args, **_kwargs):
+            return Resposta()
+
+    with pytest.raises(ErroExtracao, match="PDF válido"):
+        baixar_pdf("https://exemplo.test/erro", Sessao())
 
 
 def test_estruturar_tabela_cria_itens_por_data_e_tipo_de_dieta():
@@ -59,15 +90,26 @@ def test_estruturar_tabela_rejeita_tabela_sem_datas():
         estruturar_tabela([["PRATO PRINCIPAL", "Frango"]], "almoco")
 
 
-def test_extrair_cardapio_sinaliza_limitacao_dos_alergenos(monkeypatch):
+def test_estruturar_tabela_atribui_alergenos_da_celula():
     tabela = [["COMPOSIÇÃO", "21/9/2026"], ["SOBREMESA", "Banana"]]
+
+    refeicoes, _ = estruturar_tabela(tabela, "almoco", {(1, 1): frozenset({"leite", "ovo"})})
+
+    assert refeicoes[0].itens[0].alergenos == frozenset({"leite", "ovo"})
+
+
+def test_extrair_cardapio_preserva_alergenos_detectados(monkeypatch):
+    tabela = [["COMPOSIÇÃO", "21/9/2026"], ["SOBREMESA", "Pudim"]]
     pdf = PdfCardapio("Gama", "https://exemplo.test/gama.pdf", date(2026, 9, 21), date(2026, 9, 27))
-    monkeypatch.setattr(main, "extrair_tabelas", lambda _: [tabela])
+    monkeypatch.setattr(
+        main,
+        "_extrair_tabelas_com_alergenos",
+        lambda _: [(tabela, {(1, 1): frozenset({"leite", "ovo"})})],
+    )
 
     resultado = main.extrair_cardapio(pdf, b"%PDF")
 
-    assert resultado.refeicoes[0].itens[0].nome == "Banana"
-    assert "Marcadores de alérgenos" in resultado.avisos[0]
+    assert resultado.refeicoes[0].itens[0].alergenos == frozenset({"leite", "ovo"})
 
 
 def test_run_registra_falha_para_campus_sem_pdf(monkeypatch):
