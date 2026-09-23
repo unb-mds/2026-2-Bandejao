@@ -307,8 +307,12 @@ def estruturar_tabela(
 
         for coluna, data_cardapio in colunas.items():
             coluna_valor = coluna
-            if coluna >= len(linha) or not linha[coluna]:
+            if (coluna >= len(linha) or not linha[coluna]) and (
+                coluna > primeira_coluna_data or primeira_coluna_data > 1
+            ):
                 # Almoço e jantar usam uma subcoluna à direita para o cabeçalho da data.
+                # Quando a primeira data está na coluna 1, a célula anterior é o rótulo
+                # da categoria; nas tabelas com subcolunas, ela começa a partir da coluna 2.
                 coluna_valor = coluna - 1
             if coluna_valor < 0 or coluna_valor >= len(linha) or not linha[coluna_valor]:
                 continue
@@ -396,9 +400,14 @@ def run(hoje: date | None = None) -> dict[str, ResultadoExtracao | ErroExtracao]
     return resultados
 
 
-if __name__ == "__main__":
+def main() -> None:
+    """Executa a extração e exibe um resumo para uso manual."""
     for campus, resultado in run().items():
         if isinstance(resultado, ErroExtracao):
             print(f"{campus}: falha - {resultado}")
         else:
             print(f"{campus}: {len(resultado.refeicoes)} refeições extraídas")
+
+
+if __name__ == "__main__":
+    main()
