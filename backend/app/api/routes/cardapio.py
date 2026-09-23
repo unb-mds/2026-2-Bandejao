@@ -71,6 +71,7 @@ def importar_cardapio(
     if campus is None:
         campus = Campus(nome=importacao.campus)
         db.add(campus)
+        # Obtém o id do campus antes de criar cardápios que dependem dele na mesma transação.
         db.flush()
 
     itens_processados = 0
@@ -101,6 +102,7 @@ def importar_cardapio(
             db.flush()
 
         for item in refeicao.itens:
+            # Converte a lista da extração nos campos booleanos usados pelos filtros da API.
             campos_alergenos = {
                 f"contem_{alergeno}": alergeno in item.alergenos
                 for alergeno in ALERGENOS_VALIDOS

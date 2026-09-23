@@ -30,6 +30,7 @@ CAMPI = {
     "fazenda": "Fazenda Água Limpa",
 }
 TIPOS_REFEICAO = ("cafe_da_manha", "almoco", "jantar")
+# A ordem segue a legenda horizontal do PDF e é usada para reconhecer os ícones.
 ALERGENOS_LEGENDA = (
     "cogumelo",
     "leite",
@@ -138,6 +139,7 @@ def descobrir_pdfs(html: str, hoje: date | None = None) -> dict[str, PdfCardapio
         if atual or futuras:
             selecionado = min(atual or futuras, key=lambda opcao: opcao.inicio)
         else:
+            # Mantém a última publicação disponível quando a página ainda não trouxe a nova semana.
             selecionado = max(opcoes, key=lambda opcao: opcao.inicio)
         encontrados[campus] = selecionado
 
@@ -349,6 +351,7 @@ def para_payload_importacao(resultado: ResultadoExtracao) -> dict[str, object]:
                         "categoria": item.categoria,
                         "tipo_dieta": item.tipo_dieta,
                         "nome": item.nome,
+                        # Conjuntos não têm ordem; ordenar torna o payload repetível e fácil de comparar.
                         "alergenos": sorted(item.alergenos),
                     }
                     for item in refeicao.itens

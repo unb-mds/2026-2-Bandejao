@@ -25,6 +25,7 @@ def sincronizar(url_base: str) -> dict[str, str]:
             resposta = enviar_ao_backend(resultado, url_base)
             resumo[campus] = f"importado ({resposta['itens_processados']} itens)"
         except (requests.RequestException, ValueError, KeyError) as erro:
+            # Um campus indisponível não impede que os demais sejam enviados nesta execução.
             resumo[campus] = f"falha na importação: {erro}"
     return resumo
 
@@ -51,6 +52,7 @@ def main() -> None:
             print(f"{campus}: {status}")
         if argumentos.intervalo_segundos == 0:
             break
+        # O modo contínuo é opcional para também permitir uso por agendadores externos.
         sleep(argumentos.intervalo_segundos)
 
 
