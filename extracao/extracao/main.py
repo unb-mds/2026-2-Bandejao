@@ -42,6 +42,7 @@ ALERGENOS_LEGENDA = (
     "oleaginosas",
     "ovo",
     "carne_suina",
+    "frutos_do_mar",
 )
 LIMIAR_DISTANCIA_ICONE = 25
 PADRAO_PERIODO = re.compile(
