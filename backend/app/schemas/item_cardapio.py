@@ -14,6 +14,7 @@ class ItemCardapioRead(BaseModel):
     contem_ovo: bool
     contem_gluten: bool
     contem_cogumelo: bool
+    contem_amendoim: bool
     contem_mel: bool
     contem_soja: bool
     contem_pimenta: bool

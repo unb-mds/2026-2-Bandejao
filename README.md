@@ -91,3 +91,20 @@ pytest
 cd extracao
 pytest
 ```
+
+### Sincronizando o cardápio real
+
+Com o backend em execução, a extração pode baixar os PDFs atuais e importá-los na API:
+
+```bash
+cd extracao
+python -m extracao.sincronizar --backend-url http://localhost:8000
+```
+
+Para deixá-la em execução periódica, informe o intervalo desejado; por exemplo, a cada seis horas:
+
+```bash
+python -m extracao.sincronizar --backend-url http://localhost:8000 --intervalo-segundos 21600
+```
+
+Antes de importar, aplique as migrações mais recentes no backend (`alembic upgrade head`).

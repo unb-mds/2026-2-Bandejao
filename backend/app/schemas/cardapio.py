@@ -11,6 +11,7 @@ ALERGENOS_VALIDOS = frozenset(
         "ovo",
         "gluten",
         "cogumelo",
+        "amendoim",
         "mel",
         "soja",
         "pimenta",
