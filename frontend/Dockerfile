@@ -7,4 +7,7 @@ RUN npm install
 
 COPY . .
 
-CMD ["npm", "run", "dev", "--", "--host", "0.0.0.0"]
+RUN npm run build
+
+# A prévia estática evita depender do WebSocket de HMR fora do ambiente de desenvolvimento.
+CMD ["npm", "run", "preview", "--", "--host", "0.0.0.0", "--port", "5173"]
