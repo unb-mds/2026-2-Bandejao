@@ -3,7 +3,17 @@ from datetime import date
 import pytest
 
 from extracao import main
-from extracao.main import ErroExtracao, PdfCardapio, baixar_pdf, descobrir_pdfs, estruturar_tabela
+from extracao.main import (
+    ErroExtracao,
+    ItemExtraido,
+    PdfCardapio,
+    RefeicaoExtraida,
+    ResultadoExtracao,
+    baixar_pdf,
+    descobrir_pdfs,
+    enviar_ao_backend,
+    estruturar_tabela,
+)
 
 
 HTML_CARDAPIOS = """
@@ -153,3 +163,37 @@ def test_pdf_cardapio_eh_imutavel():
 
     with pytest.raises(AttributeError):
         pdf.campus = "Ceilândia"
+
+
+def test_envia_resultado_no_contrato_de_importacao():
+    resultado = ResultadoExtracao(
+        "Gama",
+        "https://exemplo.test/gama.pdf",
+        [
+            RefeicaoExtraida(
+                date(2026, 9, 21),
+                "almoco",
+                [ItemExtraido("sobremesa", "comum", "Pudim", frozenset({"leite", "ovo"}))],
+            )
+        ],
+    )
+
+    class Resposta:
+        def raise_for_status(self):
+            return None
+
+        def json(self):
+            return {"campus_id": 1, "itens_processados": 1}
+
+    class Sessao:
+        def post(self, url, json, timeout):
+            assert url == "http://api.test/cardapios/importacao"
+            assert timeout == 30
+            assert json["refeicoes"][0]["data"] == "2026-09-21"
+            assert json["refeicoes"][0]["itens"][0]["alergenos"] == ["leite", "ovo"]
+            return Resposta()
+
+    assert enviar_ao_backend(resultado, "http://api.test/", Sessao()) == {
+        "campus_id": 1,
+        "itens_processados": 1,
+    }

@@ -119,6 +119,67 @@ def test_rejeita_alergeno_desconhecido(client: TestClient):
     assert "Alérgeno inválido" in response.json()["detail"]
 
 
+def test_importa_cardapio_e_substitui_itens_ao_reprocessar(
+    client: TestClient, db_session: Session
+):
+    payload = {
+        "campus": "Gama",
+        "fonte_pdf_url": "https://ru.unb.br/gama-semana.pdf",
+        "refeicoes": [
+            {
+                "data": "2026-09-21",
+                "tipo_refeicao": "almoco",
+                "itens": [
+                    {
+                        "categoria": "prato_principal",
+                        "tipo_dieta": "padrao",
+                        "nome": "Frango grelhado",
+                        "alergenos": ["soja"],
+                    }
+                ],
+            }
+        ],
+    }
+
+    primeira_resposta = client.post("/cardapios/importacao", json=payload)
+    assert primeira_resposta.status_code == 200
+    assert primeira_resposta.json()["itens_processados"] == 1
+
+    payload["refeicoes"][0]["itens"][0]["nome"] = "Lentilha"
+    payload["refeicoes"][0]["itens"][0]["alergenos"] = []
+    segunda_resposta = client.post("/cardapios/importacao", json=payload)
+
+    assert segunda_resposta.status_code == 200
+    assert db_session.query(Campus).filter_by(nome="Gama").count() == 1
+    cardapio = db_session.query(Cardapio).filter_by(data=date(2026, 9, 21)).one()
+    assert [(item.nome, item.contem_soja) for item in cardapio.itens] == [("Lentilha", False)]
+
+
+def test_importacao_rejeita_alergeno_fora_do_contrato(client: TestClient):
+    response = client.post(
+        "/cardapios/importacao",
+        json={
+            "campus": "Gama",
+            "refeicoes": [
+                {
+                    "data": "2026-09-21",
+                    "tipo_refeicao": "almoco",
+                    "itens": [
+                        {
+                            "categoria": "sobremesa",
+                            "tipo_dieta": "comum",
+                            "nome": "Pudim",
+                            "alergenos": ["amendoim"],
+                        }
+                    ],
+                }
+            ],
+        },
+    )
+
+    assert response.status_code == 422
+
+
 def test_cria_avaliacao_para_cardapio_existente(client: TestClient, db_session: Session):
     cardapio = criar_cardapio_de_teste(db_session)
 

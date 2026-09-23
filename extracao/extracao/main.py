@@ -1,8 +1,8 @@
 """Extração do cardápio semanal publicado pelo Restaurante Universitário da UnB.
 
 Os links dos PDFs são descobertos a cada execução, pois a publicação do RU muda
-semanalmente. O módulo não persiste dados: sua saída estruturada será consumida
-posteriormente pela camada de backend.
+semanalmente. A saída estruturada pode ser enviada explicitamente ao endpoint
+interno do backend, sem acoplar a etapa padrão de extração à persistência.
 """
 
 from __future__ import annotations
@@ -333,6 +333,46 @@ def extrair_cardapio(pdf: PdfCardapio, conteudo_pdf: bytes) -> ResultadoExtracao
         refeicoes.extend(resultado_tabela)
         avisos.extend(aviso for aviso in avisos_tabela if aviso not in avisos)
     return ResultadoExtracao(pdf.campus, pdf.url, refeicoes, avisos)
+
+
+def para_payload_importacao(resultado: ResultadoExtracao) -> dict[str, object]:
+    """Converte a saída da extração no contrato aceito pelo endpoint interno do backend."""
+    return {
+        "campus": resultado.campus,
+        "fonte_pdf_url": resultado.fonte_pdf_url,
+        "refeicoes": [
+            {
+                "data": refeicao.data.isoformat(),
+                "tipo_refeicao": refeicao.tipo_refeicao,
+                "itens": [
+                    {
+                        "categoria": item.categoria,
+                        "tipo_dieta": item.tipo_dieta,
+                        "nome": item.nome,
+                        "alergenos": sorted(item.alergenos),
+                    }
+                    for item in refeicao.itens
+                ],
+            }
+            for refeicao in resultado.refeicoes
+        ],
+    }
+
+
+def enviar_ao_backend(
+    resultado: ResultadoExtracao,
+    url_base: str = "http://localhost:8000",
+    sessao: requests.Session | None = None,
+) -> dict[str, object]:
+    """Envia explicitamente um campus extraído; a execução padrão continua sem gravar dados."""
+    cliente = sessao or requests.Session()
+    resposta = cliente.post(
+        f"{url_base.rstrip('/')}/cardapios/importacao",
+        json=para_payload_importacao(resultado),
+        timeout=TIMEOUT_SEGUNDOS,
+    )
+    resposta.raise_for_status()
+    return resposta.json()
 
 
 def run(hoje: date | None = None) -> dict[str, ResultadoExtracao | ErroExtracao]:
