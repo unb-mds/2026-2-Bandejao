@@ -33,12 +33,8 @@ services:
     build: ./frontend
     ports:
       - "5173:5173"
-    volumes:
-      - ./frontend:/app
-      - frontend_node_modules:/app/node_modules
     depends_on:
       - backend
 
 volumes:
   db_data:
-  frontend_node_modules:

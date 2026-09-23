@@ -1,6 +1,7 @@
 requests==2.32.3
 beautifulsoup4==4.12.3
 pdfplumber==0.11.4
+Pillow==12.3.0
 
 # dev / testes
 pytest==8.3.4

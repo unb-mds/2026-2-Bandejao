@@ -31,6 +31,7 @@ class ItemCardapio(Base):
     contem_ovo: Mapped[bool] = mapped_column(Boolean, default=False)
     contem_gluten: Mapped[bool] = mapped_column(Boolean, default=False)
     contem_cogumelo: Mapped[bool] = mapped_column(Boolean, default=False)
+    contem_amendoim: Mapped[bool] = mapped_column(Boolean, default=False)
     contem_mel: Mapped[bool] = mapped_column(Boolean, default=False)
     contem_soja: Mapped[bool] = mapped_column(Boolean, default=False)
     contem_pimenta: Mapped[bool] = mapped_column(Boolean, default=False)

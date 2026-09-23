@@ -4,26 +4,16 @@ from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session, selectinload
 
 from app.db.session import get_db
-from app.models.cardapio import Cardapio
+from app.models import Campus, Cardapio, ItemCardapio
 from app.models.enums import TipoDieta, TipoRefeicao
-from app.schemas.cardapio import CardapioRead
+from app.schemas.cardapio import (
+    ALERGENOS_VALIDOS,
+    CardapioImportacao,
+    CardapioRead,
+    ImportacaoResultado,
+)
 
 router = APIRouter(prefix="/cardapios", tags=["cardapio"])
-
-# Alérgenos que podem ser excluídos via filtro, mapeados para o campo do model
-ALERGENOS_VALIDOS = {
-    "leite",
-    "ovo",
-    "gluten",
-    "cogumelo",
-    "mel",
-    "soja",
-    "pimenta",
-    "oleaginosas",
-    "carne_suina",
-    "frutos_do_mar",
-}
-
 
 @router.get("/", response_model=list[CardapioRead])
 def listar_cardapios(
@@ -70,6 +60,70 @@ def listar_cardapios(
             cardapio.itens = itens
 
     return resultado
+
+
+@router.post("/importacao", response_model=ImportacaoResultado, tags=["importacao"])
+def importar_cardapio(
+    importacao: CardapioImportacao, db: Session = Depends(get_db)
+) -> ImportacaoResultado:
+    """Insere a saída da extração e permite reprocessar a mesma semana sem duplicar dados."""
+    campus = db.query(Campus).filter(Campus.nome == importacao.campus).first()
+    if campus is None:
+        campus = Campus(nome=importacao.campus)
+        db.add(campus)
+        # Obtém o id do campus antes de criar cardápios que dependem dele na mesma transação.
+        db.flush()
+
+    itens_processados = 0
+    for refeicao in importacao.refeicoes:
+        cardapio = (
+            db.query(Cardapio)
+            .filter(
+                Cardapio.campus_id == campus.id,
+                Cardapio.data == refeicao.data,
+                Cardapio.tipo_refeicao == refeicao.tipo_refeicao,
+            )
+            .first()
+        )
+        if cardapio is None:
+            cardapio = Cardapio(
+                campus_id=campus.id,
+                data=refeicao.data,
+                tipo_refeicao=refeicao.tipo_refeicao,
+                fonte_pdf_url=importacao.fonte_pdf_url,
+            )
+            db.add(cardapio)
+            db.flush()
+        else:
+            cardapio.fonte_pdf_url = importacao.fonte_pdf_url
+            # A fonte é semanal: uma nova extração substitui a versão anterior da refeição.
+            for item in cardapio.itens:
+                db.delete(item)
+            db.flush()
+
+        for item in refeicao.itens:
+            # Converte a lista da extração nos campos booleanos usados pelos filtros da API.
+            campos_alergenos = {
+                f"contem_{alergeno}": alergeno in item.alergenos
+                for alergeno in ALERGENOS_VALIDOS
+            }
+            db.add(
+                ItemCardapio(
+                    cardapio_id=cardapio.id,
+                    categoria=item.categoria,
+                    tipo_dieta=item.tipo_dieta,
+                    nome=item.nome,
+                    **campos_alergenos,
+                )
+            )
+            itens_processados += 1
+
+    db.commit()
+    return ImportacaoResultado(
+        campus_id=campus.id,
+        cardapios_processados=len(importacao.refeicoes),
+        itens_processados=itens_processados,
+    )
 
 
 @router.get("/{cardapio_id}", response_model=CardapioRead)
