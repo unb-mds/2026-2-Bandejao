@@ -1,4 +1,5 @@
 import Cardapio from '../components/Cardapio'
+import BotoesCampus from '../components/BotoesCampus'
 
 function Home() {
   return (
@@ -6,14 +7,10 @@ function Home() {
       <h1>Bandejão UnB 🍽️</h1>
       <p>Cardápio e Informações em Tempo Real</p>
 
-      <div style={{ margin: '20px 0' }}>
-        <button style={{ margin: '5px', padding: '10px 15px' }}>Darcy Ribeiro</button>
-        <button style={{ margin: '5px', padding: '10px 15px' }}>Gama</button>
-        <button style={{ margin: '5px', padding: '10px 15px' }}>Ceilândia</button>
-        <button style={{ margin: '5px', padding: '10px 15px' }}>Planaltina</button>
-      </div>
+      {/* Componente responsável pela seleção de campus */}
+      <BotoesCampus />
 
-      {/* Aqui chamamos o nosso componente do Cardápio */}
+      {/* Componente do Cardápio */}
       <Cardapio />
     </div>
   )
