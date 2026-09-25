@@ -22,7 +22,7 @@ Aplicação para consulta ao cardápio semanal dos Restaurantes Universitários 
 
 ## Status
 
-🚧 Em desenvolvimento — Sprint 01
+🚧 Em desenvolvimento — Sprint 02
 
 ## Como rodar o projeto
 
