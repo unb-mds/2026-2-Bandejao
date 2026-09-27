@@ -20,6 +20,9 @@ Aplicação para consulta ao cardápio semanal dos Restaurantes Universitários 
 
 🚧 Em desenvolvimento — Sprint 01
 
+## 🔗 Acesso ao Protótipo Online
+👉 [Aceder ao Protótipo no Vercel](https://frontend-react-tan-gamma.vercel.app)
+
 ## Como rodar o projeto
 
 ### Pré-requisitos
