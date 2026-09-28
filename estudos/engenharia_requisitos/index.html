@@ -1,0 +1,1643 @@
+
+<!doctype html>
+<html lang="pt" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Cardápio semanal, filtros alimentares e avaliação das refeições dos Restaurantes Universitários da UnB.">
+      
+      
+      
+      
+        <link rel="prev" href="../arquitetura_software/">
+      
+      
+        <link rel="next" href="../../scrum/sprint00/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Engenharia de requisitos - Bandejão — RU UnB</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="green">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#engenharia-de-requisitos-estudo" class="md-skip">
+          Pular para conteúdo
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Cabeçalho">
+    <a href="../.." title="Bandejão — RU UnB" class="md-header__button md-logo" aria-label="Bandejão — RU UnB" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Bandejão — RU UnB
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Engenharia de requisitos
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Buscar" placeholder="Buscar" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Pesquisar">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Limpar" aria-label="Limpar" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Inicializando busca
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/unb-mds/G12-2026-2" title="Ir para repositório" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    unb-mds/G12-2026-2
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Abas" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Início
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../documento_de_visao/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Visão do produto
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../Requisitos/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Requisitos
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../Arquitetura/" class="md-tabs__link">
+          
+  
+  
+  Arquitetura
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../" class="md-tabs__link">
+          
+  
+  
+  Estudos
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../scrum/sprint00/" class="md-tabs__link">
+          
+  
+  
+  Sprints
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navegação" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Bandejão — RU UnB" class="md-nav__button md-logo" aria-label="Bandejão — RU UnB" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Bandejão — RU UnB
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/unb-mds/G12-2026-2" title="Ir para repositório" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    unb-mds/G12-2026-2
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Início
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../documento_de_visao/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Visão do produto
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Requisitos/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Requisitos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Arquitetura
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Arquitetura
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Arquitetura/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Arquitetura
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../handoff_banco_e_importacao/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Banco e importação
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Estudos
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Estudos
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Visão geral
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../git_github/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Git e GitHub
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../extracao_dados_pdf/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Extração de PDF
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ocr_imagem/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    OCR e imagem
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../backend/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Backend
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../banco_de_dados/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Banco de dados
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../frontend/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Frontend
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../arquitetura_software/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Arquitetura de software
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Engenharia de requisitos
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Engenharia de requisitos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Índice">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Índice
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#o-que-e" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        O que é
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tipos-de-requisitos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tipos de requisitos
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Tipos de requisitos">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#requisitos-funcionais" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Requisitos funcionais
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#requisitos-nao-funcionais" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Requisitos não funcionais
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#requisitos-de-usuario-x-requisitos-de-sistema" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Requisitos de usuário x requisitos de sistema
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#regras-de-negocio" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Regras de negócio
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#fases-do-processo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fases do processo
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tecnicas-de-elicitacao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Técnicas de elicitação
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#especificacao-de-requisitos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Especificação de requisitos
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Especificação de requisitos">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#historias-de-usuario-user-stories" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Histórias de usuário (User Stories)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#casos-de-uso" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Casos de uso
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#qualidades-de-um-bom-requisito" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Qualidades de um bom requisito
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#priorizacao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Priorização
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#validacao-de-requisitos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Validação de requisitos
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rastreabilidade" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rastreabilidade
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#relacao-com-o-projeto-bandejao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Relação com o projeto Bandejão
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#duvidas-em-aberto" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dúvidas em aberto
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#fontes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fontes
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sprints
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Sprints
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../scrum/sprint00/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sprint 00
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../scrum/sprint01/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sprint 01
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Índice">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Índice
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#o-que-e" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        O que é
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tipos-de-requisitos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tipos de requisitos
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Tipos de requisitos">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#requisitos-funcionais" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Requisitos funcionais
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#requisitos-nao-funcionais" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Requisitos não funcionais
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#requisitos-de-usuario-x-requisitos-de-sistema" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Requisitos de usuário x requisitos de sistema
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#regras-de-negocio" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Regras de negócio
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#fases-do-processo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fases do processo
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tecnicas-de-elicitacao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Técnicas de elicitação
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#especificacao-de-requisitos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Especificação de requisitos
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Especificação de requisitos">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#historias-de-usuario-user-stories" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Histórias de usuário (User Stories)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#casos-de-uso" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Casos de uso
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#qualidades-de-um-bom-requisito" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Qualidades de um bom requisito
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#priorizacao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Priorização
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#validacao-de-requisitos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Validação de requisitos
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rastreabilidade" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rastreabilidade
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#relacao-com-o-projeto-bandejao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Relação com o projeto Bandejão
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#duvidas-em-aberto" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dúvidas em aberto
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#fontes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fontes
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="engenharia-de-requisitos-estudo">Engenharia de Requisitos — Estudo</h1>
+<h2 id="o-que-e">O que é</h2>
+<p>Engenharia de requisitos é a disciplina que trata de descobrir, entender, documentar e gerenciar o que um sistema de software deve fazer e sob quais condições. É a etapa que conecta as necessidades reais de quem vai usar o sistema (stakeholders) com o que a equipe de desenvolvimento vai efetivamente construir.</p>
+<p>Um requisito mal levantado ou mal escrito custa caro: pesquisas apontam que grande parte dos problemas de projeto de software (requisitos incompletos, falhas de comunicação, mudanças constantes, especificações abstratas) tem origem nessa etapa, não na programação em si.</p>
+<h2 id="tipos-de-requisitos">Tipos de requisitos</h2>
+<h3 id="requisitos-funcionais">Requisitos funcionais</h3>
+<p>Descrevem <strong>o que</strong> o sistema deve fazer — as funcionalidades e comportamentos concretos.</p>
+<blockquote>
+<p>Exemplo (Bandejão): "o sistema deve permitir filtrar o cardápio do dia por restrição alimentar (vegetariano, sem glúten, sem lactose etc.)".</p>
+</blockquote>
+<h3 id="requisitos-nao-funcionais">Requisitos não funcionais</h3>
+<p>Descrevem <strong>como</strong> o sistema deve se comportar — qualidades e restrições que não são uma funcionalidade específica, mas afetam o sistema como um todo: desempenho, disponibilidade, segurança, usabilidade, escalabilidade.</p>
+<blockquote>
+<p>Exemplo (Bandejão): "a consulta ao cardápio da semana deve responder em até 1 segundo" ou "o sistema deve continuar funcionando mesmo se a extração do PDF de um campus falhar".</p>
+</blockquote>
+<h3 id="requisitos-de-usuario-x-requisitos-de-sistema">Requisitos de usuário x requisitos de sistema</h3>
+<ul>
+<li><strong>Requisitos de usuário</strong>: descritos em linguagem natural, de alto nível, do ponto de vista de quem usa (ex: "quero ver o cardápio vegetariano da semana").</li>
+<li><strong>Requisitos de sistema</strong>: versão técnica e precisa desse mesmo requisito, escrita pela equipe de desenvolvimento, já pensando em como implementar.</li>
+</ul>
+<h3 id="regras-de-negocio">Regras de negócio</h3>
+<p>Restrições ou políticas que não são requisitos funcionais em si, mas condicionam o comportamento do sistema (ex: "uma avaliação de refeição só pode ser feita por quem registrou check-in naquele restaurante no dia").</p>
+<h2 id="fases-do-processo">Fases do processo</h2>
+<ol>
+<li><strong>Elicitação</strong> — descobrir os requisitos junto aos stakeholders.</li>
+<li><strong>Análise</strong> — entender, detalhar e identificar conflitos ou inconsistências entre requisitos.</li>
+<li><strong>Especificação</strong> — documentar os requisitos de forma clara (histórias de usuário, casos de uso, etc.).</li>
+<li><strong>Validação</strong> — checar se o que foi documentado está correto, completo e reflete a necessidade real.</li>
+<li><strong>Gestão</strong> — acompanhar mudanças de requisitos ao longo do projeto (rastreabilidade).</li>
+</ol>
+<p>Esse processo raramente é linear: é comum voltar a etapas anteriores conforme o entendimento do problema evolui.</p>
+<h2 id="tecnicas-de-elicitacao">Técnicas de elicitação</h2>
+<ul>
+<li><strong>Entrevistas</strong> com stakeholders (ex: alunos, RU/UnB, coordenação do projeto).</li>
+<li><strong>Questionários</strong> para levantar necessidades de um grupo maior de usuários.</li>
+<li><strong>Análise de documentos</strong> já existentes (ex: o formato do cardápio publicado pelo RU).</li>
+<li><strong>Workshops</strong> com os envolvidos para discutir e priorizar necessidades em grupo.</li>
+<li><strong>Prototipação</strong> — mostrar telas ou fluxos simples para validar entendimento antes de construir de verdade.</li>
+<li><strong>Observação/estudo etnográfico</strong> — observar o usuário no contexto real (ex: como um aluno de fato escolhe o que comer no RU).</li>
+</ul>
+<h2 id="especificacao-de-requisitos">Especificação de requisitos</h2>
+<h3 id="historias-de-usuario-user-stories">Histórias de usuário (User Stories)</h3>
+<p>Muito usadas em métodos ágeis. Seguem o modelo dos "3Cs":</p>
+<ul>
+<li><strong>Cartão</strong>: descrição curta, em linguagem do usuário.</li>
+<li><strong>Conversa</strong>: discussão entre time e cliente/usuário para detalhar.</li>
+<li><strong>Confirmação</strong>: critérios de aceitação que validam se a história foi implementada corretamente.</li>
+</ul>
+<p>Formato padrão: <em>"Como [papel de usuário], eu quero [ação], para [benefício]"</em>.</p>
+<blockquote>
+<p>Exemplo: "Como aluno com restrição a glúten, eu quero filtrar o cardápio por essa restrição, para saber rapidamente quais pratos posso comer."</p>
+</blockquote>
+<p>Boas histórias seguem os critérios <strong>INVEST</strong>: Independentes, Negociáveis, geradoras de <strong>Valor</strong>, Estimáveis, pequenas o bastante (<strong>Small</strong>) e <strong>Testáveis</strong>.</p>
+<h3 id="casos-de-uso">Casos de uso</h3>
+<p>Descrição textual mais detalhada de como um <strong>ator</strong> (usuário ou outro sistema) interage com o sistema para atingir um objetivo. Estrutura típica:</p>
+<ul>
+<li><strong>Fluxo normal</strong>: passo a passo do cenário de sucesso ("cenário feliz").</li>
+<li><strong>Extensões</strong>: fluxos alternativos, erros e exceções.</li>
+</ul>
+<blockquote>
+<p>Exemplo: caso de uso "Avaliar refeição" — fluxo normal (usuário seleciona o prato do dia, dá uma nota, opcionalmente comenta, sistema salva a avaliação) e extensões (usuário tenta avaliar sem ter feito check-in → sistema bloqueia e informa o motivo).</p>
+</blockquote>
+<p>Boas práticas: manter o fluxo normal enxuto (poucos passos), evitar linguagem técnica e usar vocabulário consistente com o resto da documentação.</p>
+<h2 id="qualidades-de-um-bom-requisito">Qualidades de um bom requisito</h2>
+<p>Um requisito bem escrito deve ser:</p>
+<ul>
+<li><strong>Correto</strong> — reflete de fato a necessidade do stakeholder.</li>
+<li><strong>Preciso / não ambíguo</strong> — não dá margem a múltiplas interpretações.</li>
+<li><strong>Completo</strong> — nada essencial fica de fora.</li>
+<li><strong>Consistente</strong> — não contradiz outro requisito.</li>
+<li><strong>Verificável</strong> — dá para testar se foi atendido ou não.</li>
+</ul>
+<h2 id="priorizacao">Priorização</h2>
+<p>Nem todo requisito entra na primeira versão do sistema. É preciso priorizar considerando valor para o usuário, prazo e esforço de implementação — é isso que define o que entra em cada release.</p>
+<p>No caso do Bandejão, essa lógica já aparece no próprio escopo do projeto: a Release 1 concentra o essencial (cardápio, filtros, avaliação), deixando a previsão de horário de pico (que depende de volume de dados histórico) para a Release 2.</p>
+<h2 id="validacao-de-requisitos">Validação de requisitos</h2>
+<p>Verificar, junto aos stakeholders, se os requisitos documentados realmente representam o que é necessário — antes de partir para a implementação. Erros encontrados nessa fase são muito mais baratos de corrigir do que erros encontrados depois do sistema pronto.</p>
+<h2 id="rastreabilidade">Rastreabilidade</h2>
+<p>Manter a correlação entre requisitos e as partes do código/funcionalidades que os implementam. Isso facilita avaliar o impacto de uma mudança de requisito e evita "esquecer" de atualizar alguma parte do sistema quando um requisito muda.</p>
+<h2 id="relacao-com-o-projeto-bandejao">Relação com o projeto Bandejão</h2>
+<ul>
+<li>A camada de <strong>extração de dados</strong> existe justamente por causa de um requisito não funcional implícito: o sistema depende de uma fonte externa (PDF do RU) que muda de formato e de URL sem aviso, então essa parte precisa ser isolada e resiliente a mudanças.</li>
+<li>Os filtros alimentares (vegetariano, alergias a leite/ovo/glúten/etc.) são requisitos funcionais que só são viáveis porque a fonte de dados já identifica essas informações no cardápio — é um bom exemplo de como um requisito depende diretamente da qualidade dos dados disponíveis.</li>
+<li>A divisão do escopo em Release 1 e Release 2 é, na prática, uma decisão de priorização de requisitos.</li>
+</ul>
+<h2 id="duvidas-em-aberto">Dúvidas em aberto</h2>
+<p><em>(preencher conforme surgirem dúvidas durante o uso prático, ex: qual técnica de elicitação o grupo vai usar para levantar requisitos com o RU/UnB)</em></p>
+<h2 id="fontes">Fontes</h2>
+<ul>
+<li><a href="https://engsoftmoderna.info/cap3.html">Cap. 3: Requisitos – Engenharia de Software Moderna</a></li>
+<li><a href="https://medium.com/@leandro-raposo/engenharia-de-requisitos-b7a36c2e645c">Engenharia de Requisitos — Leandro Raposo, Medium</a></li>
+<li><a href="https://visuresolutions.com/pt/alm-guide/non-functional-requirements/">O que são Requisitos Não Funcionais — Visure Solutions</a></li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Voltar para o topo
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.top", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copiado para \u00e1rea de transfer\u00eancia", "clipboard.copy": "Copiar para \u00e1rea de transfer\u00eancia", "search.result.more.one": "mais 1 nesta p\u00e1gina", "search.result.more.other": "# mais nesta p\u00e1gina", "search.result.none": "Nenhum documento encontrado", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Digite para iniciar a busca", "search.result.term.missing": "Ausente", "select.version": "Selecione a vers\u00e3o"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  </body>
+</html>

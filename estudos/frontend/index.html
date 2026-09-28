@@ -1,0 +1,2058 @@
+
+<!doctype html>
+<html lang="pt" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Cardápio semanal, filtros alimentares e avaliação das refeições dos Restaurantes Universitários da UnB.">
+      
+      
+      
+      
+        <link rel="prev" href="../banco_de_dados/">
+      
+      
+        <link rel="next" href="../arquitetura_software/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Frontend - Bandejão — RU UnB</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="green">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#estudo-frontend" class="md-skip">
+          Pular para conteúdo
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Cabeçalho">
+    <a href="../.." title="Bandejão — RU UnB" class="md-header__button md-logo" aria-label="Bandejão — RU UnB" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Bandejão — RU UnB
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Frontend
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Buscar" placeholder="Buscar" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Pesquisar">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Limpar" aria-label="Limpar" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Inicializando busca
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/unb-mds/G12-2026-2" title="Ir para repositório" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    unb-mds/G12-2026-2
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Abas" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Início
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../documento_de_visao/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Visão do produto
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../Requisitos/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Requisitos
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../Arquitetura/" class="md-tabs__link">
+          
+  
+  
+  Arquitetura
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../" class="md-tabs__link">
+          
+  
+  
+  Estudos
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../scrum/sprint00/" class="md-tabs__link">
+          
+  
+  
+  Sprints
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navegação" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Bandejão — RU UnB" class="md-nav__button md-logo" aria-label="Bandejão — RU UnB" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Bandejão — RU UnB
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/unb-mds/G12-2026-2" title="Ir para repositório" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    unb-mds/G12-2026-2
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Início
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../documento_de_visao/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Visão do produto
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Requisitos/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Requisitos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Arquitetura
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Arquitetura
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Arquitetura/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Arquitetura
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../handoff_banco_e_importacao/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Banco e importação
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Estudos
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Estudos
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Visão geral
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../git_github/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Git e GitHub
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../extracao_dados_pdf/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Extração de PDF
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ocr_imagem/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    OCR e imagem
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../backend/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Backend
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../banco_de_dados/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Banco de dados
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Frontend
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Frontend
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Índice">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Índice
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#introducao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Introdução
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-componentes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Componentes
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. Componentes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#exemplo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exemplo:
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exemplo-pratico" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exemplo prático
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#vantagens" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Vantagens
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-estado" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Estado
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Estado">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#estado-vs-props" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Estado vs. Props
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#por-que-o-estado-importa" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Por que o estado importa
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-renderizacao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Renderização
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Renderização">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#o-que-significa-renderizar" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        O que significa renderizar
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tipos-de-renderizacao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tipos de renderização
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#renderizacao-imperativa" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Renderização imperativa
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#renderizacao-declarativa" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Renderização declarativa
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#vantagens-da-abordagem-declarativa" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Vantagens da abordagem declarativa:
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#comparacao-entre-os-dois-tipos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Comparação entre os dois tipos
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#re-renderizacao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Re-renderização
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#virtual-dom" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Virtual DOM
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-frameworks-de-frontend" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Frameworks de frontend
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Frameworks de frontend">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#react" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        React
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#vue" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Vue
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#angular" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Angular
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#svelte" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Svelte
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#comparacao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Comparação
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#conclusao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Conclusão
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../arquitetura_software/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Arquitetura de software
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../engenharia_requisitos/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Engenharia de requisitos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sprints
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Sprints
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../scrum/sprint00/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sprint 00
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../scrum/sprint01/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sprint 01
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Índice">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Índice
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#introducao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Introdução
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-componentes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Componentes
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. Componentes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#exemplo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exemplo:
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exemplo-pratico" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exemplo prático
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#vantagens" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Vantagens
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-estado" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Estado
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Estado">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#estado-vs-props" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Estado vs. Props
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#por-que-o-estado-importa" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Por que o estado importa
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-renderizacao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Renderização
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Renderização">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#o-que-significa-renderizar" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        O que significa renderizar
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tipos-de-renderizacao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tipos de renderização
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#renderizacao-imperativa" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Renderização imperativa
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#renderizacao-declarativa" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Renderização declarativa
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#vantagens-da-abordagem-declarativa" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Vantagens da abordagem declarativa:
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#comparacao-entre-os-dois-tipos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Comparação entre os dois tipos
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#re-renderizacao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Re-renderização
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#virtual-dom" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Virtual DOM
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-frameworks-de-frontend" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Frameworks de frontend
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Frameworks de frontend">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#react" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        React
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#vue" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Vue
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#angular" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Angular
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#svelte" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Svelte
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#comparacao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Comparação
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#conclusao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Conclusão
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="estudo-frontend">Estudo — Frontend</h1>
+<h2 id="introducao">Introdução</h2>
+<p>O desenvolvimento frontend é a área da programação responsável por tudo aquilo que o usuário vê e interage diretamente em um site ou aplicação web. Isso envolve a criação de elementos como layout, cores, botões, formulários, animações, responsividade e a experiência do usuário.</p>
+<p>Este documento reune os principais conceitos sobre  <strong>componentes</strong> , <strong>estado</strong>, e <strong>renderização</strong> , com exemplos e comparações entre frameworks mais usados no mercado.</p>
+<h2 id="1-componentes">1. Componentes</h2>
+<p>Um <strong>componente</strong> é uma unidade independente e reutilizável da interface. Em vez de construir uma página inteira em um único arquivo, o ideal é dividir a tela em blocos menores, cada um com sua própria responsabilidade.</p>
+<p>Cada componente:
+- Tem sua própria estrutura (HTML/JSK) 
+- Tem seu próprio estilo (CSS)
+- Pode ter sua própria lógica (JavaScript/TypeScript)
+- Pode ser reutilizado em várias partes da aplicação</p>
+<h3 id="exemplo">Exemplo:</h3>
+<p>Um componente <code>Botao</code> pode ser utulizado em uma tela de login, em um formulário de cadastro e em uma página de configurações mantendo
+o mesmo visual e comportamento.</p>
+<h3 id="exemplo-pratico">Exemplo prático</h3>
+<p>Em React, um componente é uma função que retorna JSX (uma sintaxe parecida com HTML):</p>
+<pre><code class="language-jsx">function Botao({ texto, onClick }) {
+  return (
+    &lt;button className=&quot;botao&quot; onClick={onClick}&gt;
+      {texto}
+    &lt;/button&gt;
+  );
+}
+</code></pre>
+<p>Esse componente Botao pode ser usado assim:</p>
+<pre><code class="language-jsx">&lt;Botao texto=&quot;Salvar&quot; onClick={salvar} /&gt;
+&lt;Botao texto=&quot;Cancelar&quot; onClick={cancelar} /&gt;
+</code></pre>
+<p>Sempre com o mesmo visual e comportamento, mas com textos e ações diferentes.</p>
+<h3 id="vantagens">Vantagens</h3>
+<ul>
+<li><strong>Reutilização:</strong>  escreve uma vez, usa em vários lugares</li>
+<li><strong>Organização:</strong> o código fica dividido em blocos menores e mais fáceis de entender </li>
+<li>
+<p><strong>Manutenção:</strong> alterações em um componente podem ser feitas em um lugar só sem precisar modificar cada parte da aplicação individualmente</p>
+</li>
+<li>
+<p><strong>Composição:</strong> componentes podem ser combinados para formar componentes maiores</p>
+</li>
+<li>
+<p><strong>Isolamento:</strong> mudanças em um componente não afetam os outros diretamente</p>
+</li>
+</ul>
+<h2 id="2-estado">2. Estado</h2>
+<p>O <strong>estado</strong> é a informação que pode mudar ao longo do tempo dentro de um
+componente ou da aplicação. Quando o estado muda, a interface reage e se
+atualiza automaticamente.</p>
+<p><strong>Exemplos de estado:</strong>
+- O texto digitado em um campo de busca
+- Se um menu está aberto ou fechado
+- Os itens dentro de um carrinho de compras
+- Se o usuário está logado ou não
+- O resultado de uma requisição à API</p>
+<h3 id="estado-vs-props">Estado vs. Props</h3>
+<table>
+<thead>
+<tr>
+<th>Conceito</th>
+<th>O que é</th>
+<th>Pode mudar?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Props</strong></td>
+<td>Dados passados de um componente pai para um filho</td>
+<td>Não (são somente leitura)</td>
+</tr>
+<tr>
+<td><strong>Estado</strong></td>
+<td>Dados que pertencem ao próprio componente</td>
+<td>Sim</td>
+</tr>
+</tbody>
+</table>
+<h3 id="por-que-o-estado-importa">Por que o estado importa</h3>
+<p>Sem estado, a interface seria estática, sempre mostrando a mesma coisa.
+O estado é o que torna a aplicação <strong>interativa</strong> e <strong>dinâmica</strong>.</p>
+<h2 id="3-renderizacao">3. Renderização</h2>
+<p>A <strong>renderização</strong> é o processo de transformar dados e estado em elementos visuais na tela. É o que faz o usuário ver o resultado do que está acontecendo na aplicação.</p>
+<h3 id="o-que-significa-renderizar">O que significa renderizar</h3>
+<p>Renderizar é, basicamente, <strong>mostrar na tela</strong>. Quando você tem dados (uma lista de receitas, o nome de um usuário, o texto de um botão) e esses dados aparecem para o usuário, isso é a renderização acontecendo.</p>
+<p>Uma analogia simples: é como imprimir um documento. Você escreve o texto no Word (os dados) e aperta Ctrl + P (a renderização). O papel que sai da impressora é o que o usuário vê (a tela).</p>
+<p>Sem renderização, os dados existiriam apenas na memória do computador, mas o usuário não veria nada.</p>
+<h3 id="tipos-de-renderizacao">Tipos de renderização</h3>
+<p>Existem duas formas principais de renderizar uma interface: a <strong>imperativa</strong> e a <strong>declarativa</strong>.</p>
+<h3 id="renderizacao-imperativa">Renderização imperativa</h3>
+<p>Na renderização imperativa, o programador diz <strong>passo a passo</strong> o que o navegador deve fazer. É o estilo usado com JavaScript puro e jQuery.</p>
+<pre><code class="language-javascript">// Exemplo imperativo
+const botao = document.querySelector(&quot;#meuBotao&quot;);
+botao.textContent = &quot;Cliquei!&quot;;
+botao.style.color = &quot;red&quot;;
+</code></pre>
+<p>Traduzindo o código acima:</p>
+<ul>
+<li>
+<p>"Pega o botão que tem id meuBotao"</p>
+</li>
+<li>
+<p>"Muda o texto dele para 'Cliquei!'"</p>
+</li>
+<li>
+<p>"Muda a cor dele para vermelho"</p>
+</li>
+</ul>
+<p>O programador está mandando o navegador fazer cada coisa, um passo por vez. Se esquecer um passo, a tela fica errada.</p>
+<p>Problemas da abordagem imperativa:</p>
+<ul>
+<li>
+<p>Em aplicações grandes, fica difícil controlar todas as mudanças</p>
+</li>
+<li>
+<p>É fácil esquecer de atualizar algo e a interface ficar inconsistente com os dados</p>
+</li>
+<li>
+<p>O código fica cheio de comandos repetitivos</p>
+</li>
+<li>
+<p>Manutenção se torna complicada</p>
+</li>
+</ul>
+<h3 id="renderizacao-declarativa">Renderização declarativa</h3>
+<p>Na renderização declarativa, o programador descreve como a tela deve ficar e o framework cuida de atualizar o que for necessário. É o estilo usado por <strong><em>React, Vue e Svelte.</em></strong></p>
+<pre><code class="language-jsx">
+// Exemplo declarativo (React)
+function Botao({ clicado }) {
+  return (
+    &lt;button style={{ color: clicado ? &quot;red&quot; : &quot;black&quot; }}&gt;
+      {clicado ? &quot;Cliquei!&quot; : &quot;Clique aqui&quot;}
+    &lt;/button&gt;
+  );
+}
+
+</code></pre>
+<p>Traduzindo o código acima:</p>
+<ul>
+<li>
+<p>"Se clicado for verdadeiro, a cor é vermelha; se não, é preta"</p>
+</li>
+<li>
+<p>"Se clicado for verdadeiro, o texto é 'Cliquei!'; se não, é 'Clique aqui'"</p>
+</li>
+</ul>
+<p>O programador não disse "muda a cor". Ele descreveu como deve ficar. O React cuida de mudar.</p>
+<h3 id="vantagens-da-abordagem-declarativa">Vantagens da abordagem declarativa:</h3>
+<ul>
+<li>
+<p>O código fica mais limpo e fácil de entender</p>
+</li>
+<li>
+<p>O programador não precisa se preocupar com cada passo da atualização</p>
+</li>
+<li>
+<p>O framework otimiza as mudanças automaticamente</p>
+</li>
+<li>
+<p>Menos chances de erro</p>
+</li>
+</ul>
+<h3 id="comparacao-entre-os-dois-tipos">Comparação entre os dois tipos</h3>
+<table>
+<thead>
+<tr>
+<th></th>
+<th><strong>Imperativa</strong></th>
+<th><strong>Declarativa</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Você diz</td>
+<td><strong>Como</strong> fazer (passo a passo)</td>
+<td><strong>O que</strong> deve aparecer</td>
+</tr>
+<tr>
+<td>Quem manda</td>
+<td>Você</td>
+<td>O framework</td>
+</tr>
+<tr>
+<td>Se errar</td>
+<td>A tela fica errada</td>
+<td>O framework corrige</td>
+</tr>
+<tr>
+<td>Usado por</td>
+<td>JavaScript puro, jQuery</td>
+<td>React, Vue, Svelte</td>
+</tr>
+<tr>
+<td>Código</td>
+<td>Mais verboso</td>
+<td>Mais enxuto</td>
+</tr>
+<tr>
+<td>Manutenção</td>
+<td>Mais difícil</td>
+<td>Mais fácil</td>
+</tr>
+</tbody>
+</table>
+<h3 id="re-renderizacao">Re-renderização</h3>
+<p>Quando o estado muda, a tela precisa ser atualizada. Isso é a re-renderização.</p>
+<p>Um exemplo prático: no Instagram, quando você clica no coração de um post:</p>
+<ol>
+<li>
+<p>estado muda de "não curtido" para "curtido"</p>
+</li>
+<li>
+<p>O React percebe que o estado mudou</p>
+</li>
+<li>
+<p>O React re-renderiza o componente</p>
+</li>
+<li>
+<p>O coração fica vermelho</p>
+</li>
+</ol>
+<p>Tudo isso acontece automaticamente. Você não precisa dizer "muda a cor do coração". Você só muda o estado, e o framework faz o resto.</p>
+<h3 id="virtual-dom">Virtual DOM</h3>
+<p>Em <strong>React e Vue</strong>, a re-renderização é otimizada pelo Virtual DOM.</p>
+<p>O Virtual DOM é uma cópia leve da interface, mantida na memória. Quando o estado muda, o framework:</p>
+<ol>
+<li>
+<p>Cria uma nova versão do Virtual DOM com as mudanças</p>
+</li>
+<li>
+<p>Compara com a versão anterior (processo chamado diffing)</p>
+</li>
+<li>
+<p>Descobre exatamente o que mudou</p>
+</li>
+<li>
+<p>Aplica apenas essas mudanças no DOM real do navegador</p>
+</li>
+</ol>
+<p>Isso é muito mais rápido do que reconstruir a tela inteira toda vez.</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th><strong>DOM real</strong></th>
+<th><strong>Virtual DOM</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>O que é</td>
+<td>A árvore de elementos que o navegador usa</td>
+<td>Uma cópia leve em memória</td>
+</tr>
+<tr>
+<td>Velocidade de leitura</td>
+<td>Lenta</td>
+<td>Rápida</td>
+</tr>
+<tr>
+<td>Atualização</td>
+<td>Direta, custosa</td>
+<td>Calculada antes de aplicar</td>
+</tr>
+<tr>
+<td>Usado por</td>
+<td>JavaScript puro, jQuery</td>
+<td>React, Vue</td>
+</tr>
+</tbody>
+</table>
+<h2 id="4-frameworks-de-frontend">4. Frameworks de frontend</h2>
+<p>Existem vários frameworks/bibliotecas para desenvolvimento frontend.
+Os mais comuns são:</p>
+<h3 id="react">React</h3>
+<ul>
+<li><strong>Criado por:</strong> Facebook (Meta)</li>
+<li><strong>Linguagem:</strong> JavaScript/TypeScript</li>
+<li><strong>Característica principal:</strong> componentes + JSX + Virtual DOM</li>
+<li><strong>Curva de aprendizado:</strong> média</li>
+</ul>
+<h3 id="vue">Vue</h3>
+<ul>
+<li><strong>Criado por:</strong> Evan You</li>
+<li><strong>Linguagem:</strong> JavaScript</li>
+<li><strong>Característica principal:</strong> sintaxe simples, reatividade nativa</li>
+<li><strong>Curva de aprendizado:</strong> baixa</li>
+</ul>
+<h3 id="angular">Angular</h3>
+<ul>
+<li><strong>Criado por:</strong> Google</li>
+<li><strong>Linguagem:</strong> TypeScript</li>
+<li><strong>Característica principal:</strong> framework completo (tudo incluso)</li>
+<li><strong>Curva de aprendizado:</strong> alta</li>
+</ul>
+<h3 id="svelte">Svelte</h3>
+<ul>
+<li><strong>Criado por:</strong> Rich Harris</li>
+<li><strong>Linguagem:</strong> JavaScript</li>
+<li><strong>Característica principal:</strong> compila para JS puro, sem Virtual DOM</li>
+<li><strong>Curva de aprendizado:</strong> baixa</li>
+</ul>
+<h3 id="comparacao">Comparação</h3>
+<table>
+<thead>
+<tr>
+<th>Framework</th>
+<th>Tipo</th>
+<th>Linguagem</th>
+<th>Curva</th>
+<th>Diferencial</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>React</td>
+<td>Biblioteca</td>
+<td>JS/TS</td>
+<td>Média</td>
+<td>Virtual DOM, maior comunidade</td>
+</tr>
+<tr>
+<td>Vue</td>
+<td>Framework progressivo</td>
+<td>JS</td>
+<td>Baixa</td>
+<td>Fácil de aprender, reativo</td>
+</tr>
+<tr>
+<td>Angular</td>
+<td>Framework completo</td>
+<td>TS</td>
+<td>Alta</td>
+<td>Solução "tudo em um"</td>
+</tr>
+<tr>
+<td>Svelte</td>
+<td>Compilador</td>
+<td>JS</td>
+<td>Baixa</td>
+<td>Sem Virtual DOM, muito rápido</td>
+</tr>
+</tbody>
+</table>
+<h2 id="conclusao">Conclusão</h2>
+<p>O frontend é responsável pela parte da aplicação que o usuário vê e usa. Os <strong>componentes</strong> ajudam a organizar e reutilizar o código, o <strong>estado</strong> permite que a tela mude conforme as ações do usuário e a <strong>renderização</strong> mostra essas mudanças na tela.</p>
+<p>Esses conceitos formam uma base importante para trabalhar com desenvolvimento frontend e entender melhor como as aplicações web modernas funcionam.</p>
+<p>## Referências</p>
+<ul>
+<li><a href="https://pt-br.react.dev/learn">Documentação do React</a></li>
+<li><a href="https://vuejs.org/">Documentação do Vue</a></li>
+<li><a href="https://angular.io/docs">Documentação do Angular</a></li>
+<li><a href="https://svelte.dev/docs">Documentação do Svelte</a></li>
+<li><a href="https://developer.mozilla.org/pt-BR/docs/Learn">MDN Web Docs</a></li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Voltar para o topo
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.top", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copiado para \u00e1rea de transfer\u00eancia", "clipboard.copy": "Copiar para \u00e1rea de transfer\u00eancia", "search.result.more.one": "mais 1 nesta p\u00e1gina", "search.result.more.other": "# mais nesta p\u00e1gina", "search.result.none": "Nenhum documento encontrado", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Digite para iniciar a busca", "search.result.term.missing": "Ausente", "select.version": "Selecione a vers\u00e3o"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  </body>
+</html>
