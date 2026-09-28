@@ -16,6 +16,9 @@ dist/
 .env
 !.env.example
 
+# MkDocs (site gerado)
+site/
+
 # IDE / SO
 .vscode/
 .idea/

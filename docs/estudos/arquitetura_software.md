@@ -77,7 +77,7 @@ Esse é um exemplo prático do princípio de isolar a parte mais frágil/instáv
 
 ## Relação com o projeto Bandejão
 
-- A arquitetura em 4 camadas descrita no [CLAUDE.md](../../CLAUDE.md) (extração → backend/API → banco de dados → frontend) é um exemplo direto de arquitetura em camadas com separação de responsabilidades: cada camada existe para isolar um tipo de mudança (formato do PDF, regras de negócio, modelo de dados, interface).
+- A arquitetura em 4 camadas descrita no [contexto.md](https://github.com/unb-mds/2026-2-Bandejao/blob/main/contexto.md) (extração → backend/API → banco de dados → frontend) é um exemplo direto de arquitetura em camadas com separação de responsabilidades: cada camada existe para isolar um tipo de mudança (formato do PDF, regras de negócio, modelo de dados, interface).
 - A camada de extração funciona como um pipeline ETL: extrai o PDF/imagem do RU, transforma em dados estruturados (pratos, restrições alimentares, campus, dia) e carrega no banco.
 - A divisão em Release 1 (cardápio, filtros, avaliação) e Release 2 (previsão de fila a partir de check-ins) também é uma decisão arquitetural, além de ser priorização de requisitos: a Release 2 depende de uma funcionalidade nova (registro de check-in) e de volume histórico de dados, então faz sentido que o modelo de dados já prevja isso desde a Release 1, mesmo que a previsão em si só seja construída depois.
 
