@@ -1,0 +1,43 @@
+site_name: Bandejão — RU UnB
+site_description: Cardápio semanal, filtros alimentares e avaliação das refeições dos Restaurantes Universitários da UnB.
+# Confirme o nome do repositório no GitHub (a URL do site será unb-mds.github.io/<nome-do-repo>/)
+repo_url: https://github.com/unb-mds/2026-2-Bandejao
+repo_name: unb-mds/2026-2-Bandejao
+
+theme:
+  name: material
+  language: pt-BR
+  palette:
+    primary: blue
+    accent: green
+  features:
+    - navigation.tabs
+    - navigation.top
+    - content.code.copy
+
+markdown_extensions:
+  - admonition
+  - tables
+  - attr_list
+  - md_in_html
+
+nav:
+  - Início: index.md
+  - Visão do produto: documento_de_visao.md
+  - Requisitos: Requisitos.md
+  - Arquitetura:
+      - Arquitetura: Arquitetura.md
+      - Banco e importação: handoff_banco_e_importacao.md
+  - Estudos:
+      - Visão geral: estudos/README.md
+      - Git e GitHub: estudos/git_github.md
+      - Extração de PDF: estudos/extracao_dados_pdf.md
+      - OCR e imagem: estudos/ocr_imagem.md
+      - Backend: estudos/backend.md
+      - Banco de dados: estudos/banco_de_dados.md
+      - Frontend: estudos/frontend.md
+      - Arquitetura de software: estudos/arquitetura_software.md
+      - Engenharia de requisitos: estudos/engenharia_requisitos.md
+  - Sprints:
+      - Sprint 00: scrum/sprint00.md
+      - Sprint 01: scrum/sprint01.md
