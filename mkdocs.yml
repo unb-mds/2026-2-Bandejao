@@ -33,16 +33,7 @@ nav:
   - Arquitetura:
       - Arquitetura: Arquitetura.md
       - Banco e importação: handoff_banco_e_importacao.md
-  - Estudos:
-      - Visão geral: estudos/README.md
-      - Git e GitHub: estudos/git_github.md
-      - Extração de PDF: estudos/extracao_dados_pdf.md
-      - OCR e imagem: estudos/ocr_imagem.md
-      - Backend: estudos/backend.md
-      - Banco de dados: estudos/banco_de_dados.md
-      - Frontend: estudos/frontend.md
-      - Arquitetura de software: estudos/arquitetura_software.md
-      - Engenharia de requisitos: estudos/engenharia_requisitos.md
   - Sprints:
       - Sprint 00: scrum/sprint00.md
       - Sprint 01: scrum/sprint01.md
+      - Sprint 02: scrum/sprint02.md
