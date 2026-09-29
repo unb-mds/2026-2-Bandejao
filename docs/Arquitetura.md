@@ -122,7 +122,7 @@ Não há uma entidade separada `Refeicao`: no schema atual, `Cardapio` represent
 | Banco de dados | PostgreSQL 16 |
 | Frontend | React 19, JavaScript/JSX e Vite 8; TypeScript e Tailwind não aparecem na configuração atual do pacote |
 | Ambiente local | Docker Compose; a extração roda separadamente |
-| CI e deploy | Ainda sem workflow configurado no repositório consultado |
+| CI e publicação | GitHub Actions executa `.github/workflows/docs.yml` para publicar o site MkDocs no GitHub Pages quando a documentação ou a configuração muda na `main`. Não há workflow de testes ou deploy da aplicação configurado. |
 
 ## 8. Interfaces relevantes
 
