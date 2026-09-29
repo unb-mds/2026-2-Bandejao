@@ -1258,12 +1258,12 @@ contrato que será usado pela rotina de extração dos cardápios do RU.</p>
 de amendoim presente nos PDFs do RU. Ela é aplicada após a revisão inicial
 <code>3e9ed9bb9055</code>.</p>
 <p>No ambiente do backend, executar:</p>
-<pre><code class="language-bash">cd backend
-alembic upgrade head
-</code></pre>
+<div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>backend
+alembic<span class="w"> </span>upgrade<span class="w"> </span>head
+</code></pre></div>
 <p>Para reverter somente essa alteração, caso necessário:</p>
-<pre><code class="language-bash">alembic downgrade 3e9ed9bb9055
-</code></pre>
+<div class="highlight"><pre><span></span><code>alembic<span class="w"> </span>downgrade<span class="w"> </span>3e9ed9bb9055
+</code></pre></div>
 <p>Não é necessário alterar dados já cadastrados: a migração preenche os registros
 anteriores com <code>false</code> e então remove o valor padrão do banco para que o modelo
 da aplicação continue sendo a fonte da regra.</p>
@@ -1273,25 +1273,25 @@ da aplicação continue sendo a fonte da regra.</p>
 <p>O endpoint é interno e recebe a saída normalizada da extração. A documentação
 interativa também fica disponível em <code>/docs</code> quando a API está em execução.</p>
 <h3 id="payload">Payload</h3>
-<pre><code class="language-json">{
-  &quot;campus&quot;: &quot;Gama&quot;,
-  &quot;fonte_pdf_url&quot;: &quot;https://ru.unb.br/wp-content/uploads/2026/09/Gama-Semana-01-21-9-a-27-9.pdf&quot;,
-  &quot;refeicoes&quot;: [
-    {
-      &quot;data&quot;: &quot;2026-09-21&quot;,
-      &quot;tipo_refeicao&quot;: &quot;almoco&quot;,
-      &quot;itens&quot;: [
-        {
-          &quot;categoria&quot;: &quot;prato_principal&quot;,
-          &quot;tipo_dieta&quot;: &quot;padrao&quot;,
-          &quot;nome&quot;: &quot;Frango grelhado&quot;,
-          &quot;alergenos&quot;: [&quot;soja&quot;]
-        }
-      ]
-    }
-  ]
-}
-</code></pre>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">"campus"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Gama"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"fonte_pdf_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://ru.unb.br/wp-content/uploads/2026/09/Gama-Semana-01-21-9-a-27-9.pdf"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"refeicoes"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">"data"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2026-09-21"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"tipo_refeicao"</span><span class="p">:</span><span class="w"> </span><span class="s2">"almoco"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"itens"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">          </span><span class="nt">"categoria"</span><span class="p">:</span><span class="w"> </span><span class="s2">"prato_principal"</span><span class="p">,</span>
+<span class="w">          </span><span class="nt">"tipo_dieta"</span><span class="p">:</span><span class="w"> </span><span class="s2">"padrao"</span><span class="p">,</span>
+<span class="w">          </span><span class="nt">"nome"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Frango grelhado"</span><span class="p">,</span>
+<span class="w">          </span><span class="nt">"alergenos"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"soja"</span><span class="p">]</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">      </span><span class="p">]</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">]</span>
+<span class="p">}</span>
+</code></pre></div>
 <table>
 <thead>
 <tr>
@@ -1361,12 +1361,12 @@ interativa também fica disponível em <code>/docs</code> quando a API está em 
 fora dessa lista retorna <code>422 Unprocessable Entity</code> antes de qualquer gravação.</p>
 <h3 id="resposta-de-sucesso">Resposta de sucesso</h3>
 <p>O endpoint responde <code>200 OK</code>:</p>
-<pre><code class="language-json">{
-  &quot;campus_id&quot;: 1,
-  &quot;cardapios_processados&quot;: 1,
-  &quot;itens_processados&quot;: 1
-}
-</code></pre>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">"campus_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"cardapios_processados"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"itens_processados"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span>
+<span class="p">}</span>
+</code></pre></div>
 <h2 id="regra-de-reprocessamento">Regra de reprocessamento</h2>
 <p>A chave lógica de uma refeição é <code>(campus, data, tipo_refeicao)</code>.</p>
 <ul>
@@ -1381,9 +1381,9 @@ registro de <code>cardapio</code> é mantido; somente os respectivos itens são 
 <h2 id="dependencia-da-rotina-de-extracao">Dependência da rotina de extração</h2>
 <p>Depois de aplicar a migração e iniciar a API, a sincronização pode ser rodada
 com:</p>
-<pre><code class="language-bash">cd extracao
-python -m extracao.sincronizar --backend-url http://localhost:8000
-</code></pre>
+<div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>extracao
+python<span class="w"> </span>-m<span class="w"> </span>extracao.sincronizar<span class="w"> </span>--backend-url<span class="w"> </span>http://localhost:8000
+</code></pre></div>
 <p>O processo trata cada campus de forma independente: uma falha de PDF ou de
 importação em um campus não impede os demais de serem processados.</p>
 

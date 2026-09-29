@@ -1657,18 +1657,18 @@
 o mesmo visual e comportamento.</p>
 <h3 id="exemplo-pratico">Exemplo prático</h3>
 <p>Em React, um componente é uma função que retorna JSX (uma sintaxe parecida com HTML):</p>
-<pre><code class="language-jsx">function Botao({ texto, onClick }) {
-  return (
-    &lt;button className=&quot;botao&quot; onClick={onClick}&gt;
-      {texto}
-    &lt;/button&gt;
-  );
-}
-</code></pre>
-<p>Esse componente Botao pode ser usado assim:</p>
-<pre><code class="language-jsx">&lt;Botao texto=&quot;Salvar&quot; onClick={salvar} /&gt;
-&lt;Botao texto=&quot;Cancelar&quot; onClick={cancelar} /&gt;
-</code></pre>
+<p><div class="highlight"><pre><span></span><code><span class="kd">function</span><span class="w"> </span><span class="nx">Botao</span><span class="p">({</span><span class="w"> </span><span class="nx">texto</span><span class="p">,</span><span class="w"> </span><span class="nx">onClick</span><span class="w"> </span><span class="p">})</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="p">(</span>
+<span class="w">    </span><span class="p">&lt;</span><span class="nt">button</span><span class="w"> </span><span class="na">className</span><span class="o">=</span><span class="s">"botao"</span><span class="w"> </span><span class="na">onClick</span><span class="o">=</span><span class="p">{</span><span class="nx">onClick</span><span class="p">}&gt;</span>
+<span class="w">      </span><span class="p">{</span><span class="nx">texto</span><span class="p">}</span>
+<span class="w">    </span><span class="p">&lt;/</span><span class="nt">button</span><span class="p">&gt;</span>
+<span class="w">  </span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+Esse componente Botao pode ser usado assim:</p>
+<div class="highlight"><pre><span></span><code><span class="p">&lt;</span><span class="nt">Botao</span><span class="w"> </span><span class="na">texto</span><span class="o">=</span><span class="s">"Salvar"</span><span class="w"> </span><span class="na">onClick</span><span class="o">=</span><span class="p">{</span><span class="nx">salvar</span><span class="p">}</span><span class="w"> </span><span class="p">/&gt;</span>
+<span class="p">&lt;</span><span class="nt">Botao</span><span class="w"> </span><span class="na">texto</span><span class="o">=</span><span class="s">"Cancelar"</span><span class="w"> </span><span class="na">onClick</span><span class="o">=</span><span class="p">{</span><span class="nx">cancelar</span><span class="p">}</span><span class="w"> </span><span class="p">/&gt;</span>
+</code></pre></div>
 <p>Sempre com o mesmo visual e comportamento, mas com textos e ações diferentes.</p>
 <h3 id="vantagens">Vantagens</h3>
 <ul>
@@ -1729,11 +1729,11 @@ O estado é o que torna a aplicação <strong>interativa</strong> e <strong>din�
 <p>Existem duas formas principais de renderizar uma interface: a <strong>imperativa</strong> e a <strong>declarativa</strong>.</p>
 <h3 id="renderizacao-imperativa">Renderização imperativa</h3>
 <p>Na renderização imperativa, o programador diz <strong>passo a passo</strong> o que o navegador deve fazer. É o estilo usado com JavaScript puro e jQuery.</p>
-<pre><code class="language-javascript">// Exemplo imperativo
-const botao = document.querySelector(&quot;#meuBotao&quot;);
-botao.textContent = &quot;Cliquei!&quot;;
-botao.style.color = &quot;red&quot;;
-</code></pre>
+<div class="highlight"><pre><span></span><code><span class="c1">// Exemplo imperativo</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">botao</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">document</span><span class="p">.</span><span class="nx">querySelector</span><span class="p">(</span><span class="s2">"#meuBotao"</span><span class="p">);</span>
+<span class="nx">botao</span><span class="p">.</span><span class="nx">textContent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"Cliquei!"</span><span class="p">;</span>
+<span class="nx">botao</span><span class="p">.</span><span class="nx">style</span><span class="p">.</span><span class="nx">color</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"red"</span><span class="p">;</span>
+</code></pre></div>
 <p>Traduzindo o código acima:</p>
 <ul>
 <li>
@@ -1764,17 +1764,15 @@ botao.style.color = &quot;red&quot;;
 </ul>
 <h3 id="renderizacao-declarativa">Renderização declarativa</h3>
 <p>Na renderização declarativa, o programador descreve como a tela deve ficar e o framework cuida de atualizar o que for necessário. É o estilo usado por <strong><em>React, Vue e Svelte.</em></strong></p>
-<pre><code class="language-jsx">
-// Exemplo declarativo (React)
-function Botao({ clicado }) {
-  return (
-    &lt;button style={{ color: clicado ? &quot;red&quot; : &quot;black&quot; }}&gt;
-      {clicado ? &quot;Cliquei!&quot; : &quot;Clique aqui&quot;}
-    &lt;/button&gt;
-  );
-}
-
-</code></pre>
+<div class="highlight"><pre><span></span><code><span class="c1">// Exemplo declarativo (React)</span>
+<span class="kd">function</span><span class="w"> </span><span class="nx">Botao</span><span class="p">({</span><span class="w"> </span><span class="nx">clicado</span><span class="w"> </span><span class="p">})</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="p">(</span>
+<span class="w">    </span><span class="p">&lt;</span><span class="nt">button</span><span class="w"> </span><span class="na">style</span><span class="o">=</span><span class="p">{{</span><span class="w"> </span><span class="nx">color</span><span class="o">:</span><span class="w"> </span><span class="nx">clicado</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="s2">"red"</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s2">"black"</span><span class="w"> </span><span class="p">}}&gt;</span>
+<span class="w">      </span><span class="p">{</span><span class="nx">clicado</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="s2">"Cliquei!"</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s2">"Clique aqui"</span><span class="p">}</span>
+<span class="w">    </span><span class="p">&lt;/</span><span class="nt">button</span><span class="p">&gt;</span>
+<span class="w">  </span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
 <p>Traduzindo o código acima:</p>
 <ul>
 <li>
