@@ -1,0 +1,37 @@
+name: Publicar documentação (MkDocs)
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "docs/**"
+      - "mkdocs.yml"
+      - ".github/workflows/docs.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout do repositório
+        uses: actions/checkout@v4
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Instalar MkDocs Material
+        run: pip install mkdocs-material
+
+      - name: Configurar Git para o deploy
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Publicar no GitHub Pages
+        run: mkdocs gh-deploy --force
