@@ -2,7 +2,7 @@
 
 **Cardápio semanal, filtros alimentares e avaliação das refeições dos Restaurantes Universitários da UnB.**
 
-[🎨 Protótipo e board no Figma](https://www.figma.com/board/61OYJuLeyE3m3jwzSzfZ1W/Bandejao-2026-2?t=kVJg4rR4m3kIYsj7-0){ .md-button .md-button--primary }
+[🎨 Protótipo no Figma](https://www.figma.com/board/61OYJuLeyE3m3jwzSzfZ1W/Bandejao-2026-2?t=kVJg4rR4m3kIYsj7-0){ .md-button .md-button--primary }
 [💻 Repositório no GitHub](https://github.com/unb-mds/2026-2-Bandejao){ .md-button }
 
 !!! info "Projeto em andamento"
