@@ -56,6 +56,7 @@ nav:
       - Banco de dados: estudos/banco_de_dados.md
       - Extração de PDF: estudos/extracao_dados_pdf.md
       - OCR de imagem: estudos/ocr_imagem.md
+      - IA no desenvolvimento: estudos/ia-desenvolvimento.md
   - GitHub Pages:
       - Publicação e manutenção: github-pages.md
       - Histórico de mudanças: changelog.md
