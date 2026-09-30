@@ -39,6 +39,7 @@ nav:
   - Arquitetura:
       - Arquitetura: Arquitetura.md
       - Banco e importação: handoff_banco_e_importacao.md
+      - Validação dos PDFs: validacao-extracao-pdfs.md
   - Sprints:
       - Sprint 00: scrum/sprint00.md
       - Sprint 01: scrum/sprint01.md

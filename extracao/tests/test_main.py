@@ -32,6 +32,15 @@ def test_descobrir_pdfs_seleciona_semana_atual_por_campus():
     assert encontrados["Ceilândia"].fim == date(2026, 9, 27)
 
 
+def test_descobrir_pdfs_aceita_hifen_final_no_arquivo_de_planaltina():
+    url = "/wp-content/uploads/2026/09/Planaltina-Semana-02-28-09-a-04-10-.pdf"
+
+    encontrados = descobrir_pdfs(f'<a href="{url}">Planaltina</a>', hoje=date(2026, 9, 30))
+
+    assert encontrados["Planaltina"].inicio == date(2026, 9, 28)
+    assert encontrados["Planaltina"].fim == date(2026, 10, 4)
+
+
 def test_baixar_pdf_valida_conteudo_recebido():
     class Resposta:
         content = b"%PDF-arquivo-de-teste"

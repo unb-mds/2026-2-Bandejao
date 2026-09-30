@@ -44,10 +44,14 @@ ALERGENOS_LEGENDA = (
     "carne_suina",
     "frutos_do_mar",
 )
+# Os PDFs publicados atualmente têm dez ícones: a legenda termina em "Suíno" e
+# não apresenta um símbolo separado para frutos do mar. Mantemos também a lista
+# de onze posições para PDFs antigos que tragam os dois símbolos.
+ALERGENOS_LEGENDA_ATUAL = ALERGENOS_LEGENDA[:-1]
 LIMIAR_DISTANCIA_ICONE = 25
 PADRAO_PERIODO = re.compile(
     r"semana-\d+-(?P<inicio_dia>\d{1,2})-(?P<inicio_mes>\d{1,2})-a-"
-    r"(?P<fim_dia>\d{1,2})-(?P<fim_mes>\d{1,2})\.pdf$",
+    r"(?P<fim_dia>\d{1,2})-(?P<fim_mes>\d{1,2})-?\.pdf$",
     re.IGNORECASE,
 )
 PADRAO_ANO = re.compile(r"/uploads/(?P<ano>\d{4})/")
@@ -184,12 +188,17 @@ def _alergenos_por_celula(pagina: object, tabela: object) -> dict[tuple[int, int
         ),
         key=lambda imagem: imagem["x0"],
     )
-    if len(referencias) != len(ALERGENOS_LEGENDA):
+    legendas_por_quantidade = {
+        len(ALERGENOS_LEGENDA): ALERGENOS_LEGENDA,
+        len(ALERGENOS_LEGENDA_ATUAL): ALERGENOS_LEGENDA_ATUAL,
+    }
+    legenda = legendas_por_quantidade.get(len(referencias))
+    if legenda is None:
         return {}
 
     assinaturas = [
         (alergeno, _assinatura_visual(_imagem_do_stream(imagem["stream"])))
-        for alergeno, imagem in zip(ALERGENOS_LEGENDA, referencias)
+        for alergeno, imagem in zip(legenda, referencias)
     ]
     encontrados: dict[tuple[int, int], set[str]] = {}
     for imagem in imagens:

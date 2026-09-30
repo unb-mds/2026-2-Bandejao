@@ -40,7 +40,7 @@ flowchart LR
         web["Frontend Web<br/>React 19 + Vite 8<br/>Estado: scaffold, sem integração"]
         api["API REST<br/>FastAPI + SQLAlchemy<br/>Estado: rotas de cardápio e avaliação implementadas"]
         banco[("PostgreSQL 16<br/>Estado: schema e migrações existentes")]
-        extracao["Processo de extração<br/>Python, requests, BeautifulSoup,<br/>pdfplumber e Pillow<br/>Estado: código implementado; validação real pendente"]
+        extracao["Processo de extração<br/>Python, requests, BeautifulSoup,<br/>pdfplumber e Pillow<br/>Estado: PDFs de 30/09/2026 validados; formatos futuros podem variar"]
     end
 
     pessoa -->|"Navegador / HTTP"| web
@@ -57,14 +57,14 @@ flowchart LR
 | Frontend Web | Seleção de campus, cardápio, filtros, avaliações e reclamações | React 19 e Vite 8; ainda contém a tela de demonstração do Vite e não chama a API. |
 | API REST | Validar importações, consultar cardápios e receber avaliações | FastAPI e SQLAlchemy; rotas de campus, cardápio/importação e avaliação existentes. Reclamações e planejamento não existem ainda. |
 | PostgreSQL | Persistir campi, cardápios, itens, avaliações e check-ins legados | PostgreSQL 16 no Docker Compose; schema gerenciado pelo Alembic. |
-| Processo de extração | Encontrar PDFs, extrair e normalizar dados e enviá-los à API | Pacote Python separado; pode rodar uma vez ou em loop com intervalo, mas não tem agendador no Compose. PDFs reais dos cinco campi ainda precisam ser validados. |
+| Processo de extração | Encontrar PDFs, extrair e normalizar dados e enviá-los à API | Pacote Python separado; pode rodar uma vez ou em loop com intervalo, mas não tem agendador no Compose. A publicação consultada em 30/09/2026 foi validada; ver [relatório dos PDFs](validacao-extracao-pdfs.md). Formatos futuros precisam de nova conferência. |
 
 ## 4. Fluxos principais
 
 ### 4.1 Importação de cardápio
 
 1. O processo de extração solicita a página oficial do RU e encontra links de PDF por campus e período.
-2. Baixa cada PDF e extrai datas, refeições, categorias, pratos e informação de dieta. A identificação de alérgenos compara os ícones das células com a legenda visual do PDF.
+2. Baixa cada PDF e extrai datas, refeições, categorias, pratos e informação de dieta. A identificação de alérgenos compara os ícones das células com a legenda visual do PDF. Nos arquivos validados em 30/09/2026, a legenda não apresenta símbolo separado para frutos do mar; essa informação permanece indisponível.
 3. Converte o resultado em um payload normalizado e envia `POST /cardapios/importacao`.
 4. A API valida campos, enums e alérgenos e grava os registros no PostgreSQL.
 5. A chave lógica de uma refeição é `(campus, data, tipo_refeicao)`. Reimportar essa chave substitui os itens anteriores, atualiza a URL de origem e preserva o registro do cardápio e suas avaliações.
