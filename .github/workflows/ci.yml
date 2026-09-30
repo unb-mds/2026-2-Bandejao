@@ -57,6 +57,9 @@ jobs:
       - name: Instalar dependências
         working-directory: frontend
         run: npm ci
+      - name: Testar cliente da API
+        working-directory: frontend
+        run: npm test
       - name: Analisar código
         working-directory: frontend
         run: npm run lint

@@ -49,12 +49,12 @@ Além do que estava planejado, a sprint incluiu a reformulação dos requisitos 
 | Extração real do cardápio | ✅ Implementada e validada contra a publicação oficial dos 5 campi em 30/09/2026; formatos futuros ainda precisam de conferência |
 | Schemas Pydantic | ✅ Concluído |
 | Endpoints de campus, cardápio e avaliação | ✅ Concluído, com testes |
-| Telas do frontend | 🔲 Protótipo pronto no Figma; implementação em React pendente |
+| Consulta no frontend | ✅ Seleção de campus e consulta por período/refeição integrada à API; filtros alimentares e demais fluxos do protótipo pendentes |
 
 ## Pendências e próximos passos
 
 - Rodar a sincronização com o backend e conferir os dados importados
-- Implementar as telas do frontend a partir do protótipo e integrá-las à API
+- Completar os fluxos do frontend do protótipo (filtros alimentares, avaliações e reclamações) após validar requisitos e dados
 - Adequar o backend e o modelo de dados à mudança dos requisitos: entidade de planejamento semanal (no lugar de check-in) e reclamações
 - Definir estratégia de deploy da aplicação; a CI de backend, extração e frontend foi adicionada em 30/09/2026 no `.github/workflows/ci.yml`
 - Criar as Release Notes da Release 1
@@ -82,3 +82,9 @@ Esta atualização cobre a GH Page. Não altera requisitos, regras de negócio o
 - A publicação atual dos cinco campi foi processada; o relatório registra links, datas, contagens e hashes dos PDFs em [Validação da extração](../validacao-extracao-pdfs.md).
 - Foram corrigidos dois casos reproduzíveis: hífen adicional no nome do PDF de Planaltina e legenda atual com dez ícones, em vez dos onze esperados pelo código anterior.
 - A legenda consultada não tem marcador separado para frutos do mar; essa informação não deve ser interpretada como ausência confirmada.
+
+## Integração inicial do frontend — 30/09/2026
+
+- A tela React consome `GET /campi/` e `GET /cardapios/`, com filtro opcional por datas e tipo de refeição.
+- A URL da API é definida por `VITE_API_BASE_URL`; o backend permite CORS para as origens em `CORS_ORIGINS`.
+- Lista vazia é apresentada como falta de registros na API, sem inferir que o RU esteja fechado. Filtros de dieta e alérgenos seguem pendentes de D02.
