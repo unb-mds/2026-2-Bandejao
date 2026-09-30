@@ -66,6 +66,42 @@ def test_alergenos_por_celula_reconhece_icone_e_ignora_imagens_fora_da_tabela(mo
     assert main._alergenos_por_celula(Pagina(), Tabela()) == {(0, 0): frozenset({"cogumelo"})}
 
 
+def test_alergenos_por_celula_reconhece_legenda_atual_de_dez_icones(monkeypatch):
+    class Linha:
+        cells = [(0, 0, 10, 10)]
+
+    class Tabela:
+        rows = [Linha()]
+
+    class Pagina:
+        height = 100
+
+    referencias = [
+        {"top": 90, "width": 30, "x0": indice, "stream": indice}
+        for indice in range(len(main.ALERGENOS_LEGENDA_ATUAL))
+    ]
+    icone_leite = {
+        "top": 1,
+        "width": 10,
+        "x0": 1,
+        "x1": 9,
+        "bottom": 9,
+        "stream": 1,
+    }
+    Pagina.images = referencias + [icone_leite]
+    monkeypatch.setattr(main, "_imagem_do_stream", lambda stream: [stream])
+    monkeypatch.setattr(main, "_assinatura_visual", lambda imagem: imagem)
+    monkeypatch.setattr(
+        main,
+        "_distancia_assinaturas",
+        lambda esquerda, direita: 0 if esquerda == direita else 30,
+    )
+
+    assert main._alergenos_por_celula(Pagina(), Tabela()) == {
+        (0, 0): frozenset({"leite"})
+    }
+
+
 def test_alergenos_por_celula_retorna_vazio_sem_uma_legenda_completa():
     pagina = type("Pagina", (), {"height": 100, "images": []})()
 

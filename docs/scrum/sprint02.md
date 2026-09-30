@@ -46,14 +46,14 @@ Além do que estava planejado, a sprint incluiu a reformulação dos requisitos 
 | Item planejado | Situação |
 |---|---|
 | Script de seed | ✅ Concluído |
-| Extração real do cardápio | ✅ Implementada; validação contra os PDFs atuais dos 5 campi ainda pendente |
+| Extração real do cardápio | ✅ Implementada e validada contra a publicação oficial dos 5 campi em 30/09/2026; formatos futuros ainda precisam de conferência |
 | Schemas Pydantic | ✅ Concluído |
 | Endpoints de campus, cardápio e avaliação | ✅ Concluído, com testes |
 | Telas do frontend | 🔲 Protótipo pronto no Figma; implementação em React pendente |
 
 ## Pendências e próximos passos
 
-- Validar a extração contra os PDFs reais de todos os campi e rodar a sincronização com o backend
+- Rodar a sincronização com o backend e conferir os dados importados
 - Implementar as telas do frontend a partir do protótipo e integrá-las à API
 - Adequar o backend e o modelo de dados à mudança dos requisitos: entidade de planejamento semanal (no lugar de check-in) e reclamações
 - Definir estratégia de deploy da aplicação; a CI de backend, extração e frontend foi adicionada em 30/09/2026 no `.github/workflows/ci.yml`
@@ -76,3 +76,9 @@ Esta atualização cobre a GH Page. Não altera requisitos, regras de negócio o
 - Workflow separado em `.github/workflows/ci.yml`: testes do backend e da extração, lint e build do frontend em pull requests e mudanças relacionadas na `main`.
 - A execução de validação desta entrega passou no GitHub Actions: [workflow da CI](https://github.com/unb-mds/2026-2-Bandejao/actions/runs/36768269405).
 - A CI não configura deploy da aplicação; a estratégia de hospedagem e operação continua pendente.
+
+## Validação dos PDFs oficiais — 30/09/2026
+
+- A publicação atual dos cinco campi foi processada; o relatório registra links, datas, contagens e hashes dos PDFs em [Validação da extração](../validacao-extracao-pdfs.md).
+- Foram corrigidos dois casos reproduzíveis: hífen adicional no nome do PDF de Planaltina e legenda atual com dez ícones, em vez dos onze esperados pelo código anterior.
+- A legenda consultada não tem marcador separado para frutos do mar; essa informação não deve ser interpretada como ausência confirmada.
