@@ -56,7 +56,7 @@ Além do que estava planejado, a sprint incluiu a reformulação dos requisitos 
 - Validar a extração contra os PDFs reais de todos os campi e rodar a sincronização com o backend
 - Implementar as telas do frontend a partir do protótipo e integrá-las à API
 - Adequar o backend e o modelo de dados à mudança dos requisitos: entidade de planejamento semanal (no lugar de check-in) e reclamações
-- Configurar pipeline de CI (GitHub Actions) e definir a estratégia de deploy
+- Definir estratégia de deploy da aplicação; a CI de backend, extração e frontend foi adicionada em 30/09/2026 no `.github/workflows/ci.yml`
 - Criar as Release Notes da Release 1
 - Conferir o status do README a cada mudança de sprint (atualmente indica Sprint 02)
 
@@ -70,3 +70,9 @@ Além do que estava planejado, a sprint incluiu a reformulação dos requisitos 
 - Configuração necessária no repositório: **Settings → Pages → Source → GitHub Actions**; acompanhar o workflow e conferir a URL após a publicação.
 
 Esta atualização cobre a GH Page. Não altera requisitos, regras de negócio ou código da aplicação e não constitui ata de reunião.
+
+## CI da aplicação — 30/09/2026
+
+- Workflow separado em `.github/workflows/ci.yml`: testes do backend e da extração, lint e build do frontend em pull requests e mudanças relacionadas na `main`.
+- A execução de validação desta entrega passou no GitHub Actions: [workflow da CI](https://github.com/unb-mds/2026-2-Bandejao/actions/runs/36768269405).
+- A CI não configura deploy da aplicação; a estratégia de hospedagem e operação continua pendente.

@@ -4,7 +4,7 @@
 
 **Escopo:** arquitetura da Release 1 e direção da Release 2
 
-**Estado do código consultado:** 28/09/2026
+**Estado do código consultado:** 30/09/2026
 
 ## 1. Propósito e estado
 
@@ -122,7 +122,7 @@ Não há uma entidade separada `Refeicao`: no schema atual, `Cardapio` represent
 | Banco de dados | PostgreSQL 16 |
 | Frontend | React 19, JavaScript/JSX e Vite 8; TypeScript e Tailwind não aparecem na configuração atual do pacote |
 | Ambiente local | Docker Compose; a extração roda separadamente |
-| CI e publicação | GitHub Actions executa `.github/workflows/docs.yml` para publicar o site MkDocs no GitHub Pages quando a documentação ou a configuração muda na `main`. Não há workflow de testes ou deploy da aplicação configurado. |
+| CI e publicação | `.github/workflows/ci.yml` executa testes do backend e da extração, além de lint e build do frontend em pull requests e mudanças da aplicação na `main`. `.github/workflows/docs.yml` valida a documentação em pull requests e publica o MkDocs no GitHub Pages na `main`. O deploy da aplicação ainda não está configurado. |
 
 ## 8. Interfaces relevantes
 
@@ -151,4 +151,4 @@ A extração é iniciada à parte, a partir da pasta `extracao`, com `python -m 
 
 ---
 
-*Documento de arquitetura atualizado para refletir o schema e os componentes encontrados no repositório em 28/09/2026. Requisitos futuros estão identificados como planejados, não como implementação existente.*
+*Documento de arquitetura atualizado para refletir o schema e os componentes encontrados no repositório em 30/09/2026. Requisitos futuros estão identificados como planejados, não como implementação existente.*
