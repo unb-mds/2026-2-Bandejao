@@ -58,4 +58,15 @@ Além do que estava planejado, a sprint incluiu a reformulação dos requisitos 
 - Adequar o backend e o modelo de dados à mudança dos requisitos: entidade de planejamento semanal (no lugar de check-in) e reclamações
 - Configurar pipeline de CI (GitHub Actions) e definir a estratégia de deploy
 - Criar as Release Notes da Release 1
-- Atualizar o status no README (ainda indica Sprint 01)
+- Conferir o status do README a cada mudança de sprint (atualmente indica Sprint 02)
+
+## Atualização da GitHub Page — 30/09/2026
+
+- Navegação ampliada para todos os estudos, protótipos, execução local e manutenção da documentação.
+- Página inicial com roteiro de consulta dos documentos para avaliação da Release 1, distinguindo escopo planejado de implementação.
+- Endereço do clone corrigido no README e URL canônica do site configurada.
+- Build estrito em pull requests e deploy por artefato na `main`, sem commits automáticos de publicação.
+- Dependências principais do site fixadas e mudanças registradas em [Histórico](../changelog.md).
+- Configuração necessária no repositório: **Settings → Pages → Source → GitHub Actions**; acompanhar o workflow e conferir a URL após a publicação.
+
+Esta atualização cobre a GH Page. Não altera requisitos, regras de negócio ou código da aplicação e não constitui ata de reunião.

@@ -29,6 +29,8 @@ O sistema é dividido em camadas:
 
 ## Stack técnica
 
+- Documentação/GitHub Pages: MkDocs Material, configuração em `mkdocs.yml`, dependências em `requirements-docs.txt`. O workflow `.github/workflows/docs.yml` valida PRs com build estrito e publica artefatos na `main`; requer origem **GitHub Actions** em Settings → Pages. Manutenção e histórico em `docs/github-pages.md` e `docs/changelog.md`.
+
 - Extração de dados: Python (requests + BeautifulSoup para navegar a página do RU, pdfplumber para extrair texto do PDF do cardápio).
 - Backend: Python + FastAPI, SQLAlchemy como ORM.
 - Banco de dados: PostgreSQL.

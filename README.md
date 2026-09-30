@@ -18,7 +18,9 @@ Aplicação para consulta ao cardápio semanal dos Restaurantes Universitários 
 
 ## Links úteis
 
+- [Documentação no GitHub Pages](https://unb-mds.github.io/2026-2-Bandejao/)
 - [Figma](https://www.figma.com/board/61OYJuLeyE3m3jwzSzfZ1W/Bandejao-2026-2?t=kVJg4rR4m3kIYsj7-0)
+- [Publicação e manutenção da GH Page](docs/github-pages.md)
 
 ## Status
 
@@ -36,14 +38,15 @@ Aplicação para consulta ao cardápio semanal dos Restaurantes Universitários 
 
 1. Clone o repositório:
    ```bash
-   git clone https://github.com/unb-mds/G12-2026-2.git
-   cd G12-2026-2
+   git clone https://github.com/unb-mds/2026-2-Bandejao.git
+   cd 2026-2-Bandejao
    ```
 
 2. Copie o arquivo de variáveis de ambiente do backend:
    ```bash
    cp backend/.env.example backend/.env
    ```
+   No PowerShell, use `Copy-Item backend/.env.example backend/.env`.
 
 3. Suba os serviços (banco de dados, backend e frontend):
    ```bash
@@ -114,3 +117,19 @@ python -m extracao.sincronizar --backend-url http://localhost:8000 --intervalo-s
 ```
 
 Antes de importar, aplique as migrações mais recentes no backend (`alembic upgrade head`).
+
+## Documentação e GitHub Pages
+
+A GH Page reúne visão do produto, requisitos, arquitetura C4, dados, protótipos, sprints e estudos. É um site de documentação; API, banco e aplicação exigem ambiente próprio.
+
+Com Python 3.12 e um ambiente virtual ativo, na raiz:
+
+```bash
+python -m pip install -r requirements-docs.txt
+python -m mkdocs build --strict
+python -m mkdocs serve
+```
+
+A prévia usa `http://127.0.0.1:8000`; com a API nessa porta, use `python -m mkdocs serve -a 127.0.0.1:8001`.
+
+O workflow valida alterações da documentação em pull requests e publica a partir da `main`. Em **Settings → Pages**, a origem deve ser **GitHub Actions**. Consulte [instruções completas](docs/github-pages.md) e [histórico das mudanças](docs/changelog.md).

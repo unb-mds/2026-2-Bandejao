@@ -8,6 +8,21 @@
 !!! info "Projeto em andamento"
     Esta documentação acompanha o projeto sprint a sprint: requisitos, produto e decisões são atualizados conforme o grupo avança.
 
+## Avaliação da Release 1
+
+Esta entrega acadêmica apresenta a ideia e a organização da implementação. As funcionalidades descritas abaixo representam o escopo do produto; seu estado e as pendências estão registrados na arquitetura e nos requisitos.
+
+| Material para avaliação | Onde consultar |
+|---|---|
+| Problema, público e escopo | [Visão do produto](documento_de_visao.md) |
+| RFs, RNFs, regras e critérios de aceitação | [Requisitos e decisões pendentes](Requisitos.md) |
+| Contexto e containers C4, relações entre dados | [Arquitetura](Arquitetura.md) |
+| Fonte dos dados e contrato de importação | [Banco e importação](handoff_banco_e_importacao.md) |
+| Figma e protótipo web | [Protótipos](prototipos.md) |
+| Evolução do projeto | [Sprint 00](scrum/sprint00.md), [Sprint 01](scrum/sprint01.md), [Sprint 02](scrum/sprint02.md) |
+| Passo a passo para rodar | [Desenvolvimento](desenvolvimento.md) |
+| Manutenção e rastreabilidade desta página | [Publicação](github-pages.md) e [histórico](changelog.md) |
+
 ## 🎯 Objetivo
 
 Os Restaurantes Universitários da UnB publicam o cardápio da semana apenas em **PDF**, separado por campus e sem nenhum filtro. Quem tem restrição alimentar não encontra rápido uma opção adequada, não há como avaliar as refeições e a fila é imprevisível.
@@ -96,7 +111,7 @@ A extração localiza o PDF de cada campus na página do RU, lê a tabela (inclu
 
     O que foi feito em cada sprint.
 
-    [:octicons-arrow-right-24: Ver sprints](scrum/sprint01.md)
+    [:octicons-arrow-right-24: Ver sprint atual](scrum/sprint02.md)
 
 </div>
 
