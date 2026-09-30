@@ -27,6 +27,7 @@ Aplicação para consulta ao cardápio semanal dos Restaurantes Universitários 
 🚧 Em desenvolvimento — Sprint 02
 
 - **Protótipo Vercel:** [Aceder ao Protótipo](https://frontend-react-tan-gamma.vercel.app)
+- A interface local consulta campi e cardápios já cadastrados na API; filtros alimentares e os fluxos de avaliação/reclamação ainda estão pendentes.
 
 ## Como rodar o projeto
 
@@ -47,6 +48,8 @@ Aplicação para consulta ao cardápio semanal dos Restaurantes Universitários 
    cp backend/.env.example backend/.env
    ```
    No PowerShell, use `Copy-Item backend/.env.example backend/.env`.
+
+   Para personalizar a URL da API usada pelo frontend no Docker Compose, defina `VITE_API_BASE_URL` no arquivo `.env` da raiz (o padrão local é `http://localhost:8000`). Para executar o frontend fora do Docker, copie `frontend/.env.example` para `frontend/.env`.
 
 3. Suba os serviços (banco de dados, backend e frontend):
    ```bash
@@ -99,6 +102,12 @@ pytest
 # Extração
 cd extracao
 pytest
+
+# Frontend
+cd ../frontend
+npm test
+npm run lint
+npm run build
 ```
 
 ### Sincronizando o cardápio real

@@ -58,6 +58,20 @@ def test_lista_campi_ordenados(client: TestClient, db_session: Session):
     assert [campus["nome"] for campus in response.json()] == ["Ceilândia", "Planaltina"]
 
 
+def test_cors_permite_frontend_local_consultar_api(client: TestClient):
+    response = client.options(
+        "/campi/",
+        headers={
+            "Origin": "http://localhost:5173",
+            "Access-Control-Request-Method": "GET",
+        },
+    )
+
+    assert response.status_code == 200
+    assert response.headers["access-control-allow-origin"] == "http://localhost:5173"
+    assert "GET" in response.headers["access-control-allow-methods"]
+
+
 def test_obtem_campus_e_retorna_404_quando_nao_existe(client: TestClient, db_session: Session):
     campus = Campus(nome="Darcy Ribeiro")
     db_session.add(campus)

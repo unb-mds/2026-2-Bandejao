@@ -8,7 +8,7 @@
 
 ## 1. Propósito e estado
 
-Este documento apresenta a arquitetura do Bandejão nos níveis de **Contexto** e **Containers** do modelo C4, o modelo de dados existente e os fluxos principais. Os diagramas distinguem a arquitetura pretendida do estado implementado: o backend, o banco e a extração já têm código; a interface React ainda é o scaffold do Vite e não está integrada à API.
+Este documento apresenta a arquitetura do Bandejão nos níveis de **Contexto** e **Containers** do modelo C4, o modelo de dados existente e os fluxos principais. Os diagramas distinguem a arquitetura pretendida do estado implementado: backend, banco e extração já têm código; a interface React consulta campi e cardápios pela API, enquanto filtros alimentares, avaliações e reclamações ainda estão pendentes.
 
 O Bandejão centraliza os cardápios publicados em PDF pelos Restaurantes Universitários da UnB. A Release 1 prevê consulta do cardápio por campus, filtros alimentares, avaliações e reclamações. O planejamento semanal e a estimativa de movimento pertencem à Release 2.
 
@@ -37,14 +37,14 @@ flowchart LR
     site["Site oficial do RU<br/>HTML e PDFs"]
 
     subgraph sistema["Bandejão — sistema de software"]
-        web["Frontend Web<br/>React 19 + Vite 8<br/>Estado: scaffold, sem integração"]
+        web["Frontend Web<br/>React 19 + Vite 8<br/>Estado: consulta de cardápio integrada"]
         api["API REST<br/>FastAPI + SQLAlchemy<br/>Estado: rotas de cardápio e avaliação implementadas"]
         banco[("PostgreSQL 16<br/>Estado: schema e migrações existentes")]
         extracao["Processo de extração<br/>Python, requests, BeautifulSoup,<br/>pdfplumber e Pillow<br/>Estado: PDFs de 30/09/2026 validados; formatos futuros podem variar"]
     end
 
     pessoa -->|"Navegador / HTTP"| web
-    web -->|"JSON / HTTP — planejado"| api
+    web -->|"JSON / HTTP — consulta de campus e cardápio"| api
     api -->|"SQL"| banco
     extracao -->|"HTTPS: busca página e baixa PDF"| site
     extracao -->|"HTTP: POST /cardapios/importacao"| api
@@ -54,8 +54,8 @@ flowchart LR
 
 | Container | Responsabilidade | Implementação observada |
 |---|---|---|
-| Frontend Web | Seleção de campus, cardápio, filtros, avaliações e reclamações | React 19 e Vite 8; ainda contém a tela de demonstração do Vite e não chama a API. |
-| API REST | Validar importações, consultar cardápios e receber avaliações | FastAPI e SQLAlchemy; rotas de campus, cardápio/importação e avaliação existentes. Reclamações e planejamento não existem ainda. |
+| Frontend Web | Seleção de campus e consulta de cardápios por período e refeição | React 19 e Vite 8; consulta `GET /campi/` e `GET /cardapios/`, com URL configurável por `VITE_API_BASE_URL`. Filtros alimentares, avaliações e reclamações ainda não estão integrados. |
+| API REST | Validar importações, consultar cardápios e receber avaliações | FastAPI e SQLAlchemy; rotas de campus, cardápio/importação e avaliação existentes. CORS permite origens configuradas em `CORS_ORIGINS`. Reclamações e planejamento não existem ainda. |
 | PostgreSQL | Persistir campi, cardápios, itens, avaliações e check-ins legados | PostgreSQL 16 no Docker Compose; schema gerenciado pelo Alembic. |
 | Processo de extração | Encontrar PDFs, extrair e normalizar dados e enviá-los à API | Pacote Python separado; pode rodar uma vez ou em loop com intervalo, mas não tem agendador no Compose. A publicação consultada em 30/09/2026 foi validada; ver [relatório dos PDFs](validacao-extracao-pdfs.md). Formatos futuros precisam de nova conferência. |
 
@@ -73,7 +73,7 @@ A rotina isola falhas por campus durante o processamento. A disponibilidade e a 
 
 ### 4.2 Consulta e feedback
 
-O frontend deverá consultar `GET /campi/` e `GET /cardapios/`, enviando filtros como campus, intervalo de datas, tipo de refeição, dieta e alérgenos. O backend retorna cardápios e itens filtrados. A integração navegador–API ainda precisa de configuração de CORS ou proxy e da URL da API por ambiente.
+O frontend consulta `GET /campi/` e `GET /cardapios/`, enviando campus, intervalo opcional de datas e tipo de refeição. A URL é configurável por `VITE_API_BASE_URL`; a API habilita CORS para as origens listadas em `CORS_ORIGINS`. A interface não define uma semana padrão nem oferece filtro alimentar enquanto D01/D02 e a qualidade dos marcadores não forem validados.
 
 As rotas para registrar e consultar avaliações existem em `/cardapios/{cardapio_id}/avaliacoes`. A interface correspondente está pendente. Reclamações separadas das notas são requisito da Release 1, mas ainda não têm modelo, migração ou endpoint.
 
