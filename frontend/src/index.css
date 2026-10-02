@@ -1,14 +1,42 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+@import 'tailwindcss';
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-border: var(--border);
+  --color-ring: var(--ring);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+}
+
 :root {
-  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  color: #263f34;
-  background: #f6f8f1;
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  font-optical-sizing: auto;
-  font-weight: 400;
-  color-scheme: light;
+  --background: #FAFAF7;
+  --foreground: #1A1A18;
+  --card: #FFFFFF;
+  --card-foreground: #1A1A18;
+  --primary: #2D6A3F;
+  --primary-foreground: #FFFFFF;
+  --secondary: #F0EDE4;
+  --secondary-foreground: #3D3D38;
+  --muted: #F4F1E8;
+  --muted-foreground: #5C5C55;
+  --accent: #E8570A;
+  --accent-foreground: #FFFFFF;
+  --border: #E2DDD4;
+  --ring: #2D6A3F;
+  --radius: 0.5rem;
 }
 
 * {
@@ -16,25 +44,192 @@
 }
 
 body {
-  min-width: 320px;
-  min-height: 100vh;
-  margin: 0;
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: 'Inter', sans-serif;
+  -webkit-font-smoothing: antialiased;
 }
 
-button,
-input,
-select {
-  font: inherit;
+h1, h2, h3, h4 {
+  font-family: 'Inter', system-ui, sans-serif;
 }
 
-button:focus-visible,
-a:focus-visible,
-input:focus-visible,
-select:focus-visible {
-  outline-offset: 3px;
+.mono {
+  font-family: 'JetBrains Mono', monospace;
 }
 
-::selection {
-  background: #d7e9b3;
-  color: #183c32;
+/* Star rating */
+.star-btn {
+  transition: transform 0.1s ease;
+}
+.star-btn:hover {
+  transform: scale(1.15);
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--muted-foreground); }
+
+/* Global focus ring — keyboard navigation */
+:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+  border-radius: 3px;
+}
+
+/* Transitions */
+button, a, input, select, textarea {
+  transition: all 0.15s ease;
+}
+
+.card-hover {
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+.card-hover:hover {
+  box-shadow: 0 8px 32px rgba(0,0,0,0.10);
+  transform: translateY(-2px);
+}
+
+/* Upload area */
+.underline-links a {
+  text-decoration: underline;
+}
+
+/* Alto contraste — substitui todas as variáveis por paleta P&B */
+.alto-contraste {
+  --background: #000000 !important;
+  --foreground: #ffffff !important;
+  --card: #0a0a0a !important;
+  --card-foreground: #ffffff !important;
+  --primary: #ffff00 !important;
+  --primary-foreground: #000000 !important;
+  --secondary: #1a1a1a !important;
+  --secondary-foreground: #ffffff !important;
+  --muted: #1a1a1a !important;
+  --muted-foreground: #cccccc !important;
+  --accent: #ffff00 !important;
+  --accent-foreground: #000000 !important;
+  --border: #ffffff !important;
+  --ring: #ffff00 !important;
+}
+
+.alto-contraste header,
+.alto-contraste nav {
+  background: #000000 !important;
+  border-color: #ffffff !important;
+}
+
+.alto-contraste header h1 {
+  color: #ffff00 !important;
+  background: #000000 !important;
+  padding: 2px 6px !important;
+  border-radius: 4px !important;
+}
+
+.alto-contraste .card-hover:hover {
+  box-shadow: 0 0 0 2px #ffff00;
+  transform: none;
+}
+
+.alto-contraste button,
+.alto-contraste select,
+.alto-contraste input,
+.alto-contraste textarea {
+  border-color: #ffffff !important;
+  background-color: #000000 !important;
+  color: #ffffff !important;
+}
+
+.alto-contraste button:hover {
+  background-color: #222222 !important;
+}
+
+.alto-contraste [style*="background: var(--primary)"],
+.alto-contraste [style*="background: '#2D6A3F'"] {
+  background: #ffff00 !important;
+  color: #000000 !important;
+}
+
+.alto-contraste .bg-green-50,
+.alto-contraste .bg-yellow-50,
+.alto-contraste .bg-red-50 {
+  background: #1a1a1a !important;
+}
+
+.alto-contraste .text-green-800,
+.alto-contraste .text-yellow-800,
+.alto-contraste .text-red-800 {
+  color: #ffffff !important;
+}
+
+.alto-contraste .border-green-500,
+.alto-contraste .border-yellow-500,
+.alto-contraste .border-red-500 {
+  border-color: #ffff00 !important;
+}
+
+/* Cardápio — cards com background inline branco/colorido */
+.alto-contraste .rounded-2xl,
+.alto-contraste .rounded-xl,
+.alto-contraste .rounded-3xl {
+  background: #111111 !important;
+  border-color: #ffffff !important;
+  color: #ffffff !important;
+}
+
+/* Ícone-emoji dentro dos cards: fundo neutro escuro */
+.alto-contraste .rounded-2xl [style*="background"],
+.alto-contraste .rounded-xl [style*="background"],
+.alto-contraste .rounded-3xl [style*="background"] {
+  background: #222222 !important;
+}
+
+/* Títulos das seções (Vegetariano, Guarnição, Acompanhamentos, Saladas, Fruta, Suco) */
+.alto-contraste p[style*="muted-foreground"] {
+  color: #ffff00 !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.1em !important;
+}
+
+/* Texto principal dentro dos cards */
+.alto-contraste .rounded-2xl p,
+.alto-contraste .rounded-2xl li,
+.alto-contraste .rounded-2xl span,
+.alto-contraste .rounded-xl p,
+.alto-contraste .rounded-xl li,
+.alto-contraste .rounded-xl span,
+.alto-contraste .rounded-3xl p,
+.alto-contraste .rounded-3xl li,
+.alto-contraste .rounded-3xl span {
+  color: #ffffff !important;
+}
+
+/* Pílulas de acompanhamentos/saladas */
+.alto-contraste span[style*="var(--muted)"] {
+  background: #2a2a2a !important;
+  color: #ffffff !important;
+  border: 1px solid #ffffff !important;
+}
+
+/* Badge verde "Vegetariano" */
+.alto-contraste span[style*="#EEF7F1"] {
+  background: #1a1a1a !important;
+  color: #ffff00 !important;
+  border: 1px solid #ffff00 !important;
+}
+
+/* Dot bullets da guarnição */
+.alto-contraste span[style*="#C9A84C"] {
+  background: #ffff00 !important;
+}
+
+.upload-zone {
+  border: 2px dashed var(--border);
+  transition: border-color 0.2s, background 0.2s;
+}
+.upload-zone:hover, .upload-zone.dragover {
+  border-color: var(--primary);
+  background: #f0f7f2;
 }

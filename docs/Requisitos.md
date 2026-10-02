@@ -179,7 +179,7 @@ As metas numéricas são **propostas para aprovação em D07**, não resultados 
 
 **Requisito:** O projeto deve executar análise estática de segurança e não manter achados altos ou críticos em aberto na versão aceita. **Relacionados:** todos os RFs implementados.
 
-- **CA-RNF05-01:** Cada proposta de integração de código deverá executar SAST sobre o código próprio em Python e JavaScript, com ferramenta, versão e regras registradas. Falha de execução ou linguagem não analisada não contará como aprovação.
+- **CA-RNF05-01:** Cada proposta de integração de código deverá executar SAST sobre o código próprio em Python e JavaScript/TypeScript, com ferramenta, versão e regras registradas. Falha de execução ou linguagem não analisada não contará como aprovação.
 - **CA-RNF05-02:** O relatório da versão candidata deverá apresentar zero achados altos ou críticos em aberto. Falso positivo só poderá ser encerrado com justificativa rastreável e revisão por outro integrante; ocultar ou desativar regra sem justificativa não atende ao critério.
 - **CA-RNF05-03:** A evidência deverá identificar commit, arquivos/linguagens cobertos e exclusões justificadas. A verificação deverá impedir integração enquanto houver falha ou achado bloqueante.
 
@@ -204,6 +204,10 @@ Os caminhos abaixo são pontos de inspeção na versão-base `717d960`, não com
 | RNF03 | v1.0: resiliência | `extracao/tests/test_main.py`; `extracao/tests/test_cobertura_total.py` | Revisar conjunto de referência e verificar cenários propostos. |
 | RNF04 | v1.0: acesso para avaliação | Link de protótipo no README | Validar versão integrada e janela de avaliação. |
 | RNF05 | v1.0: SAST | Pipeline pendente na Sprint 02 | Configurar ferramenta/bloqueio e guardar relatório. |
+
+### Integração local do frontend — 01/10/2026
+
+A tabela acima preserva a inspeção da versão-base. A aplicação local agora incorpora as telas React/TypeScript/Tailwind da equipe e consulta campi/cardápios pela API. Origem PDF, estados de falha/indisponibilidade e filtros locais sobre os marcadores publicados estão implementados; atualização dos dados, semântica de D01/D02 e aceite operacional continuam pendentes. Avaliações, reclamações, planejamento e lotação permanecem demonstrações sem persistência integrada. Checks locais e respostas simuladas no navegador não comprovam aceite dos RFs. Consulte [Arquitetura](Arquitetura.md) e [Protótipos](prototipos.md).
 
 ### Registro de validação
 

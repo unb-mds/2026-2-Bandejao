@@ -4,11 +4,11 @@
 
 **Escopo:** arquitetura da Release 1 e direção da Release 2
 
-**Estado do código consultado:** 30/09/2026
+**Estado do código consultado:** 01/10/2026 (integração local, sem publicação)
 
 ## 1. Propósito e estado
 
-Este documento apresenta a arquitetura do Bandejão nos níveis de **Contexto** e **Containers** do modelo C4, o modelo de dados existente e os fluxos principais. Os diagramas distinguem a arquitetura pretendida do estado implementado: backend, banco e extração já têm código; a interface React consulta campi e cardápios pela API, enquanto filtros alimentares, avaliações e reclamações ainda estão pendentes.
+Este documento apresenta a arquitetura do Bandejão nos níveis de **Contexto** e **Containers** do modelo C4, o modelo de dados existente e os fluxos principais. Os diagramas distinguem a arquitetura pretendida do estado implementado: backend, banco e extração já têm código; a interface React/TypeScript/Tailwind incorpora as telas da equipe e consulta campi e cardápios pela API. Filtros locais usam os marcadores dos itens; avaliações, reclamações, planejamento e lotação permanecem demonstrações, sem persistência integrada.
 
 O Bandejão centraliza os cardápios publicados em PDF pelos Restaurantes Universitários da UnB. A Release 1 prevê consulta do cardápio por campus, filtros alimentares, avaliações e reclamações. O planejamento semanal e a estimativa de movimento pertencem à Release 2.
 
@@ -37,7 +37,7 @@ flowchart LR
     site["Site oficial do RU<br/>HTML e PDFs"]
 
     subgraph sistema["Bandejão — sistema de software"]
-        web["Frontend Web<br/>React 19 + Vite 8<br/>Estado: consulta de cardápio integrada"]
+        web["Frontend Web<br/>React 19 + Vite 8<br/>TypeScript + Tailwind v4<br/>Estado: consulta de cardápio integrada"]
         api["API REST<br/>FastAPI + SQLAlchemy<br/>Estado: rotas de cardápio e avaliação implementadas"]
         banco[("PostgreSQL 16<br/>Estado: schema e migrações existentes")]
         extracao["Processo de extração<br/>Python, requests, BeautifulSoup,<br/>pdfplumber e Pillow<br/>Estado: PDFs de 30/09/2026 validados; formatos futuros podem variar"]
@@ -54,7 +54,7 @@ flowchart LR
 
 | Container | Responsabilidade | Implementação observada |
 |---|---|---|
-| Frontend Web | Seleção de campus e consulta de cardápios por período e refeição | React 19 e Vite 8; consulta `GET /campi/` e `GET /cardapios/`, com URL configurável por `VITE_API_BASE_URL`. Filtros alimentares, avaliações e reclamações ainda não estão integrados. |
+| Frontend Web | Seleção de campus e consulta de cardápios por período e refeição | React 19, Vite 8, TypeScript e Tailwind v4, a partir das telas da equipe. Consulta `GET /campi/` e `GET /cardapios/`, com URL configurável por `VITE_API_BASE_URL`; filtros locais usam os marcadores retornados. Avaliações/reclamações e planejamento são demonstrações em memória; lotação usa exemplos. |
 | API REST | Validar importações, consultar cardápios e receber avaliações | FastAPI e SQLAlchemy; rotas de campus, cardápio/importação e avaliação existentes. CORS permite origens configuradas em `CORS_ORIGINS`. Reclamações e planejamento não existem ainda. |
 | PostgreSQL | Persistir campi, cardápios, itens, avaliações e check-ins legados | PostgreSQL 16 no Docker Compose; schema gerenciado pelo Alembic. |
 | Processo de extração | Encontrar PDFs, extrair e normalizar dados e enviá-los à API | Pacote Python separado; pode rodar uma vez ou em loop com intervalo, mas não tem agendador no Compose. A publicação consultada em 30/09/2026 foi validada; ver [relatório dos PDFs](validacao-extracao-pdfs.md). Formatos futuros precisam de nova conferência. |
@@ -73,9 +73,9 @@ A rotina isola falhas por campus durante o processamento. A disponibilidade e a 
 
 ### 4.2 Consulta e feedback
 
-O frontend consulta `GET /campi/` e `GET /cardapios/`, enviando campus, intervalo opcional de datas e tipo de refeição. A URL é configurável por `VITE_API_BASE_URL`; a API habilita CORS para as origens listadas em `CORS_ORIGINS`. A interface não define uma semana padrão nem oferece filtro alimentar enquanto D01/D02 e a qualidade dos marcadores não forem validados.
+O frontend consulta `GET /campi/` e `GET /cardapios/`, enviando o campus cadastrado e o intervalo da semana escolhida. A apresentação começa na semana atual (domingo a sábado) e permite outra semana; a refeição é selecionada entre os resultados carregados. A URL é configurável por `VITE_API_BASE_URL`; a API habilita CORS para as origens em `CORS_ORIGINS`. Os filtros locais correspondem aos tipos de dieta e marcadores publicados, sem inferir ingredientes ou garantir ausência de alérgenos. Essa apresentação não resolve D01/D02. Lista vazia não indica fechamento do RU; o backend não informa horários de funcionamento nem instante de atualização dos dados.
 
-As rotas para registrar e consultar avaliações existem em `/cardapios/{cardapio_id}/avaliacoes`. A interface correspondente está pendente. Reclamações separadas das notas são requisito da Release 1, mas ainda não têm modelo, migração ou endpoint.
+As rotas para registrar e consultar avaliações existem em `/cardapios/{cardapio_id}/avaliacoes`. A tela do protótipo está incorporada, mas ainda registra avaliações apenas na sessão; a adaptação do formulário ao contrato da API permanece pendente. Reclamações separadas das notas são requisito da Release 1, mas ainda não têm modelo, migração ou endpoint.
 
 ### 4.3 Planejamento e previsão — Release 2
 
@@ -109,7 +109,7 @@ Não há uma entidade separada `Refeicao`: no schema atual, `Cardapio` represent
 |---|---|---|---|
 | Cardápio | PDFs ligados pela página oficial `https://ru.unb.br/cardapio-refeitorio/` | A publicação é semanal; a extração busca os links quando é executada. | Não há API oficial. Links, tabelas e ícones podem mudar sem aviso; o cardápio também pode ser alterado pelo RU. |
 | Campus | Nome extraído do arquivo ou já cadastrado no banco | Criado durante importação quando ainda não existe | A identificação depende dos nomes/formatos usados nos links dos PDFs. |
-| Avaliação | Envio da pessoa usuária pela API | Registrada no envio | A API permite listar avaliações; o uso da interface está pendente. Não há conta de usuário associada no schema atual. |
+| Avaliação | Envio da pessoa usuária pela API | Registrada no envio | A API permite listar avaliações; a tela local é demonstração e sua persistência pela API está pendente. Não há conta de usuário associada no schema atual. |
 | Reclamação | Prevista para a Release 1 | A definir | Ainda não há armazenamento ou endpoint; definir privacidade e política de retenção ao projetar. |
 | Planejamento | Previsto para a Release 2 | A definir | Ainda não existe. A granularidade do horário precisa ser definida antes da previsão. |
 
@@ -120,7 +120,7 @@ Não há uma entidade separada `Refeicao`: no schema atual, `Cardapio` represent
 | Extração | Python (versão não fixada), `requests`, BeautifulSoup, `pdfplumber` e Pillow |
 | API | Python 3.12, FastAPI, SQLAlchemy, Pydantic Settings e Alembic |
 | Banco de dados | PostgreSQL 16 |
-| Frontend | React 19, JavaScript/JSX e Vite 8; TypeScript e Tailwind não aparecem na configuração atual do pacote |
+| Frontend | React 19, TypeScript/TSX, Vite 8 e Tailwind CSS v4; cliente HTTP tipado, plugin Tailwind no Vite e checagem de tipos antes do build |
 | Ambiente local | Docker Compose; a extração roda separadamente |
 | CI e publicação | `.github/workflows/ci.yml` executa testes do backend e da extração, além de lint e build do frontend em pull requests e mudanças da aplicação na `main`. `.github/workflows/docs.yml` valida a documentação em pull requests e publica o MkDocs no GitHub Pages na `main`. O deploy da aplicação ainda não está configurado. |
 
@@ -151,4 +151,4 @@ A extração é iniciada à parte, a partir da pasta `extracao`, com `python -m 
 
 ---
 
-*Documento de arquitetura atualizado para refletir o schema e os componentes encontrados no repositório em 30/09/2026. Requisitos futuros estão identificados como planejados, não como implementação existente.*
+*Documento de arquitetura atualizado para refletir o schema e os componentes encontrados no repositório em 01/10/2026. A incorporação local do frontend não comprova publicação nem aceite. Requisitos futuros estão identificados como planejados, não como implementação existente.*

@@ -25,7 +25,7 @@ O sistema é dividido em camadas:
    - `GET /campi/{campus_id}/checkins`, `POST /campi/{campus_id}/checkins` (implementação anterior da Release 2; deverá ser substituída pelo planejamento semanal definido nos RF06 e RF07)
    - O RF08 e a nova abordagem dos RF06/RF07 ainda não estão implementados no backend.
 3. **Banco de dados** — armazena cardápio e avaliações. O modelo `CheckIn`, já implementado em `backend/app/models/`, pertence à abordagem anterior da Release 2 e deverá ser substituído por uma entidade de planejamento semanal. Os demais modelos SQLAlchemy são `Campus`, `Cardapio`, `ItemCardapio` e `Avaliacao`, além dos enums `TipoRefeicao`, `Categoria` e `TipoDieta`. Migrações são gerenciadas por Alembic (`backend/alembic/`).
-4. **Frontend** (`/frontend`) — deve consumir a API e oferecer cardápio, filtros, avaliação, seção de reclamações e planejamento semanal; atualmente ainda contém apenas o scaffold inicial do Vite.
+4. **Frontend** (`/frontend`) — deve consumir a API e oferecer cardápio, filtros, avaliação, seção de reclamações e planejamento semanal; usa React 19, Vite 8, TypeScript e Tailwind v4, incorporando as telas de `marilluantunes/frontend-react`. Campi e cardápios são consultados na API; filtros locais usam os marcadores publicados. Avaliações, reclamações, planejamento e lotação seguem como demonstrações sem persistência integrada. Veja `frontend/README.md` para estrutura e limites.
 
 ## Stack técnica
 

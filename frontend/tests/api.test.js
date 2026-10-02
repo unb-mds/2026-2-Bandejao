@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
 
-import { listarCampi, listarCardapios, requisitarJson } from '../src/api.js'
+import { listarCampi, listarCardapios, requisitarJson } from '../src/api.ts'
 
 test('carrega campi pela rota da API', async () => {
   let urlRecebida

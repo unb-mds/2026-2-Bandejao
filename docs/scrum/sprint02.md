@@ -49,12 +49,12 @@ Além do que estava planejado, a sprint incluiu a reformulação dos requisitos 
 | Extração real do cardápio | ✅ Implementada e validada contra a publicação oficial dos 5 campi em 30/09/2026; formatos futuros ainda precisam de conferência |
 | Schemas Pydantic | ✅ Concluído |
 | Endpoints de campus, cardápio e avaliação | ✅ Concluído, com testes |
-| Consulta no frontend | ✅ Seleção de campus e consulta por período/refeição integrada à API; filtros alimentares e demais fluxos do protótipo pendentes |
+| Consulta no frontend | ✅ Consulta à API incorporada às telas TypeScript/Tailwind da equipe; semana e refeição selecionáveis, filtros locais sobre marcações publicadas. Aceite de D01/D02 e persistência dos demais fluxos pendentes |
 
 ## Pendências e próximos passos
 
 - Rodar a sincronização com o backend e conferir os dados importados
-- Completar os fluxos do frontend do protótipo (filtros alimentares, avaliações e reclamações) após validar requisitos e dados
+- Validar D01/D02 e os filtros sobre os dados publicados; integrar a persistência das avaliações e reclamações às telas incorporadas do protótipo
 - Adequar o backend e o modelo de dados à mudança dos requisitos: entidade de planejamento semanal (no lugar de check-in) e reclamações
 - Definir estratégia de deploy da aplicação; a CI de backend, extração e frontend foi adicionada em 30/09/2026 no `.github/workflows/ci.yml`
 - Criar as Release Notes da Release 1
@@ -88,3 +88,11 @@ Esta atualização cobre a GH Page. Não altera requisitos, regras de negócio o
 - A tela React consome `GET /campi/` e `GET /cardapios/`, com filtro opcional por datas e tipo de refeição.
 - A URL da API é definida por `VITE_API_BASE_URL`; o backend permite CORS para as origens em `CORS_ORIGINS`.
 - Lista vazia é apresentada como falta de registros na API, sem inferir que o RU esteja fechado. Filtros de dieta e alérgenos seguem pendentes de D02.
+
+## Alinhamento do frontend da equipe — 01/10/2026
+
+- Incorporada localmente a estrutura React/TypeScript/Tailwind v4 de `marilluantunes/frontend-react`, revisão `c1833a3`, preservando navegação, tema e acessibilidade.
+- O cliente da API foi convertido para TypeScript e conectado às telas Hoje e Cardápio, com seleção de semana, campus da API, link de origem e tratamento de falhas.
+- Cardápios e avaliações fictícios foram retirados da consulta. Os itens preservam categorias, dietas e marcadores publicados; filtros não certificam ausência de ingredientes.
+- Avaliações, reclamações, planejamento e lotação continuam demonstrações identificadas na interface. Não há nova persistência, previsão operacional ou publicação do Vercel nesta integração.
+- O build passa a incluir checagem de tipos; foram corrigidos erros de sintaxe/tipagem encontrados nos componentes importados. O registro de 30/09 acima descreve a entrega anterior.

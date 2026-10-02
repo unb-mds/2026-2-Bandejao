@@ -27,7 +27,8 @@ Aplicação para consulta ao cardápio semanal dos Restaurantes Universitários 
 🚧 Em desenvolvimento — Sprint 02
 
 - **Protótipo Vercel:** [Aceder ao Protótipo](https://frontend-react-tan-gamma.vercel.app)
-- A interface local consulta campi e cardápios já cadastrados na API; filtros alimentares e os fluxos de avaliação/reclamação ainda estão pendentes.
+- O frontend local usa React 19, Vite 8, TypeScript e Tailwind v4, incorporando as telas da equipe de [marilluantunes/frontend-react](https://github.com/marilluantunes/frontend-react). Campi e cardápios vêm da API; os filtros usam as marcações dos itens. Avaliações, reclamações, planejamento e lotação continuam como demonstrações sem persistência integrada.
+- Consulte [estrutura, execução e limites do frontend](frontend/README.md). O protótipo Vercel externo é uma publicação separada.
 
 ## Como rodar o projeto
 

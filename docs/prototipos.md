@@ -7,6 +7,12 @@
 
 A [Sprint 02](scrum/sprint02.md) registra a preparação dos materiais de produto. A disponibilidade e a integração do protótipo externo com a API não foram verificadas nesta atualização da GH Page.
 
+## Incorporação à aplicação local
+
+As telas da equipe em [marilluantunes/frontend-react](https://github.com/marilluantunes/frontend-react), revisão `c1833a3b7175765574e258c6574973b88a04c361`, foram incorporadas ao diretório `frontend/` em 01/10/2026. A aplicação usa React, Vite, TypeScript e Tailwind v4. A consulta de campi/cardápios usa a API do projeto; os demais fluxos continuam demonstrações locais identificadas. Consulte [Arquitetura](Arquitetura.md) e [Desenvolvimento](desenvolvimento.md).
+
+Essa integração local não atualiza a publicação Vercel externa nem comprova aceite dos requisitos.
+
 ## Roteiro de revisão
 
 | Fluxo a revisar no protótipo | Requisitos relacionados |
