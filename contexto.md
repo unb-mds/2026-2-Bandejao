@@ -13,6 +13,19 @@ Projeto acadêmico, desenvolvido por uma equipe de 7 integrantes.
 - **Release 1:** cardápio da semana, filtros alimentares (vegetariano, alergias), avaliação de refeições e registro independente de reclamações.
 - **Release 2:** planejamento semanal de dias e refeições no RU e estimativa de horário de pico a partir do volume de planejamentos por dia, refeição e campus.
 
+## Decisões D01–D08 (Requisitos v1.2, 14/10/2026)
+
+Decisões tomadas pela equipe em `docs/Requisitos.md` (seção 7), ainda sendo incorporadas ao código na Sprint 03 (`docs/scrum/sprint03.md`):
+
+- **D01:** semana de segunda a domingo, fuso `America/Sao_Paulo`.
+- **D02:** filtro de dieta inclusivo — selecionar "ovolactovegetariano" também retorna itens "vegetariano estrito". As demais dietas continuam exatas. A API hoje ainda filtra por classe exata; o ajuste está na Sprint 03.
+- **D03:** horários de início de cada refeição vêm de uma tabela de configuração versionada (sem horário cadastrado, a avaliação fica fechada). Sem recurso de "serviço suspenso" — limitação conhecida.
+- **D04:** **sem cadastro nem login.** Identidade anônima por navegador (código aleatório gerado no cliente). Uma avaliação por identidade por refeição; novo envio atualiza a anterior em vez de duplicar. Não identifica pessoa: outro navegador, ou limpar os dados, gera outra identidade.
+- **D05:** RF07 estima **demanda por refeição** (sem horário de chegada), com amostra mínima de 10 intenções ativas (constante de configuração). Dados de demonstração devem ser identificados como simulados.
+- **D06:** reclamações com 4 categorias (qualidade, higiene, atendimento, outros), até 1.000 caracteres, sem foto, sem nome, sem lista pública. Acesso restrito a quem registrou e à equipe.
+- **D07:** metas de verificação — carga com k6 (50 usuários, local), sincronização a cada 6h, 4–6 PDFs de referência, SAST com bandit + CodeQL (bloqueia alto/crítico), checagem de 10s a cada 5min em janela curta.
+- **D08 (novo, RNF06):** a rota de importação do cardápio passa a exigir um token secreto (variável de ambiente), usado pela rotina de sincronização. **Hoje a rota é pública** — é uma falha apontada na própria revisão de requisitos, ainda não corrigida.
+
 ## Arquitetura
 
 O sistema é dividido em camadas:
@@ -34,10 +47,10 @@ O sistema é dividido em camadas:
 - Extração de dados: Python (requests + BeautifulSoup para navegar a página do RU, pdfplumber para extrair texto do PDF do cardápio).
 - Backend: Python + FastAPI, SQLAlchemy como ORM.
 - Banco de dados: PostgreSQL.
-- Frontend: React + Vite.
+- Frontend: React 19 + Vite 8, TypeScript e Tailwind v4.
 - Orquestração local: Docker Compose (`docker-compose.yml` na raiz sobe banco, backend e frontend).
 - Testes: pytest (backend e extração) com cobertura via pytest-cov, conforme RNF05 do documento de requisitos.
-- Lint: ruff (Python), oxlint (frontend, já configurado pelo scaffold do Vite).
+- Lint: ruff (Python), ESLint via `npm run lint` (frontend).
 
 ## Convenções do projeto
 
