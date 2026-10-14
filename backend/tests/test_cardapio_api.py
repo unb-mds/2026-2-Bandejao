@@ -1,9 +1,18 @@
 from datetime import date
 
+import pytest
 from fastapi.testclient import TestClient
+from pydantic import SecretStr
 from sqlalchemy.orm import Session
 
+from app.core.config import settings
 from app.models import Campus, Cardapio, Categoria, ItemCardapio, TipoDieta, TipoRefeicao
+
+
+@pytest.fixture()
+def importacao_headers(monkeypatch):
+    monkeypatch.setattr(settings, "importacao_token", SecretStr("segredo-apenas-para-teste"))
+    return {"Authorization": "Bearer segredo-apenas-para-teste"}
 
 
 def criar_cardapio_de_teste(db_session: Session) -> Cardapio:
@@ -134,7 +143,7 @@ def test_rejeita_alergeno_desconhecido(client: TestClient):
 
 
 def test_importa_cardapio_e_substitui_itens_ao_reprocessar(
-    client: TestClient, db_session: Session
+    client: TestClient, db_session: Session, importacao_headers
 ):
     payload = {
         "campus": "Gama",
@@ -155,7 +164,7 @@ def test_importa_cardapio_e_substitui_itens_ao_reprocessar(
         ],
     }
 
-    primeira_resposta = client.post("/cardapios/importacao", json=payload)
+    primeira_resposta = client.post("/cardapios/importacao", json=payload, headers=importacao_headers)
     assert primeira_resposta.status_code == 200
     assert primeira_resposta.json()["itens_processados"] == 1
     assert client.get("/cardapios/", params={"excluir_alergenos": "amendoim"}).json()[0][
@@ -164,7 +173,7 @@ def test_importa_cardapio_e_substitui_itens_ao_reprocessar(
 
     payload["refeicoes"][0]["itens"][0]["nome"] = "Lentilha"
     payload["refeicoes"][0]["itens"][0]["alergenos"] = []
-    segunda_resposta = client.post("/cardapios/importacao", json=payload)
+    segunda_resposta = client.post("/cardapios/importacao", json=payload, headers=importacao_headers)
 
     assert segunda_resposta.status_code == 200
     assert db_session.query(Campus).filter_by(nome="Gama").count() == 1
@@ -174,9 +183,10 @@ def test_importa_cardapio_e_substitui_itens_ao_reprocessar(
     ]
 
 
-def test_importacao_rejeita_alergeno_fora_do_contrato(client: TestClient):
+def test_importacao_rejeita_alergeno_fora_do_contrato(client: TestClient, importacao_headers):
     response = client.post(
         "/cardapios/importacao",
+        headers=importacao_headers,
         json={
             "campus": "Gama",
             "refeicoes": [
@@ -223,14 +233,54 @@ def test_rejeita_nota_fora_do_intervalo(client: TestClient, db_session: Session)
     assert response.status_code == 422
 
 
-def test_registra_e_lista_checkins(client: TestClient, db_session: Session):
+def test_checkins_legados_nao_estao_expostos(client: TestClient, db_session: Session):
     campus = Campus(nome="Fazenda Água Limpa")
     db_session.add(campus)
     db_session.commit()
 
     response = client.post(f"/campi/{campus.id}/checkins/")
 
-    assert response.status_code == 201
-    assert response.json()["campus_id"] == campus.id
-    assert len(client.get(f"/campi/{campus.id}/checkins/").json()) == 1
+    assert response.status_code == 404
+    assert client.get(f"/campi/{campus.id}/checkins/").status_code == 404
     assert client.post("/campi/999/checkins/").status_code == 404
+
+
+@pytest.mark.parametrize("authorization", [None, "Bearer incorreto", "Basic incorreto", "Bearer"])
+def test_importacao_sem_credencial_valida_nao_grava(
+    client: TestClient, db_session: Session, importacao_headers, authorization
+):
+    cardapio = criar_cardapio_de_teste(db_session)
+    headers = {} if authorization is None else {"Authorization": authorization}
+    response = client.post(
+        "/cardapios/importacao",
+        headers=headers,
+        json={
+            "campus": "Gama",
+            "refeicoes": [{"data": "2026-09-15", "tipo_refeicao": "almoco", "itens": []}],
+        },
+    )
+    assert response.status_code == 401
+    assert response.headers["www-authenticate"] == "Bearer"
+    db_session.expire_all()
+    assert db_session.query(Campus).count() == 1
+    assert db_session.query(Cardapio).count() == 1
+    assert len(db_session.get(Cardapio, cardapio.id).itens) == 3
+    assert "segredo-apenas-para-teste" not in response.text
+
+
+@pytest.mark.parametrize("token_configurado", ["", "   "])
+def test_importacao_sem_segredo_configurado_falha_fechada(
+    client: TestClient, db_session: Session, monkeypatch, token_configurado
+):
+    monkeypatch.setattr(settings, "importacao_token", SecretStr(token_configurado))
+    response = client.post(
+        "/cardapios/importacao",
+        headers={"Authorization": "Bearer qualquer-token"},
+        json={"campus": "Gama", "refeicoes": []},
+    )
+    assert response.status_code == 401
+    assert db_session.query(Campus).count() == 0
+    assert db_session.query(Cardapio).count() == 0
+    assert db_session.query(ItemCardapio).count() == 0
+    assert client.get("/cardapios/").status_code == 200
+    assert client.get("/campi/").status_code == 200
