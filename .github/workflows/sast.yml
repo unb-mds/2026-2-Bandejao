@@ -1,0 +1,77 @@
+name: SAST
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  bandit:
+    name: SAST Python (Bandit)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: '3.12'
+      - run: python -m pip install -r requirements-security.txt
+      - name: Testar bloqueio de segurança
+        run: python -m unittest discover -s scripts/security -p 'test_*.py' -v
+      - name: Analisar Python e bloquear severidade alta
+        run: python scripts/security/run_bandit.py security-reports
+      - name: Guardar evidências
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: bandit-${{ github.sha }}
+          path: security-reports/
+          if-no-files-found: error
+          retention-days: 30
+
+  codeql:
+    name: SAST JavaScript (CodeQL)
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: '3.12'
+      - name: Inicializar CodeQL
+        uses: github/codeql-action/init@24c54180a607b1449ed407dd24f251e4e9147c8d # v4
+        with:
+          languages: javascript-typescript
+          build-mode: none
+          tools: linked
+          queries: security-extended
+      - name: Registrar fontes e versão
+        run: |
+          mkdir -p security-reports
+          git rev-parse HEAD > security-reports/commit.txt
+          git ls-files -- '*.js' '*.jsx' '*.ts' '*.tsx' '*.mjs' '*.cjs' > security-reports/javascript-files.txt
+          test -s security-reports/javascript-files.txt
+      - name: Analisar JavaScript e TypeScript
+        uses: github/codeql-action/analyze@24c54180a607b1449ed407dd24f251e4e9147c8d # v4
+        with:
+          output: security-reports/codeql
+          upload: never
+          upload-database: false
+      - name: Bloquear achados altos e críticos
+        run: python scripts/security/check_reports.py sarif security-reports/codeql/*.sarif
+      - name: Guardar evidências
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: codeql-${{ github.sha }}
+          path: security-reports/
+          if-no-files-found: error
+          retention-days: 30
