@@ -28,6 +28,30 @@ services:
     depends_on:
       db:
         condition: service_healthy
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "python",
+          "-c",
+          "import urllib.request; urllib.request.urlopen('http://localhost:8000/health', timeout=3)",
+        ]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+
+  sincronizador:
+    build: ./extracao
+    profiles: ["sincronizacao"]
+    restart: unless-stopped
+    env_file:
+      - ./backend/.env
+    environment:
+      BACKEND_URL: http://backend:8000
+    depends_on:
+      backend:
+        condition: service_healthy
 
   frontend:
     build:

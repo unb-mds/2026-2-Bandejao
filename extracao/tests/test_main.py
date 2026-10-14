@@ -195,14 +195,15 @@ def test_envia_resultado_no_contrato_de_importacao():
             return {"campus_id": 1, "itens_processados": 1}
 
     class Sessao:
-        def post(self, url, json, timeout):
+        def post(self, url, json, timeout, headers):
             assert url == "http://api.test/cardapios/importacao"
             assert timeout == 30
+            assert headers == {"Authorization": "Bearer segredo-teste"}
             assert json["refeicoes"][0]["data"] == "2026-09-21"
             assert json["refeicoes"][0]["itens"][0]["alergenos"] == ["leite", "ovo"]
             return Resposta()
 
-    assert enviar_ao_backend(resultado, "http://api.test/", Sessao()) == {
+    assert enviar_ao_backend(resultado, "http://api.test/", Sessao(), token="segredo-teste") == {
         "campus_id": 1,
         "itens_processados": 1,
     }
