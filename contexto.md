@@ -24,7 +24,7 @@ Decisões tomadas pela equipe em `docs/Requisitos.md` (seção 7), ainda sendo i
 - **D05:** RF07 estima **demanda por refeição** (sem horário de chegada), com amostra mínima de 10 intenções ativas (constante de configuração). Dados de demonstração devem ser identificados como simulados.
 - **D06:** reclamações com 4 categorias (qualidade, higiene, atendimento, outros), até 1.000 caracteres, sem foto, sem nome, sem lista pública. Acesso restrito a quem registrou e à equipe.
 - **D07:** metas de verificação — carga com k6 (50 usuários, local), sincronização a cada 6h, 4–6 PDFs de referência, SAST com bandit + CodeQL (bloqueia alto/crítico), checagem de 10s a cada 5min em janela curta.
-- **D08 (novo, RNF06):** a rota de importação do cardápio passa a exigir um token secreto (variável de ambiente), usado pela rotina de sincronização. **Hoje a rota é pública** — é uma falha apontada na própria revisão de requisitos, ainda não corrigida.
+- **D08 (novo, RNF06):** a rota de importação do cardápio exige um token secreto (`IMPORTACAO_TOKEN`), usado também pela rotina de sincronização. Sem segredo válido, a API recusa a escrita.
 
 ## Arquitetura
 
@@ -35,7 +35,7 @@ O sistema é dividido em camadas:
    - `GET /campi/`, `GET /campi/{campus_id}`
    - `GET /cardapios/` (filtros: `campus_id`, `data_inicio`/`data_fim`, `tipo_refeicao`, `tipo_dieta`, `excluir_alergenos` — implementa o filtro por restrição alimentar do RF03), `GET /cardapios/{cardapio_id}`
    - `GET /cardapios/{cardapio_id}/avaliacoes`, `POST /cardapios/{cardapio_id}/avaliacoes` (RF04/RF05)
-   - `GET /campi/{campus_id}/checkins`, `POST /campi/{campus_id}/checkins` (implementação anterior da Release 2; deverá ser substituída pelo planejamento semanal definido nos RF06 e RF07)
+   - As rotas HTTP de check-in legado foram retiradas na Sprint 03; o modelo/tabela permanece até a migração para planejamento.
    - O RF08 e a nova abordagem dos RF06/RF07 ainda não estão implementados no backend.
 3. **Banco de dados** — armazena cardápio e avaliações. O modelo `CheckIn`, já implementado em `backend/app/models/`, pertence à abordagem anterior da Release 2 e deverá ser substituído por uma entidade de planejamento semanal. Os demais modelos SQLAlchemy são `Campus`, `Cardapio`, `ItemCardapio` e `Avaliacao`, além dos enums `TipoRefeicao`, `Categoria` e `TipoDieta`. Migrações são gerenciadas por Alembic (`backend/alembic/`).
 4. **Frontend** (`/frontend`) — deve consumir a API e oferecer cardápio, filtros, avaliação, seção de reclamações e planejamento semanal; usa React 19, Vite 8, TypeScript e Tailwind v4, incorporando as telas de `marilluantunes/frontend-react`. Campi e cardápios são consultados na API; filtros locais usam os marcadores publicados. Avaliações, reclamações, planejamento e lotação seguem como demonstrações sem persistência integrada. Veja `frontend/README.md` para estrutura e limites.
@@ -48,8 +48,9 @@ O sistema é dividido em camadas:
 - Backend: Python + FastAPI, SQLAlchemy como ORM.
 - Banco de dados: PostgreSQL.
 - Frontend: React 19 + Vite 8, TypeScript e Tailwind v4.
-- Orquestração local: Docker Compose (`docker-compose.yml` na raiz sobe banco, backend e frontend).
-- Testes: pytest (backend e extração) com cobertura via pytest-cov, conforme RNF05 do documento de requisitos.
+- Orquestração local: Docker Compose (`docker-compose.yml` sobe banco, backend e frontend; o perfil opcional `sincronizacao` adiciona a rotina a cada seis horas).
+- Testes: pytest (backend e extração) com cobertura via pytest-cov.
+- Segurança estática: Bandit para Python e CodeQL para JavaScript/TypeScript, conforme RNF05; o bloqueio de merge depende dos checks obrigatórios no GitHub.
 - Lint: ruff (Python), ESLint via `npm run lint` (frontend).
 
 ## Convenções do projeto

@@ -197,7 +197,7 @@ As metas numéricas foram definidas na D07; não são resultados medidos nem exi
 - **CA-RNF06-02:** Dada a rotina de sincronização configurada com o token correto, quando executar, então a importação será aceita. O token virá de variável de ambiente, nunca do repositório.
 - **CA-RNF06-03:** Dado o repositório, quando inspecionado, então não conterá o token real; o `.env.example` terá apenas valor de exemplo.
 
-**Verificação:** testes automatizados da API. Na inspeção do código em 14/10/2026, a rota de importação é pública e não há autenticação no backend. A rota legada de check-in também é pública; como o planejamento a substitui, deve ser removida ou protegida.
+**Verificação:** testes automatizados da API. Na base da Sprint 03, a rota exige Bearer token e falha fechada quando o segredo não está configurado; a sincronização envia o mesmo segredo pelo ambiente. As rotas HTTP de check-in legado foram retiradas, preservando modelo e tabela para migração futura. A execução no CI e a inspeção do repositório ainda precisam compor a evidência da versão aceita.
 
 ## 6. Rastreabilidade e evidências
 
@@ -217,8 +217,8 @@ Os caminhos abaixo são pontos de inspeção na versão-base `717d960`, não com
 | RNF02 | v1.0: atualização semanal | `extracao/extracao/sincronizar.py`; `extracao/tests/test_sincronizar.py` | Evidenciar agendamento, prazo e última atualização. |
 | RNF03 | v1.0: resiliência | `extracao/tests/test_main.py`; `extracao/tests/test_cobertura_total.py` | Revisar conjunto de referência e verificar cenários propostos. |
 | RNF04 | v1.0: acesso para avaliação | Link de protótipo no README | Validar versão integrada e janela de avaliação. |
-| RNF05 | v1.0: SAST | Pipeline pendente na Sprint 02 | Configurar ferramenta/bloqueio e guardar relatório. |
-| RNF06 | Revisão de 14/10/2026: importação sem autenticação | `backend/app/api/routes/cardapio.py` (importação); `extracao/extracao/sincronizar.py` | Exigir token na importação e na sincronização; remover ou proteger o check-in legado. |
+| RNF05 | v1.0: SAST | `.github/workflows/sast.yml`; `scripts/security/POLICY.md` | Confirmar Bandit e CodeQL no GitHub Actions, guardar relatórios e tornar ambos os checks obrigatórios na proteção da `main`. |
+| RNF06 | Revisão de 14/10/2026: importação sem autenticação | `backend/app/core/security.py`; rota de importação; rotina de sincronização; testes automatizados | Validar a execução no CI e configurar/rotacionar o segredo no ambiente real sem expô-lo. |
 
 ### Integração local do frontend — 01/10/2026
 

@@ -4,7 +4,7 @@ Projeto acadêmico — Universidade de Brasília (UnB).
 
 ## Sobre
 
-Aplicação para consulta ao cardápio semanal dos Restaurantes Universitários (RU) da UnB, abrangendo todos os campi (Darcy Ribeiro, Ceilândia, Gama, Planaltina e Fazenda Água Limpa), com filtros alimentares, avaliação e registro de reclamações sobre refeições e, em uma segunda etapa, planejamento semanal de idas ao RU e estimativa de horário de pico da fila.
+Aplicação para consulta ao cardápio semanal dos Restaurantes Universitários (RU) da UnB, abrangendo todos os campi (Darcy Ribeiro, Ceilândia, Gama, Planaltina e Fazenda Água Limpa), com filtros alimentares, avaliação e registro de reclamações sobre refeições e, em uma segunda etapa, planejamento semanal de idas ao RU e estimativa de intenções por refeição.
 
 ## Equipe
 
@@ -24,7 +24,7 @@ Aplicação para consulta ao cardápio semanal dos Restaurantes Universitários 
 
 ## Status
 
-🚧 Em desenvolvimento — Sprint 02
+🚧 Em desenvolvimento — Sprint 03 (infraestrutura em preparação)
 
 - **Protótipo Vercel:** [Aceder ao Protótipo](https://frontend-react-tan-gamma.vercel.app)
 - O frontend local usa React 19, Vite 8, TypeScript e Tailwind v4, incorporando as telas da equipe de [marilluantunes/frontend-react](https://github.com/marilluantunes/frontend-react). Campi e cardápios vêm da API; os filtros usam as marcações dos itens. Avaliações, reclamações, planejamento e lotação continuam como demonstrações sem persistência integrada.
@@ -49,6 +49,8 @@ Aplicação para consulta ao cardápio semanal dos Restaurantes Universitários 
    cp backend/.env.example backend/.env
    ```
    No PowerShell, use `Copy-Item backend/.env.example backend/.env`.
+
+   Defina `IMPORTACAO_TOKEN` em `backend/.env` com um segredo aleatório exclusivo do ambiente (por exemplo, gerado com `python -c "import secrets; print(secrets.token_urlsafe(32))"`). Não publique o valor. Backend e sincronizador usarão o mesmo arquivo; sem o token, a importação fica indisponível. O frontend não recebe esse segredo.
 
    Para personalizar a URL da API usada pelo frontend no Docker Compose, defina `VITE_API_BASE_URL` no arquivo `.env` da raiz (o padrão local é `http://localhost:8000`). Para executar o frontend fora do Docker, copie `frontend/.env.example` para `frontend/.env`.
 
@@ -113,20 +115,33 @@ npm run build
 
 ### Sincronizando o cardápio real
 
-Com o backend em execução, a extração pode baixar os PDFs atuais e importá-los na API:
+Depois de configurar `IMPORTACAO_TOKEN`, iniciar a API e aplicar `alembic upgrade head`, ative o serviço opcional:
+
+```bash
+docker compose --profile sincronizacao up -d --build sincronizador
+docker compose logs --tail=100 sincronizador
+```
+
+Ele consulta a fonte ao iniciar e repete a sincronização a cada seis horas enquanto o host e o Docker estiverem ativos. O serviço usa `http://backend:8000` na rede do Compose e autentica cada importação com Bearer token. Reinicie/recrie os serviços após trocar o segredo no ambiente. Para interromper só a rotina:
+
+```bash
+docker compose --profile sincronizacao stop sincronizador
+```
+
+Fora do Docker, exporte `IMPORTACAO_TOKEN` no processo da extração com o mesmo valor configurado no backend (o extrator não carrega automaticamente `backend/.env`). Então, com as dependências de `extracao/requirements.txt` instaladas:
 
 ```bash
 cd extracao
 python -m extracao.sincronizar --backend-url http://localhost:8000
-```
-
-Para deixá-la em execução periódica, informe o intervalo desejado; por exemplo, a cada seis horas:
-
-```bash
+# Opcional: manter a rotina periódica nesta sessão
 python -m extracao.sincronizar --backend-url http://localhost:8000 --intervalo-segundos 21600
 ```
 
-Antes de importar, aplique as migrações mais recentes no backend (`alembic upgrade head`).
+O modo periódico registra horário/status por campus e continua após falhas externas; não grava um novo instante de sucesso no banco. Uma execução isolada com falhas retorna código diferente de zero. Consulte o [roteiro de operação](docs/desenvolvimento.md) e o [contrato de importação](docs/handoff_banco_e_importacao.md).
+
+### Segurança estática no CI
+
+O workflow `.github/workflows/sast.yml` analisa Python com Bandit e JavaScript/TypeScript com CodeQL em cada PR. Achados altos/críticos e falhas de análise reprovam os checks; relatórios são guardados como artefatos. O bloqueio efetivo de merge exige que os checks sejam obrigatórios na proteção da `main`. Veja nomes, comandos e política de severidade em [SAST](scripts/security/POLICY.md).
 
 ## Documentação e GitHub Pages
 

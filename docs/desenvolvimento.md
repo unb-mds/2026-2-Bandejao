@@ -27,6 +27,8 @@ No PowerShell:
 Copy-Item backend/.env.example backend/.env
 ```
 
+Antes de iniciar, preencha `IMPORTACAO_TOKEN` em `backend/.env` com um segredo aleatório exclusivo do ambiente. Backend e sincronizador compartilham esse valor; o frontend não o utiliza. Não publique o arquivo `.env`.
+
 Inicie os serviços:
 
 ```bash
@@ -51,13 +53,44 @@ O seed substitui seus dados de exemplo anteriores; não comprova atualização p
 
 ## Papel do Docker
 
-O Compose padroniza o ambiente e inicia banco, backend e frontend. O frontend usa uma prévia do build estático. A extração não é iniciada nem agendada pelo Compose. O volume `db_data` preserva o banco entre reinícios.
+O Compose padroniza o ambiente e inicia banco, backend e frontend. O frontend usa uma prévia do build estático. O perfil opcional `sincronizacao` adiciona a extração periódica, ativada separadamente após as migrações. O volume `db_data` preserva o banco entre reinícios.
 
 Para encerrar os serviços preservando esse volume:
 
 ```bash
 docker compose down
 ```
+
+## Sincronização a cada seis horas
+
+Após as migrações e a configuração do token, na raiz do repositório:
+
+```bash
+docker compose --profile sincronizacao up -d --build sincronizador
+docker compose logs --tail=100 sincronizador
+```
+
+O serviço aguarda a API responder ao endpoint de saúde, executa imediatamente e usa 21.600 segundos entre os inícios dos ciclos, descontando o tempo de execução. Um ciclo que exceda seis horas não dispara outra instância em paralelo; o próximo começa assim que o anterior termina. Falhas da fonte/API são registradas e não encerram o laço. O reinício do container inicia uma nova execução; isso é seguro para a chave de reimportação, mas não significa garantia de execução quando o host estiver desligado.
+
+O serviço compartilha `backend/.env`, usa `BACKEND_URL=http://backend:8000` e não acessa diretamente o banco. Aplique as migrações antes de ativá-lo. Logs informam instante UTC, campus e status; para diagnóstico, confira também os logs do backend. Não registre credenciais nem o cabeçalho de autorização em logs.
+
+```bash
+# Parar apenas o sincronizador
+docker compose --profile sincronizacao stop sincronizador
+# Recriar após alterar o token em backend/.env
+docker compose up -d --force-recreate backend
+docker compose --profile sincronizacao up -d --force-recreate sincronizador
+```
+
+A política `unless-stopped` reinicia o serviço após falhas/reinício do Docker, exceto quando ele foi parado explicitamente. A rotina exige token antes de acessar a fonte. Uma falha de configuração deve ser corrigida antes de tentar novamente. Para execução manual fora do Docker, exporte `IMPORTACAO_TOKEN` com o mesmo valor da API; o extrator não lê o arquivo `.env` automaticamente. Os comandos estão no README.
+
+A cadência implementada não certifica disponibilidade contínua, publicação do RU dentro de prazo ou exibição de última atualização na interface. O modelo atual ainda não registra esse último instante.
+
+## SAST e proteção da branch
+
+O workflow `SAST` executa Bandit sobre o código Python do backend/extração e CodeQL sobre JavaScript/TypeScript. A política em `scripts/security/POLICY.md` no repositório define severidades, arquivos analisados e comandos locais. Relatórios e versões dos scanners devem ser consultados nos artefatos da execução, mesmo quando o check falha.
+
+No GitHub, um administrador deve configurar os checks de SAST como obrigatórios na proteção/ruleset da `main`, depois que o workflow executar. Sem essa configuração, uma falha de check pode ser ignorada por quem tiver permissão de merge. Esta mudança não altera permissões ou regras remotas automaticamente. Consultar os nomes exatos na política do repositório.
 
 ## Testes e execução alternativa
 

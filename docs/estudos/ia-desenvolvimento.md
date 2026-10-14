@@ -45,7 +45,7 @@ O GitHub recomenda entender e revisar sugestões, avaliar segurança e manutenç
 
 ## Aplicação neste projeto
 
-No Bandejão, um assistente pode ajudar a explicar rotas, preparar testes para a extração de PDFs, organizar uma documentação ou sugerir um ajuste localizado. Ele não deve inventar regras de dieta ou declarar segurança alimentar com base em campos incompletos. As decisões ainda pendentes, como D01 e D02 em [Requisitos](../Requisitos.md#7-decisoes-pendentes), continuam com a equipe. A validação usa o código, a fonte oficial, os testes e a CI do repositório.
+No Bandejão, um assistente pode ajudar a explicar rotas, preparar testes para a extração de PDFs, organizar uma documentação ou sugerir um ajuste localizado. Ele não deve inventar regras de dieta ou declarar segurança alimentar com base em campos incompletos. As decisões D01 a D08 estão registradas em [Requisitos](../Requisitos.md#7-decisoes) e continuam sob responsabilidade da equipe. A validação usa o código, a fonte oficial, os testes e a CI do repositório.
 
 ## Referências
 
