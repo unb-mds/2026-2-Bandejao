@@ -30,17 +30,22 @@ def check_sarif(report):
     blocked = []
     for run in report["runs"]:
         driver = run["tool"]["driver"]
-        if driver["name"] != "CodeQL" or not driver["rules"]:
-            raise ValueError("Expected CodeQL rules in SARIF")
+        if driver["name"] != "CodeQL":
+            raise ValueError("Expected CodeQL tool in SARIF")
         for invocation in run.get("invocations", []):
             if invocation.get("executionSuccessful") is False:
                 raise ValueError("CodeQL invocation failed")
             for notification in invocation.get("toolExecutionNotifications", []):
                 if notification.get("level") == "error":
                     raise ValueError("CodeQL reported an execution error")
-        rules = {rule["id"]: rule for rule in driver["rules"]}
         if not isinstance(run["results"], list):
             raise ValueError("Invalid SARIF results")
+        declared_rules = driver.get("rules", [])
+        if not isinstance(declared_rules, list):
+            raise ValueError("Invalid CodeQL rules")
+        if run["results"] and not declared_rules:
+            raise ValueError("Expected CodeQL rules for reported results")
+        rules = {rule["id"]: rule for rule in declared_rules}
         for finding in run["results"]:
             rule = rules[finding["ruleId"]]
             props = rule.get("properties", {})

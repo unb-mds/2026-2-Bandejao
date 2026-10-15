@@ -62,6 +62,18 @@ class SecurityGateTests(unittest.TestCase):
         report["runs"][0]["results"] = []
         self.assertEqual(check_sarif(report), [])
 
+    def test_clean_codeql_result_without_declared_rules_passes(self):
+        report = sarif()
+        report["runs"][0]["tool"]["driver"]["rules"] = []
+        report["runs"][0]["results"] = []
+        self.assertEqual(check_sarif(report), [])
+
+    def test_codeql_result_without_declared_rules_fails(self):
+        report = sarif()
+        report["runs"][0]["tool"]["driver"]["rules"] = []
+        with self.assertRaises(ValueError):
+            check_sarif(report)
+
     def test_bandit_severity_and_errors(self):
         report = {"errors": [], "metrics": {"_totals": {"loc": 5}}, "results": []}
         self.assertEqual(check_bandit(report), [])
