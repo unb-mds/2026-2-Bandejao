@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
 
-import { listarCampi, listarCardapios, requisitarJson } from '../src/api.ts'
+import { listarCampi, listarCardapios, requisitarJson, salvarAvaliacao } from '../src/api.ts'
 
 test('carrega campi pela rota da API', async () => {
   let urlRecebida
@@ -73,4 +73,35 @@ test('informa o status HTTP se a resposta de erro não tiver JSON', async () => 
     }),
     { message: 'A API respondeu com HTTP 502.' },
   )
+})
+
+test('envia avaliação com a identidade anônima no cabeçalho', async () => {
+  let urlRecebida
+  let opcoesRecebidas
+  const identidade = '123e4567-e89b-42d3-a456-426614174000'
+
+  const resultado = await salvarAvaliacao(
+    42,
+    { nota: 5, comentario: 'Muito bom' },
+    identidade,
+    {
+      baseUrl: 'https://api.exemplo.test',
+      fetchImpl: async (url, opcoes) => {
+        urlRecebida = new URL(url)
+        opcoesRecebidas = opcoes
+        return {
+          ok: true,
+          status: 201,
+          json: async () => ({ id: 7, cardapio_id: 42, nota: 5 }),
+        }
+      },
+    },
+  )
+
+  assert.equal(urlRecebida.pathname, '/cardapios/42/avaliacoes/')
+  assert.equal(opcoesRecebidas.method, 'POST')
+  assert.equal(opcoesRecebidas.headers['X-Identidade'], identidade)
+  assert.equal(opcoesRecebidas.headers['Content-Type'], 'application/json')
+  assert.deepEqual(JSON.parse(opcoesRecebidas.body), { nota: 5, comentario: 'Muito bom' })
+  assert.equal(resultado.id, 7)
 })

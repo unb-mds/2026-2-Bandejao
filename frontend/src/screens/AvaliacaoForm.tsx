@@ -25,12 +25,14 @@ export interface AvaliacaoFormProps {
   avFoto: string | undefined
   setAvFoto: (v: string | undefined) => void
   avSuccess: boolean
+  avErro: string
+  avEnviando: boolean
   fileRef: React.RefObject<HTMLInputElement | null>
   dragging: boolean
   setDragging: (v: boolean) => void
   handleFoto: (file: File) => void
   handleDrop: (e: React.DragEvent) => void
-  submitAvaliacao: (e: React.FormEvent) => void
+  submitAvaliacao: (e: React.FormEvent) => void | Promise<void>
 }
 
 // ── Mesma função usada na HomeScreen ──
@@ -69,6 +71,8 @@ export default function AvaliacaoForm({
   avFoto,
   setAvFoto,
   avSuccess,
+  avErro,
+  avEnviando,
   fileRef,
   dragging,
   setDragging,
@@ -114,7 +118,12 @@ export default function AvaliacaoForm({
             className="mb-5 p-4 rounded-xl flex items-center gap-2 font-semibold text-sm"
             style={{ background: '#EEF7F1', border: '1px solid #B8DCC5', color: '#1A5C2E' }}
           >
-            <span aria-hidden="true">✅</span> Avaliação salva nesta sessão de demonstração.
+            <span aria-hidden="true">✅</span> Avaliação salva.
+          </div>
+        )}
+        {avErro && (
+          <div className="mb-5 p-4 rounded-xl text-sm" role="alert" style={{ background: '#FEF2F2', border: '1px solid #FCA5A5', color: '#991B1B' }}>
+            {avErro}
           </div>
         )}
       </div>
@@ -290,11 +299,11 @@ export default function AvaliacaoForm({
 
             <button
               type="submit"
-              disabled={!avSabor || !avSal || !avTemp || !avApres || !avQtd || !avGeral}
+              disabled={avEnviando || !avSabor || !avSal || !avTemp || !avApres || !avQtd || !avGeral}
               className="w-full py-4 rounded-2xl font-bold text-base disabled:opacity-40 disabled:cursor-not-allowed transition-all"
               style={{ background: 'var(--primary)', color: 'white' }}
             >
-              Enviar avaliação →
+              {avEnviando ? 'Enviando…' : 'Enviar avaliação →'}
             </button>
           </>
         )}
