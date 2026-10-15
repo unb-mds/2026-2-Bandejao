@@ -1,5 +1,19 @@
 # Histórico de mudanças da documentação
 
+## 14/10/2026 — Base de infraestrutura da Sprint 03
+
+**Escopo:** SAST, sincronização periódica, proteção da importação e documentação operacional; sem implementação de tempo, dieta, identidade anônima, reclamações ou planejamento.
+
+- Importação protegida por Bearer token compartilhado entre backend e sincronizador; sem configuração válida, a escrita é recusada.
+- Rotas HTTP de check-in legado retiradas, preservando modelo e banco para migração futura.
+- Serviço opcional do Docker Compose executa a sincronização ao iniciar e a cada seis horas, sem sobrepor ciclos.
+- Workflow SAST adiciona Bandit para Python e CodeQL para JavaScript/TypeScript, com gate para achados altos/críticos e relatórios como artefatos.
+- Sprint 03 diferencia a proposta de votação das decisões efetivamente registradas na ata e delimita o recorte implementado nesta branch.
+
+**Verificação local:** 22 testes do backend, 41 da extração e 10 do gate SAST passaram; backend e extração mantiveram 100% de cobertura. Ruff, `docker compose config --quiet`, `git diff --check`, Bandit sobre os arquivos Python rastreados e `mkdocs build --strict` passaram. Os SHAs das Actions foram conferidos nos repositórios oficiais.
+
+**Limites:** o daemon Docker não estava disponível, portanto os containers não foram iniciados nem houve importação real. CodeQL precisa executar no GitHub Actions, e a obrigatoriedade dos checks depende da proteção/ruleset da `main`.
+
 ## 01/10/2026 — Alinhamento do frontend com as telas da equipe
 
 **Escopo:** integração do frontend da equipe ao repositório principal e alinhamento da documentação. A publicação da aplicação e a atualização do Vercel externo não fazem parte desta entrega.

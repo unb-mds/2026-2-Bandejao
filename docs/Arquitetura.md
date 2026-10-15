@@ -4,7 +4,7 @@
 
 **Escopo:** arquitetura da Release 1 e direção da Release 2
 
-**Estado do código consultado:** 01/10/2026 (integração local, sem publicação)
+**Estado do código consultado:** 14/10/2026 (Sprint 03, sem publicação)
 
 ## 1. Propósito e estado
 
@@ -29,7 +29,7 @@ flowchart LR
 
 ## 3. C4 — Diagrama de Containers
 
-O container de extração é um comando Python separado. O Docker Compose local sobe apenas banco, API e frontend; não agenda nem executa a extração.
+O container de extração executa como serviço opcional do Docker Compose. O perfil `sincronizacao` aguarda a API ficar saudável, executa uma sincronização ao iniciar e repete a cada seis horas enquanto o host estiver ativo.
 
 ```mermaid
 flowchart LR
@@ -40,14 +40,14 @@ flowchart LR
         web["Frontend Web<br/>React 19 + Vite 8<br/>TypeScript + Tailwind v4<br/>Estado: consulta de cardápio integrada"]
         api["API REST<br/>FastAPI + SQLAlchemy<br/>Estado: rotas de cardápio e avaliação implementadas"]
         banco[("PostgreSQL 16<br/>Estado: schema e migrações existentes")]
-        extracao["Processo de extração<br/>Python, requests, BeautifulSoup,<br/>pdfplumber e Pillow<br/>Estado: PDFs de 30/09/2026 validados; formatos futuros podem variar"]
+        extracao["Sincronizador e extração<br/>Python, requests, BeautifulSoup,<br/>pdfplumber e Pillow<br/>Execução opcional a cada 6 horas"]
     end
 
     pessoa -->|"Navegador / HTTP"| web
     web -->|"JSON / HTTP — consulta de campus e cardápio"| api
     api -->|"SQL"| banco
     extracao -->|"HTTPS: busca página e baixa PDF"| site
-    extracao -->|"HTTP: POST /cardapios/importacao"| api
+    extracao -->|"HTTP + Bearer token:<br/>POST /cardapios/importacao"| api
 ```
 
 ### Responsabilidade e estado de cada container
@@ -57,7 +57,7 @@ flowchart LR
 | Frontend Web | Seleção de campus e consulta de cardápios por período e refeição | React 19, Vite 8, TypeScript e Tailwind v4, a partir das telas da equipe. Consulta `GET /campi/` e `GET /cardapios/`, com URL configurável por `VITE_API_BASE_URL`; filtros locais usam os marcadores retornados. Avaliações/reclamações e planejamento são demonstrações em memória; lotação usa exemplos. |
 | API REST | Validar importações, consultar cardápios e receber avaliações | FastAPI e SQLAlchemy; rotas de campus, cardápio/importação e avaliação existentes. CORS permite origens configuradas em `CORS_ORIGINS`. Reclamações e planejamento não existem ainda. |
 | PostgreSQL | Persistir campi, cardápios, itens, avaliações e check-ins legados | PostgreSQL 16 no Docker Compose; schema gerenciado pelo Alembic. |
-| Processo de extração | Encontrar PDFs, extrair e normalizar dados e enviá-los à API | Pacote Python separado; pode rodar uma vez ou em loop com intervalo, mas não tem agendador no Compose. A publicação consultada em 30/09/2026 foi validada; ver [relatório dos PDFs](validacao-extracao-pdfs.md). Formatos futuros precisam de nova conferência. |
+| Processo de extração | Encontrar PDFs, extrair e normalizar dados e enviá-los à API | Pacote Python separado e serviço opcional `sincronizador`; roda uma vez ao iniciar e repete a cada seis horas, sem sobreposição. A publicação consultada em 30/09/2026 foi validada; ver [relatório dos PDFs](validacao-extracao-pdfs.md). Formatos futuros precisam de nova conferência. |
 
 ## 4. Fluxos principais
 
@@ -65,11 +65,11 @@ flowchart LR
 
 1. O processo de extração solicita a página oficial do RU e encontra links de PDF por campus e período.
 2. Baixa cada PDF e extrai datas, refeições, categorias, pratos e informação de dieta. A identificação de alérgenos compara os ícones das células com a legenda visual do PDF. Nos arquivos validados em 30/09/2026, a legenda não apresenta símbolo separado para frutos do mar; essa informação permanece indisponível.
-3. Converte o resultado em um payload normalizado e envia `POST /cardapios/importacao`.
-4. A API valida campos, enums e alérgenos e grava os registros no PostgreSQL.
+3. Converte o resultado em um payload normalizado e envia `POST /cardapios/importacao`, autenticado pelo segredo `IMPORTACAO_TOKEN` no cabeçalho Bearer.
+4. A API valida primeiro o token e depois campos, enums e alérgenos; requisição não autorizada não grava dados.
 5. A chave lógica de uma refeição é `(campus, data, tipo_refeicao)`. Reimportar essa chave substitui os itens anteriores, atualiza a URL de origem e preserva o registro do cardápio e suas avaliações.
 
-A rotina isola falhas por campus durante o processamento. A disponibilidade e a qualidade do cardápio dependem da publicação do RU e da execução bem-sucedida da extração. A importação ainda não tem autenticação; antes de expor a API publicamente, deve ser protegida ou isolada da rede pública, pois pode substituir dados.
+A rotina isola falhas por campus durante o processamento. A disponibilidade e a qualidade do cardápio dependem da publicação do RU e da execução bem-sucedida da extração. Sem segredo configurado, a API recusa importações. O token protege a escrita administrativa, mas não substitui HTTPS, rotação de segredo ou isolamento de rede em uma implantação pública.
 
 ### 4.2 Consulta e feedback
 
@@ -79,7 +79,7 @@ As rotas para registrar e consultar avaliações existem em `/cardapios/{cardapi
 
 ### 4.3 Planejamento e previsão — Release 2
 
-O código atual contém check-ins, que representam uma abordagem antiga. O requisito vigente substitui check-in por planejamento antecipado. Antes de desenhar o modelo e a previsão, é necessário decidir como coletar horário/faixa de chegada: campus, dia e refeição não bastam para inferir uma hora de pico.
+O código ainda contém o modelo/tabela de check-ins, que representam uma abordagem antiga, mas suas rotas HTTP foram retiradas. O requisito vigente substitui check-in por planejamento antecipado. A decisão D05 limita a estimativa à quantidade de intenções por campus, data e refeição, com mínimo de 10; não serão inferidos horário de chegada nem tempo de espera.
 
 ## 5. Modelo de dados atual
 
@@ -122,31 +122,31 @@ Não há uma entidade separada `Refeicao`: no schema atual, `Cardapio` represent
 | Banco de dados | PostgreSQL 16 |
 | Frontend | React 19, TypeScript/TSX, Vite 8 e Tailwind CSS v4; cliente HTTP tipado, plugin Tailwind no Vite e checagem de tipos antes do build |
 | Ambiente local | Docker Compose; a extração roda separadamente |
-| CI e publicação | `.github/workflows/ci.yml` executa testes do backend e da extração, além de lint e build do frontend em pull requests e mudanças da aplicação na `main`. `.github/workflows/docs.yml` valida a documentação em pull requests e publica o MkDocs no GitHub Pages na `main`. O deploy da aplicação ainda não está configurado. |
+| CI e publicação | `.github/workflows/ci.yml` executa testes, lint e build. `.github/workflows/sast.yml` executa Bandit e CodeQL e bloqueia achados altos/críticos; o bloqueio de merge depende de configurar os checks como obrigatórios no GitHub. `.github/workflows/docs.yml` valida e publica o MkDocs. O deploy da aplicação ainda não está configurado. |
 
 ## 8. Interfaces relevantes
 
 - `GET /health` — verificação básica da API.
 - `GET /campi/` e `GET /campi/{id}` — consulta de campi.
 - `GET /cardapios/` e `GET /cardapios/{id}` — consulta de cardápios; a listagem aceita filtros.
-- `POST /cardapios/importacao` — contrato entre a extração e a API.
+- `POST /cardapios/importacao` — contrato autenticado por Bearer token entre a extração e a API.
 - `GET /cardapios/{id}/avaliacoes/` e `POST /cardapios/{id}/avaliacoes/` — histórico e criação de avaliação.
-- `GET /campi/{id}/checkins/` e `POST /campi/{id}/checkins/` — endpoints legados a revisar ao implementar planejamento.
+- As rotas HTTP de check-in legado foram retiradas na Sprint 03; modelo e tabela permanecem para migração futura.
 
 A documentação OpenAPI fica em `/docs` quando a API está em execução. O contrato detalhado do payload de importação está em `docs/handoff_banco_e_importacao.md`.
 
 ## 9. Ambiente local
 
-O `docker-compose.yml` define PostgreSQL, backend e frontend. O README orienta criar `backend/.env` a partir do exemplo, executar `docker compose up --build` e depois aplicar as migrações com `docker compose exec backend alembic upgrade head`. Os endereços locais documentados são API `http://localhost:8000`, OpenAPI `http://localhost:8000/docs` e frontend `http://localhost:5173`.
+O `docker-compose.yml` define PostgreSQL, backend e frontend, além do serviço opcional `sincronizador`. O README orienta criar `backend/.env`, definir `IMPORTACAO_TOKEN`, subir os serviços e aplicar as migrações. Só depois se ativa o perfil de sincronização. Os endereços locais documentados são API `http://localhost:8000`, OpenAPI `http://localhost:8000/docs` e frontend `http://localhost:5173`.
 
-A extração é iniciada à parte, a partir da pasta `extracao`, com `python -m extracao.sincronizar --backend-url http://localhost:8000`. O seed é apenas para desenvolvimento: ele remove o campus chamado “Gama” e dependências antes de recriar os dados de exemplo, portanto não deve ser usado em uma base com dados reais a preservar.
+A extração também pode ser iniciada fora do Docker com `python -m extracao.sincronizar --backend-url http://localhost:8000`, desde que o mesmo `IMPORTACAO_TOKEN` esteja no ambiente do processo. O seed é apenas para desenvolvimento: ele remove o campus chamado “Gama” e dependências antes de recriar os dados de exemplo, portanto não deve ser usado em uma base com dados reais a preservar.
 
 ## 10. Restrições e decisões arquiteturais
 
 - O extrator está separado da API porque o formato de origem é externo e frágil; ele conversa com o backend pelo contrato de importação, sem compartilhar tabelas ou sessão de banco.
 - O backend atual é uma API única com persistência relacional; o projeto não tem necessidade observada de dividir serviços em microserviços.
-- O Docker Compose descreve apenas o ambiente local. Execução periódica confiável da extração em produção ainda precisa de uma decisão de deploy/agendamento.
-- CORS, autenticação da importação e hospedagem pública devem ser definidos antes de abrir o sistema para tráfego externo.
+- O Docker Compose descreve apenas o ambiente local. O perfil periódico depende de um host continuamente ligado; execução confiável em produção ainda exige ambiente de deploy e monitoramento.
+- A importação exige token. Uma implantação pública também deve usar HTTPS, limitar a exposição da rota e definir rotação do segredo.
 - Para Release 2, o dado coletado deve ter granularidade compatível com o que a previsão promete. Intenções por refeição não determinam um horário.
 
 ---

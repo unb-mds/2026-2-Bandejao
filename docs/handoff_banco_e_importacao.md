@@ -41,6 +41,12 @@ da aplicação continue sendo a fonte da regra.
 O endpoint é interno e recebe a saída normalizada da extração. A documentação
 interativa também fica disponível em `/docs` quando a API está em execução.
 
+### Autenticação (D08)
+
+A importação exige `Authorization: Bearer <IMPORTACAO_TOKEN>`. Configure o mesmo segredo na API e na rotina de sincronização, por variável de ambiente; não o coloque no payload, na URL, no frontend ou no repositório. O arquivo de exemplo contém apenas a chave sem um token real.
+
+Sem token ou com token inválido, a API recusa com 401/403 antes de gravar. Sem segredo configurado no servidor, a importação também permanece bloqueada. As consultas de campus e cardápio continuam públicas. As rotas HTTP de check-in legado foram retiradas; suas tabelas e registros não foram apagados.
+
 ### Payload
 
 ```json
@@ -112,8 +118,7 @@ registro de `cardapio` é mantido; somente os respectivos itens são substituíd
 
 ## Dependência da rotina de extração
 
-Depois de aplicar a migração e iniciar a API, a sincronização pode ser rodada
-com:
+Depois de aplicar a migração e iniciar a API, exporte `IMPORTACAO_TOKEN` com o mesmo valor usado pelo backend. A sincronização pode ser rodada com:
 
 ```bash
 cd extracao
@@ -122,3 +127,5 @@ python -m extracao.sincronizar --backend-url http://localhost:8000
 
 O processo trata cada campus de forma independente: uma falha de PDF ou de
 importação em um campus não impede os demais de serem processados.
+
+O perfil `sincronizacao` do Compose agenda a execução a cada seis horas; consulte o [roteiro de operação](desenvolvimento.md). A rotina não aplica migrações nem lê o `.env` automaticamente fora do Docker.

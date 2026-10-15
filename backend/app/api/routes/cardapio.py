@@ -4,6 +4,7 @@ from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session, selectinload
 
 from app.db.session import get_db
+from app.core.security import exigir_token_importacao
 from app.models import Campus, Cardapio, ItemCardapio
 from app.models.enums import TipoDieta, TipoRefeicao
 from app.schemas.cardapio import (
@@ -62,7 +63,12 @@ def listar_cardapios(
     return resultado
 
 
-@router.post("/importacao", response_model=ImportacaoResultado, tags=["importacao"])
+@router.post(
+    "/importacao",
+    response_model=ImportacaoResultado,
+    tags=["importacao"],
+    dependencies=[Depends(exigir_token_importacao)],
+)
 def importar_cardapio(
     importacao: CardapioImportacao, db: Session = Depends(get_db)
 ) -> ImportacaoResultado:

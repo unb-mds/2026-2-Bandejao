@@ -10,6 +10,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from datetime import date, datetime
 from io import BytesIO
+import os
 import re
 import unicodedata
 from urllib.parse import urljoin
@@ -380,16 +381,28 @@ def enviar_ao_backend(
     resultado: ResultadoExtracao,
     url_base: str = "http://localhost:8000",
     sessao: requests.Session | None = None,
+    *,
+    token: str | None = None,
 ) -> dict[str, object]:
     """Envia explicitamente um campus extraído; a execução padrão continua sem gravar dados."""
+    token = obter_token_importacao(token)
     cliente = sessao or requests.Session()
     resposta = cliente.post(
         f"{url_base.rstrip('/')}/cardapios/importacao",
         json=para_payload_importacao(resultado),
+        headers={"Authorization": f"Bearer {token}"},
         timeout=TIMEOUT_SEGUNDOS,
     )
     resposta.raise_for_status()
     return resposta.json()
+
+
+def obter_token_importacao(token: str | None = None) -> str:
+    """Valida a configuração antes de qualquer acesso de rede da sincronização."""
+    valor = token if token is not None else os.getenv("IMPORTACAO_TOKEN", "")
+    if not valor.strip() or any(c.isspace() for c in valor):
+        raise ValueError("Configure IMPORTACAO_TOKEN com um segredo sem espaços.")
+    return valor
 
 
 def run(hoje: date | None = None) -> dict[str, ResultadoExtracao | ErroExtracao]:
