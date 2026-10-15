@@ -4,6 +4,7 @@ sqlalchemy==2.0.52
 psycopg[binary]==3.2.10
 pydantic-settings==2.7.0
 alembic==1.14.0
+tzdata==2026.5
 
 # dev / testes
 pytest==8.3.4
