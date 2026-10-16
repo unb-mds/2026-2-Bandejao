@@ -6,7 +6,19 @@ from pydantic import SecretStr
 from sqlalchemy.orm import Session
 
 from app.core.config import settings
-from app.models import Campus, Cardapio, Categoria, ItemCardapio, TipoDieta, TipoRefeicao
+from app.models import (
+    Avaliacao,
+    Campus,
+    Cardapio,
+    Categoria,
+    ItemCardapio,
+    TipoDieta,
+    TipoRefeicao,
+)
+
+
+IDENTIDADE_1 = "123e4567-e89b-42d3-a456-426614174000"
+IDENTIDADE_2 = "123e4567-e89b-42d3-a456-426614174001"
 
 
 @pytest.fixture()
@@ -67,18 +79,22 @@ def test_lista_campi_ordenados(client: TestClient, db_session: Session):
     assert [campus["nome"] for campus in response.json()] == ["Ceilândia", "Planaltina"]
 
 
-def test_cors_permite_frontend_local_consultar_api(client: TestClient):
+def test_cors_permite_metodos_e_identidade_do_frontend(client: TestClient):
     response = client.options(
-        "/campi/",
+        "/cardapios/1/avaliacoes/",
         headers={
             "Origin": "http://localhost:5173",
-            "Access-Control-Request-Method": "GET",
+            "Access-Control-Request-Method": "POST",
+            "Access-Control-Request-Headers": "Content-Type,X-Identidade",
         },
     )
 
     assert response.status_code == 200
     assert response.headers["access-control-allow-origin"] == "http://localhost:5173"
-    assert "GET" in response.headers["access-control-allow-methods"]
+    metodos = response.headers["access-control-allow-methods"]
+    for metodo in ["GET", "POST", "PUT", "DELETE", "OPTIONS"]:
+        assert metodo in metodos
+    assert "x-identidade" in response.headers["access-control-allow-headers"].lower()
 
 
 def test_obtem_campus_e_retorna_404_quando_nao_existe(client: TestClient, db_session: Session):
@@ -214,6 +230,7 @@ def test_cria_avaliacao_para_cardapio_existente(client: TestClient, db_session: 
 
     response = client.post(
         f"/cardapios/{cardapio.id}/avaliacoes/",
+        headers={"X-Identidade": IDENTIDADE_1},
         json={"nota": 5, "comentario": "Ótima refeição."},
     )
 
@@ -221,14 +238,83 @@ def test_cria_avaliacao_para_cardapio_existente(client: TestClient, db_session: 
     assert response.json()["cardapio_id"] == cardapio.id
     assert response.json()["nota"] == 5
     assert response.json()["comentario"] == "Ótima refeição."
-    assert client.get(f"/cardapios/{cardapio.id}/avaliacoes/").json()[0]["id"] == response.json()["id"]
+    assert "identidade" not in response.json()
+    avaliacoes = client.get(f"/cardapios/{cardapio.id}/avaliacoes/").json()
+    assert avaliacoes[0]["id"] == response.json()["id"]
+    assert all("identidade" not in avaliacao for avaliacao in avaliacoes)
     assert client.get("/cardapios/999/avaliacoes/").status_code == 404
+
+
+def test_nova_avaliacao_da_mesma_identidade_atualiza_sem_duplicar(
+    client: TestClient, db_session: Session
+):
+    cardapio = criar_cardapio_de_teste(db_session)
+    url = f"/cardapios/{cardapio.id}/avaliacoes/"
+    headers = {"X-Identidade": IDENTIDADE_1}
+
+    primeira = client.post(url, headers=headers, json={"nota": 2, "comentario": "Regular"})
+    atualizada = client.post(url, headers=headers, json={"nota": 5, "comentario": "Melhorou"})
+
+    assert primeira.status_code == 201
+    assert atualizada.status_code == 200
+    assert atualizada.json()["id"] == primeira.json()["id"]
+    assert atualizada.json()["nota"] == 5
+    assert atualizada.json()["comentario"] == "Melhorou"
+    assert db_session.query(Avaliacao).count() == 1
+
+
+def test_identidades_diferentes_criam_avaliacoes_separadas(
+    client: TestClient, db_session: Session
+):
+    cardapio = criar_cardapio_de_teste(db_session)
+    url = f"/cardapios/{cardapio.id}/avaliacoes/"
+
+    primeira = client.post(
+        url,
+        headers={"X-Identidade": IDENTIDADE_1},
+        json={"nota": 4},
+    )
+    segunda = client.post(
+        url,
+        headers={"X-Identidade": IDENTIDADE_2},
+        json={"nota": 3},
+    )
+
+    assert primeira.status_code == 201
+    assert segunda.status_code == 201
+    assert primeira.json()["id"] != segunda.json()["id"]
+    assert db_session.query(Avaliacao).count() == 2
+
+
+@pytest.mark.parametrize(
+    "identidade",
+    [None, "nao-e-uuid", "6ba7b810-9dad-11d1-80b4-00c04fd430c8"],
+)
+def test_rejeita_identidade_ausente_invalida_ou_fora_da_versao_4(
+    client: TestClient, db_session: Session, identidade
+):
+    cardapio = criar_cardapio_de_teste(db_session)
+    headers = {} if identidade is None else {"X-Identidade": identidade}
+
+    response = client.post(
+        f"/cardapios/{cardapio.id}/avaliacoes/",
+        headers=headers,
+        json={"nota": 4},
+    )
+
+    assert response.status_code == 400
+    assert "UUID v4" in response.json()["detail"]
+    assert db_session.query(Avaliacao).count() == 0
 
 
 def test_rejeita_nota_fora_do_intervalo(client: TestClient, db_session: Session):
     cardapio = criar_cardapio_de_teste(db_session)
 
-    response = client.post(f"/cardapios/{cardapio.id}/avaliacoes/", json={"nota": 6})
+    response = client.post(
+        f"/cardapios/{cardapio.id}/avaliacoes/",
+        headers={"X-Identidade": IDENTIDADE_1},
+        json={"nota": 6},
+    )
 
     assert response.status_code == 422
 
