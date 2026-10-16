@@ -11,7 +11,7 @@ A [ata de 12/10](atas-reunioes/ata-sprint03.md) e o [Documento de Requisitos v1.
 | Ponto | Proposta para votação | Decisão registrada na ata |
 |---|---|---|
 | D02 — Dieta | Correspondência exata | Ovolactovegetariano também inclui vegetariano estrito. |
-| D03 — Horários | Cadastro por campus/refeição e campo de serviço suspenso | Tabela de horários; suspensão fora do escopo. Fonte e valores dos horários ainda precisam ser preenchidos. |
+| D03 — Horários | Cadastro por campus/refeição e campo de serviço suspenso | Tabela por refeição com início às 07:00, 11:00 e 17:00, conforme a fonte oficial; suspensão fora do escopo. |
 | D04 — Identidade | Login com e-mail e senha | Sem login; código anônimo por navegador. |
 | D05 — Movimento | Mínimo de 20 intenções | Mínimo de 10; estimativa por refeição, sem horário de chegada. |
 
@@ -25,9 +25,9 @@ A infraestrutura pode ser desenvolvida sem concluir os RFs futuros. Sua operaç�
 |---|---|---|
 | D01 | Utilitário de semana segunda–domingo e fuso de Brasília | Fora do recorte desta branch; permanece no planejamento da sprint. |
 | D02 | Filtro inclusivo na API e aviso sobre marcações da fonte | Fora do recorte desta branch. |
-| D03 | Configuração de horários e função de elegibilidade | Fora do recorte desta branch; horários/fonte ainda pendentes. |
+| D03 | Configuração de horários e função de elegibilidade | Implementada na entrega S03-04, com horários da fonte oficial e limites no fuso de Brasília. |
 | D04 | Identidade anônima no backend/frontend e CORS para envio | Fora do recorte desta branch. |
-| D05 | Constante de amostra mínima de 10 | Fora do recorte desta branch; estimativa e planejamento ficam para depois. |
+| D05 | Constante de amostra mínima de 10 | Implementada na entrega S03-04; estimativa e planejamento ficam para depois. |
 | D06 | Reclamações privadas, quatro categorias, sem foto/nome | Implementação nas próximas sprints. |
 | D07b | Sincronização a cada seis horas | Serviço opcional no Docker Compose; iniciar após configuração e migrações. |
 | D07d | Bandit para Python e CodeQL para JS/TS | Workflow e verificações de severidade; execução no GitHub e checks obrigatórios precisam ser confirmados após publicação da branch. |
@@ -81,7 +81,6 @@ O instante da última importação bem-sucedida ainda não é persistido no mode
 
 ## Pendências e próximos passos
 
-- Confirmar a fonte oficial e preencher horários por campus/refeição, sem inventar valores.
 - Implementar S03-02 a S03-05 em mudanças próprias e vinculadas às decisões da ata.
 - Registrar participantes e responsáveis reais na ata e vincular as issues/PRs da sprint.
 - Ativar o serviço no ambiente escolhido e configurar os checks obrigatórios no GitHub.

@@ -1,5 +1,19 @@
+from datetime import time
+from types import MappingProxyType
+from typing import Mapping
+
 from pydantic import Field, SecretStr
 from pydantic_settings import BaseSettings, SettingsConfigDict
+
+AMOSTRA_MINIMA_ESTIMATIVA = 10
+# Fonte consultada em 15/10/2026: https://ru.unb.br/
+HORARIOS_INICIO_REFEICAO: Mapping[str, time] = MappingProxyType(
+    {
+        "cafe_da_manha": time(7, 0),
+        "almoco": time(11, 0),
+        "jantar": time(17, 0),
+    }
+)
 
 
 class Settings(BaseSettings):
