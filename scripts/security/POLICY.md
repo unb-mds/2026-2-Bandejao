@@ -46,16 +46,18 @@ o resultado SARIF é guardado como artefato e validado localmente. Não é neces
 code scanning; o uso do CodeQL continua sujeito à licença do GitHub (repositório
 público ou plano/licença aplicável a repositório privado).
 
-Para impedir merge, um administrador deve exigir estes dois checks na proteção
-da `main`/ruleset, sem bypass indevido:
+O ruleset [SAST obrigatório na main](https://github.com/unb-mds/2026-2-Bandejao/rules/25208102)
+foi ativado em 15/10/2026, sem atores com bypass. Ele exige a atualização da
+branch e a aprovação destes dois checks antes de atualizar a `main`:
 
 - `SAST Python (Bandit)`
 - `SAST JavaScript (CodeQL)`
 
-Este PR não altera configurações remotas. Check vermelho sozinho não impede
-merge sem essa proteção. As ações são fixadas por SHA; atualização de versão,
-bundle ou regras deve passar por revisão. A execução real do CodeQL acontece no
-GitHub Actions; os testes locais do gate não equivalem à análise do frontend.
+A [evidência da issue 60](../../docs/evidencias/sast-issue-60.md) registra a
+execução real, os artefatos e a configuração efetiva. As ações são fixadas por
+SHA; atualização de versão, bundle ou regras deve passar por revisão. A execução
+real do CodeQL acontece no GitHub Actions; os testes locais do gate não equivalem
+à análise do frontend.
 
 ## Verificação local
 
