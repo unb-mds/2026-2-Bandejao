@@ -1,5 +1,14 @@
 # Histórico de mudanças da documentação
 
+## 15/10/2026 — Ativação do SAST na `main`
+
+**Escopo:** conclusão operacional de RNF05 e D07d.
+
+- Bandit e CodeQL confirmados em Pull Request real, com os dois jobs aprovados.
+- Artefatos das duas análises baixados e inspecionados; nenhum achado alto ou crítico.
+- Ruleset ativo na `main`, sem bypass, exige os dois checks e branch atualizada antes do merge.
+- Links, SHAs, resultados e comandos de reprodução registrados na evidência da issue 60.
+
 ## 14/10/2026 — Base de infraestrutura da Sprint 03
 
 **Escopo:** SAST, sincronização periódica, proteção da importação e documentação operacional; sem implementação de tempo, dieta, identidade anônima, reclamações ou planejamento.

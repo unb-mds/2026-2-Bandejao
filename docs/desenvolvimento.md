@@ -90,7 +90,7 @@ A cadência implementada não certifica disponibilidade contínua, publicação 
 
 O workflow `SAST` executa Bandit sobre o código Python do backend/extração e CodeQL sobre JavaScript/TypeScript. A política em `scripts/security/POLICY.md` no repositório define severidades, arquivos analisados e comandos locais. Relatórios e versões dos scanners devem ser consultados nos artefatos da execução, mesmo quando o check falha.
 
-No GitHub, um administrador deve configurar os checks de SAST como obrigatórios na proteção/ruleset da `main`, depois que o workflow executar. Sem essa configuração, uma falha de check pode ser ignorada por quem tiver permissão de merge. Esta mudança não altera permissões ou regras remotas automaticamente. Consultar os nomes exatos na política do repositório.
+No GitHub, o ruleset [SAST obrigatório na main](https://github.com/unb-mds/2026-2-Bandejao/rules/25208102) exige os checks `SAST Python (Bandit)` e `SAST JavaScript (CodeQL)`, sem atores com bypass e com atualização obrigatória da branch antes do merge. A [evidência da ativação](evidencias/sast-issue-60.md) registra a execução real, os artefatos e a configuração verificada.
 
 ## Testes e execução alternativa
 
