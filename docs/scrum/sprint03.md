@@ -17,7 +17,7 @@ A [ata de 12/10](atas-reunioes/ata-sprint03.md) e o [Documento de Requisitos v1.
 
 Esta branch, `feature/sprint03-base-entrega`, concentra **SAST, sincronização e documentação**, conforme o escopo solicitado. Inclui D08 porque a rotina de sincronização precisa autenticar a importação. O agendamento de seis horas, anteriormente listado para uma sprint posterior, entra nesta entrega. Tempo, dieta, identidade e funcionalidades das próximas sprints continuam pendentes.
 
-A infraestrutura pode ser desenvolvida sem concluir os RFs futuros. Sua operação depende de API e banco disponíveis, migrações aplicadas, token configurado e uma máquina mantendo o Docker em execução. O bloqueio de merge depende também da configuração dos checks obrigatórios no GitHub.
+A infraestrutura pode ser desenvolvida sem concluir os RFs futuros. Sua operação depende de API e banco disponíveis, migrações aplicadas, token configurado e uma máquina mantendo o Docker em execução. Os checks SAST obrigatórios foram ativados no GitHub em 15/10/2026.
 
 ## Decisões e entregas
 
@@ -30,7 +30,7 @@ A infraestrutura pode ser desenvolvida sem concluir os RFs futuros. Sua operaç�
 | D05 | Constante de amostra mínima de 10 | Implementada na entrega S03-04; estimativa e planejamento ficam para depois. |
 | D06 | Reclamações privadas, quatro categorias, sem foto/nome | Implementação nas próximas sprints. |
 | D07b | Sincronização a cada seis horas | Serviço opcional no Docker Compose; iniciar após configuração e migrações. |
-| D07d | Bandit para Python e CodeQL para JS/TS | Workflow e verificações de severidade; execução no GitHub e checks obrigatórios precisam ser confirmados após publicação da branch. |
+| D07d | Bandit para Python e CodeQL para JS/TS | Workflow confirmado em PR real, artefatos inspecionados e checks obrigatórios ativados na `main`. |
 | D08 | Token na importação e na sincronização | Importação autenticada e rotas HTTP de check-in legado retiradas; modelos e dados legados preservados. |
 
 ## Itens de trabalho
@@ -66,16 +66,16 @@ O [roteiro de desenvolvimento](../desenvolvimento.md) descreve como configurar o
 A validação desta branch deve distinguir:
 
 - **Código/testes locais:** autenticação, isolamento por campus, repetição do agendamento, tratamento dos relatórios de segurança e configuração do Compose.
-- **Execução no GitHub:** CodeQL, upload de relatórios e configuração dos checks obrigatórios, após publicar a branch.
+- **Execução no GitHub:** CodeQL e Bandit aprovados, relatórios publicados e ruleset ativo, conforme a [evidência da issue 60](../evidencias/sast-issue-60.md).
 - **Operação:** execução real com banco migrado e fonte disponível, em máquina continuamente ligada. Se o host estiver suspenso ou desligado, a rotina não executa; ao voltar, começa um novo ciclo.
 
 ### Evidências locais desta branch
 
 - Backend: 22 testes aprovados, 100% de cobertura e Ruff aprovado.
 - Extração/sincronização: 41 testes aprovados, 100% de cobertura e Ruff aprovado.
-- Gate SAST: 10 testes aprovados; Bandit analisou os arquivos Python rastreados sem achados altos.
+- Gate SAST: 12 testes aprovados; Bandit analisou os arquivos Python rastreados sem achados altos.
 - Configuração/documentação: `docker compose config --quiet`, validação do YAML, `git diff --check` e `mkdocs build --strict` aprovados.
-- Actions: SHAs de checkout, setup-python, upload-artifact e CodeQL conferidos nas fontes oficiais. A execução real do CodeQL permanece pendente do GitHub Actions.
+- Actions: SHAs de checkout, setup-python, upload-artifact e CodeQL conferidos nas fontes oficiais; execução real aprovada e artefatos inspecionados.
 
 O instante da última importação bem-sucedida ainda não é persistido no modelo `Cardapio`. O agendamento e os logs não representam atendimento completo de RNF02 nem do critério de exibição de atualização em RF01.
 
@@ -83,5 +83,5 @@ O instante da última importação bem-sucedida ainda não é persistido no mode
 
 - Implementar S03-02 a S03-05 em mudanças próprias e vinculadas às decisões da ata.
 - Registrar participantes e responsáveis reais na ata e vincular as issues/PRs da sprint.
-- Ativar o serviço no ambiente escolhido e configurar os checks obrigatórios no GitHub.
+- Ativar o serviço de sincronização no ambiente escolhido.
 - Manter para as próximas sprints: reclamações, aplicação da janela nas rotas de avaliação, planejamento, estimativa, teste de carga, corpus de PDFs, checagem de disponibilidade e deploy da aplicação.

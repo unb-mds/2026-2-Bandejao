@@ -9,9 +9,10 @@ import CardapioTab from '@/screens/CardapioTab'
 import LotacaoTab from '@/screens/LotacaoTab'
 
 import { DIAS_SEMANA } from './data'
-import { listarCampi, listarCardapios } from './api'
+import { listarCampi, listarCardapios, salvarAvaliacao } from './api'
 import type { CardapioApi } from './api'
 import { inicioSemana, dataDaSemana, montarSemana } from './cardapios'
+import { obterIdentidadeAnonima } from './identidade'
 import type { Campus } from './types'
 import type { Avaliacao, NivelLotacao, Reclamacao, Refeicao, ReportLotacao } from './types'
 import { getCurrentMealInfo } from './utils'
@@ -134,6 +135,8 @@ export default function App() {
   const [avComentario, setAvComentario] = useState('')
   const [avFoto, setAvFoto] = useState<string | undefined>()
   const [avSuccess, setAvSuccess] = useState(false)
+  const [avErro, setAvErro] = useState('')
+  const [avEnviando, setAvEnviando] = useState(false)
 
   const [recNome, setRecNome] = useState('')
   const [recCategoria, setRecCategoria] = useState('Qualidade da comida')
@@ -163,12 +166,33 @@ export default function App() {
     if (file?.type.startsWith('image/')) handleFoto(file)
   }
 
-  const handleSubmitAvaliacao = (e: React.FormEvent) => {
+  const handleSubmitAvaliacao = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!avSabor || !avSal || !avTemp || !avApres || !avQtd || !avGeral) return
+    const cardapioAtual = cardapioDia[refeicao]
+    if (!cardapioAtual.id) {
+      setAvErro('Não foi possível identificar a refeição selecionada.')
+      return
+    }
+
+    setAvErro('')
+    setAvEnviando(true)
+    let avaliacaoSalva
+    try {
+      avaliacaoSalva = await salvarAvaliacao(
+        cardapioAtual.id,
+        { nota: avGeral, comentario: avComentario.trim() || null },
+        obterIdentidadeAnonima(),
+      )
+    } catch (erro) {
+      setAvErro(erro instanceof Error ? erro.message : 'Não foi possível salvar a avaliação.')
+      setAvEnviando(false)
+      return
+    }
+
     const nova: Avaliacao = {
-      id: crypto.randomUUID(), autor: avNome || 'Anônimo',
-      refeicao: cardapioDia[refeicao].label,
+      id: avaliacaoSalva.id, autor: avNome || 'Anônimo',
+      refeicao: cardapioAtual.label,
       campus: campus.name,
       sabor: avSabor, sal: avSal, temperatura: avTemp,
       apresentacao: avApres, quantidade: avQtd, geral: avGeral,
@@ -176,10 +200,11 @@ export default function App() {
       data: new Date().toLocaleDateString('pt-BR'),
       horario: new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }),
     }
-    setAvaliacoes(prev => [nova, ...prev])
+    setAvaliacoes(prev => [nova, ...prev.filter(avaliacao => avaliacao.id !== nova.id)])
     setAvNome(''); setAvSabor(0); setAvSal(0); setAvTemp(0); setAvApres(0); setAvQtd(0); setAvGeral(0)
     setAvComentario(''); setAvFoto(undefined)
     setAvSuccess(true)
+    setAvEnviando(false)
     setTimeout(() => { setAvSuccess(false); setTab('avaliar'); setTabAvaliar('historico') }, 1800)
   }
 
@@ -263,7 +288,7 @@ export default function App() {
           </div>}
           {estadoCampi === 'pronto' && estadoCardapios === 'carregando' && <p role="status">Carregando cardápios…</p>}
           {estadoCampi === 'pronto' && estadoCardapios === 'pronto' && cardapiosApi.length === 0 && <p role="status">Nenhum cardápio publicado para esta semana. Isso não confirma que o RU esteja fechado.</p>}
-          <p className="text-xs text-muted-foreground">Avaliações, reclamações e planejamento são demonstrações nesta versão: os registros ficam apenas nesta sessão e não são enviados ao RU. A tela de lotação usa exemplos, sem estimativa real.</p>
+          <p className="text-xs text-muted-foreground">Reclamações e planejamento são demonstrações nesta versão: os registros ficam apenas nesta sessão e não são enviados ao RU. A tela de lotação usa exemplos, sem estimativa real.</p>
         </section>
         {tab === 'hoje' && estadoCampi === 'pronto' && estadoCardapios === 'pronto' && campus.id && (
           <div id="panel-hoje" role="tabpanel" aria-labelledby="tab-hoje">
@@ -306,7 +331,7 @@ export default function App() {
       <AvaliarTab
         tabAvaliar={tabAvaliar}
         setTabAvaliar={setTabAvaliar}
-        formProps={{ cardapioDia, refeicao, setRefeicao, campus, avNome, setAvNome, avSabor, setAvSabor, avSal, setAvSal, avTemp, setAvTemp, avApres, setAvApres, avQtd, setAvQtd, avGeral, setAvGeral, avComentario, setAvComentario, avFoto, setAvFoto, avSuccess, fileRef, dragging, setDragging, handleFoto, handleDrop, submitAvaliacao: handleSubmitAvaliacao }}
+        formProps={{ cardapioDia, refeicao, setRefeicao, campus, avNome, setAvNome, avSabor, setAvSabor, avSal, setAvSal, avTemp, setAvTemp, avApres, setAvApres, avQtd, setAvQtd, avGeral, setAvGeral, avComentario, setAvComentario, avFoto, setAvFoto, avSuccess, avErro, avEnviando, fileRef, dragging, setDragging, handleFoto, handleDrop, submitAvaliacao: handleSubmitAvaliacao }}
         historicoProps={{ avaliacoes: avaliacoesDoCampus, mediaGeral, setTab }}
         reclamacoesProps={{ recSuccess, recCategoria, setRecCategoria, recNome, setRecNome, recDescricao, setRecDescricao, recFoto, setRecFoto, recFotoRef, submitReclamacao, reclamacoes }}
       />
