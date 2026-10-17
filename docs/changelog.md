@@ -9,6 +9,17 @@
 - Ruleset ativo na `main`, sem bypass, exige os dois checks e branch atualizada antes do merge.
 - Links, SHAs, resultados e comandos de reprodução registrados na evidência da issue 60.
 
+## 15/10/2026 — Horários e janela de avaliação
+
+**Escopo:** base de negócio das decisões D03 e D05.
+
+- Horários de início de café da manhã, almoço e jantar centralizados na configuração, com referência à página oficial do RU.
+- Função de elegibilidade criada com a janela entre o início do serviço e antes de 00h do dia seguinte, no fuso de Brasília; refeição sem horário permanece fechada.
+- Amostra mínima da estimativa centralizada com o valor 10.
+- Testes cobrem os quatro limites da janela, conversão de fuso e ausência de configuração.
+
+**Verificação local:** 40 testes do backend passaram com 100% de cobertura; Ruff aprovado.
+
 ## 14/10/2026 — Base de infraestrutura da Sprint 03
 
 **Escopo:** SAST, sincronização periódica, proteção da importação e documentação operacional; sem implementação de tempo, dieta, identidade anônima, reclamações ou planejamento.

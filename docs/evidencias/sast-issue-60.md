@@ -1,7 +1,9 @@
 # Evidência de ativação do SAST — issue 60
 
-**Data da verificação:** 15/10/2026  
-**Requisito:** RNF05 / D07d  
+**Data da verificação:** 15/10/2026
+
+**Requisito:** RNF05 / D07d
+
 **Repositório:** `unb-mds/2026-2-Bandejao`
 
 ## Execução em Pull Request
