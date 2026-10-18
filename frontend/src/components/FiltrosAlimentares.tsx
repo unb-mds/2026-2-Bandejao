@@ -165,6 +165,9 @@ export default function FiltrosAlimentares({ filtros, setFiltros }: FiltrosAlime
                 )
               })}
             </div>
+            <p className="mt-2 text-xs" style={{ color: 'var(--muted-foreground)' }}>
+              “Sem marcação” significa “não marcado na fonte”, não “livre de”.
+            </p>
           </div>
 
           {totalAtivos > 0 && (

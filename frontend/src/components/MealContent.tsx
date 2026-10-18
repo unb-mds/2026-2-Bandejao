@@ -1,5 +1,5 @@
 import { AlergDots, SectionLabel } from '@/components/ui'
-import { alergenosDoItem, CATEGORIAS, DIETAS } from '@/cardapios'
+import { alergenosDoItem, CATEGORIAS, dietaCompativelComFiltros, DIETAS } from '@/cardapios'
 import type { FiltrosAlimentares, Refeicao, RefeicaoData } from '@/types'
 
 export interface MealContentProps {
@@ -13,10 +13,7 @@ export default function MealContent({ data, filtros }: MealContentProps) {
   const itens = data.itensApi ?? []
   const visiveis = itens.filter(item => {
     if (filtros?.alergenos.some(alergeno => alergenosDoItem(item).includes(alergeno))) return false
-    if (filtros?.vegetariano || filtros?.vegetarianoEstrito) {
-      return (filtros.vegetariano && item.tipo_dieta === 'ovolactovegetariano')
-        || (filtros.vegetarianoEstrito && item.tipo_dieta === 'vegetariano_estrito')
-    }
+    if (filtros && !dietaCompativelComFiltros(item.tipo_dieta, filtros)) return false
     return true
   })
   const categorias = [...new Set(visiveis.map(item => item.categoria))]
@@ -48,7 +45,7 @@ export default function MealContent({ data, filtros }: MealContentProps) {
               </section>
             ))}
           </div>
-          <p className="text-xs text-muted-foreground">Os filtros usam as marcações publicadas. A ausência de uma marcação não garante ausência do ingrediente. A legenda validada não informa frutos do mar; confira a fonte oficial.</p>
+          <p className="text-xs text-muted-foreground">Os filtros usam as marcações publicadas pelo RU. “Sem marcação” significa “não marcado na fonte”, não “livre de”. A legenda validada não informa frutos do mar; confira a fonte oficial.</p>
         </>
       )}
       {data.fontePdfUrl && <a className="inline-block text-sm font-semibold text-primary underline" href={data.fontePdfUrl} target="_blank" rel="noreferrer">Ver PDF da fonte ↗</a>}
