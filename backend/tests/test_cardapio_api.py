@@ -44,6 +44,12 @@ def criar_cardapio_de_teste(db_session: Session) -> Cardapio:
         [
             ItemCardapio(
                 cardapio_id=cardapio.id,
+                categoria=Categoria.ACOMPANHAMENTO,
+                tipo_dieta=TipoDieta.COMUM,
+                nome="Arroz",
+            ),
+            ItemCardapio(
+                cardapio_id=cardapio.id,
                 categoria=Categoria.PRATO_PRINCIPAL,
                 tipo_dieta=TipoDieta.PADRAO,
                 nome="Frango grelhado",
@@ -67,6 +73,29 @@ def criar_cardapio_de_teste(db_session: Session) -> Cardapio:
     )
     db_session.commit()
     return cardapio
+
+
+@pytest.mark.parametrize(
+    ("tipo_dieta", "nomes_esperados"),
+    [
+        ("comum", ["Arroz"]),
+        ("padrao", ["Frango grelhado"]),
+        ("ovolactovegetariano", ["Bolo de fubá", "Banana"]),
+        ("vegetariano_estrito", ["Banana"]),
+    ],
+)
+def test_filtro_de_dieta_inclui_apenas_classes_compativeis(
+    client: TestClient,
+    db_session: Session,
+    tipo_dieta: str,
+    nomes_esperados: list[str],
+):
+    criar_cardapio_de_teste(db_session)
+
+    response = client.get("/cardapios/", params={"tipo_dieta": tipo_dieta})
+
+    assert response.status_code == 200
+    assert [item["nome"] for item in response.json()[0]["itens"]] == nomes_esperados
 
 
 def test_lista_campi_ordenados(client: TestClient, db_session: Session):
@@ -350,7 +379,7 @@ def test_importacao_sem_credencial_valida_nao_grava(
     db_session.expire_all()
     assert db_session.query(Campus).count() == 1
     assert db_session.query(Cardapio).count() == 1
-    assert len(db_session.get(Cardapio, cardapio.id).itens) == 3
+    assert len(db_session.get(Cardapio, cardapio.id).itens) == 4
     assert "segredo-apenas-para-teste" not in response.text
 
 

@@ -1,7 +1,8 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
-import { adaptarCardapio, alergenosDoItem, dataDaSemana, inicioSemana, montarSemana } from '../src/cardapios.ts'
+import { adaptarCardapio, alergenosDoItem, dataDaSemana, dietaCompativelComFiltros, inicioSemana, montarSemana } from '../src/cardapios.ts'
 import type { CardapioApi, ItemApi } from '../src/api.ts'
+import type { FiltrosAlimentares } from '../src/types.ts'
 
 const item: ItemApi = {
   id: 1, nome: 'Prato publicado', categoria: 'prato_principal', tipo_dieta: 'padrao',
@@ -13,6 +14,22 @@ const cardapio: CardapioApi = {
   id: 7, campus_id: 2, data: '2026-09-30', tipo_refeicao: 'almoco',
   fonte_pdf_url: 'https://ru.unb.br/cardapio.pdf', itens: [item],
 }
+
+test('filtro ovolacto inclui a classe vegetariana estrita e mantém as demais classes fora', () => {
+  const filtros: FiltrosAlimentares = { vegetariano: true, vegetarianoEstrito: false, alergenos: [] }
+  assert.equal(dietaCompativelComFiltros('comum', filtros), false)
+  assert.equal(dietaCompativelComFiltros('padrao', filtros), false)
+  assert.equal(dietaCompativelComFiltros('ovolactovegetariano', filtros), true)
+  assert.equal(dietaCompativelComFiltros('vegetariano_estrito', filtros), true)
+})
+
+test('filtro vegetariano estrito permanece exato e ausência de dieta selecionada inclui tudo', () => {
+  const estrito: FiltrosAlimentares = { vegetariano: false, vegetarianoEstrito: true, alergenos: [] }
+  const semDieta: FiltrosAlimentares = { vegetariano: false, vegetarianoEstrito: false, alergenos: [] }
+  assert.equal(dietaCompativelComFiltros('ovolactovegetariano', estrito), false)
+  assert.equal(dietaCompativelComFiltros('vegetariano_estrito', estrito), true)
+  assert.equal(dietaCompativelComFiltros('comum', semDieta), true)
+})
 
 test('não mistura duas semanas que tenham o mesmo dia da semana', () => {
   const semana = montarSemana([cardapio, { ...cardapio, id: 8, data: '2026-10-07' }], '2026-09-27')

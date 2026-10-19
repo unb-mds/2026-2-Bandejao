@@ -23,7 +23,11 @@ def listar_cardapios(
     data_fim: date | None = Query(default=None),
     tipo_refeicao: TipoRefeicao | None = Query(default=None),
     tipo_dieta: TipoDieta | None = Query(
-        default=None, description="Restringe os itens retornados a esta dieta"
+        default=None,
+        description=(
+            "Restringe os itens à dieta. Ovolactovegetariano inclui vegetariano estrito; "
+            "as demais opções são exatas."
+        ),
     ),
     excluir_alergenos: list[str] | None = Query(
         default=None,
@@ -55,7 +59,10 @@ def listar_cardapios(
         for cardapio in resultado:
             itens = cardapio.itens
             if tipo_dieta is not None:
-                itens = [i for i in itens if i.tipo_dieta == tipo_dieta]
+                dietas_compativeis = {tipo_dieta}
+                if tipo_dieta == TipoDieta.OVOLACTOVEGETARIANO:
+                    dietas_compativeis.add(TipoDieta.VEGETARIANO_ESTRITO)
+                itens = [i for i in itens if i.tipo_dieta in dietas_compativeis]
             for alergeno in excluir_alergenos or []:
                 itens = [i for i in itens if not getattr(i, f"contem_{alergeno}")]
             cardapio.itens = itens

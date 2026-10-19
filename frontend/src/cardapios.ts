@@ -1,5 +1,5 @@
 import type { CardapioApi, ItemApi } from './api'
-import type { CardapioRefeicoes, ItemCardapio, Refeicao, RefeicaoData } from './types'
+import type { CardapioRefeicoes, FiltrosAlimentares, ItemCardapio, Refeicao, RefeicaoData } from './types'
 
 const ROTULOS: Record<Refeicao, string> = { cafe: 'Café da Manhã', almoco: 'Almoço', jantar: 'Jantar' }
 export const CATEGORIAS: Record<string, string> = {
@@ -19,6 +19,11 @@ const ALERGENOS = {
 
 export function alergenosDoItem(item: ItemApi): string[] {
   return Object.entries(ALERGENOS).filter(([campo]) => item[campo as keyof typeof ALERGENOS] === true).map(([, nome]) => nome)
+}
+export function dietaCompativelComFiltros(tipoDieta: string, filtros: FiltrosAlimentares): boolean {
+  if (!filtros.vegetariano && !filtros.vegetarianoEstrito) return true
+  return (filtros.vegetariano && (tipoDieta === 'ovolactovegetariano' || tipoDieta === 'vegetariano_estrito'))
+    || (filtros.vegetarianoEstrito && tipoDieta === 'vegetariano_estrito')
 }
 export function dataLocal(data: Date): string {
   return `${data.getFullYear()}-${String(data.getMonth() + 1).padStart(2, '0')}-${String(data.getDate()).padStart(2, '0')}`

@@ -1,5 +1,15 @@
 # Histórico de mudanças da documentação
 
+## 18/10/2026 — Filtro de dieta inclusivo
+
+**Escopo:** implementação da decisão D02 e dos critérios de RF03.
+
+- A seleção ovolactovegetariana inclui itens vegetarianos estritos na API e na interface; comum, padrão e vegetariano estrito permanecem exatos.
+- O painel de filtros e o cardápio avisam que “sem marcação” significa “não marcado na fonte”, não “livre de”.
+- Testes cobrem as quatro classes de dieta e a combinação usada pelo filtro local.
+
+**Verificação local:** 50 testes do backend passaram com 100% de cobertura; 16 testes do frontend, Ruff, lint, TypeScript e build Vite aprovados.
+
 ## 15/10/2026 — Ativação do SAST na `main`
 
 **Escopo:** conclusão operacional de RNF05 e D07d.

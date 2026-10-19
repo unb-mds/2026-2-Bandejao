@@ -24,7 +24,7 @@ A infraestrutura pode ser desenvolvida sem concluir os RFs futuros. Sua operaç�
 | Decisão | Entrega planejada | Estado nesta branch |
 |---|---|---|
 | D01 | Utilitário de semana segunda–domingo e fuso de Brasília | Fora do recorte desta branch; permanece no planejamento da sprint. |
-| D02 | Filtro inclusivo na API e aviso sobre marcações da fonte | Fora do recorte desta branch. |
+| D02 | Filtro inclusivo na API e aviso sobre marcações da fonte | Implementada na entrega S03-03, com testes das quatro dietas e aviso na interface. |
 | D03 | Configuração de horários e função de elegibilidade | Implementada na entrega S03-04, com horários da fonte oficial e limites no fuso de Brasília. |
 | D04 | Identidade anônima no backend/frontend e CORS para envio | Fora do recorte desta branch. |
 | D05 | Constante de amostra mínima de 10 | Implementada na entrega S03-04; estimativa e planejamento ficam para depois. |
