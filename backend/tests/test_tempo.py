@@ -32,3 +32,12 @@ def test_instante_sem_fuso_e_rejeitado():
 def test_referencia_com_tipo_invalido_e_rejeitada():
     with pytest.raises(TypeError, match="data ou um instante"):
         limites_da_semana("2026-10-12")
+
+
+def test_agora_devolve_o_instante_atual_em_brasilia():
+    from app.core.tempo import FUSO_BRASILIA, agora
+
+    instante = agora()
+
+    assert instante.tzinfo is FUSO_BRASILIA
+    assert abs((datetime.now(timezone.utc) - instante).total_seconds()) < 5
