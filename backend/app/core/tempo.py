@@ -11,6 +11,11 @@ from app.models.enums import TipoRefeicao
 FUSO_BRASILIA = ZoneInfo("America/Sao_Paulo")
 
 
+def agora() -> datetime:
+    """Relógio da aplicação em Brasília; as rotas o recebem por Depends para os testes o fixarem."""
+    return datetime.now(FUSO_BRASILIA)
+
+
 def data_em_brasilia(instante: datetime) -> date:
     """Converte um instante com fuso para a data civil de Brasília."""
     if instante.tzinfo is None or instante.utcoffset() is None:

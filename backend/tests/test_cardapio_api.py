@@ -254,7 +254,10 @@ def test_importacao_rejeita_alergeno_fora_do_contrato(client: TestClient, import
     assert response.status_code == 422
 
 
-def test_cria_avaliacao_para_cardapio_existente(client: TestClient, db_session: Session):
+def test_cria_avaliacao_para_cardapio_existente(
+    client: TestClient, db_session: Session, definir_agora
+):
+    definir_agora(2026, 9, 15, 12)
     cardapio = criar_cardapio_de_teste(db_session)
 
     response = client.post(
@@ -275,8 +278,9 @@ def test_cria_avaliacao_para_cardapio_existente(client: TestClient, db_session: 
 
 
 def test_nova_avaliacao_da_mesma_identidade_atualiza_sem_duplicar(
-    client: TestClient, db_session: Session
+    client: TestClient, db_session: Session, definir_agora
 ):
+    definir_agora(2026, 9, 15, 12)
     cardapio = criar_cardapio_de_teste(db_session)
     url = f"/cardapios/{cardapio.id}/avaliacoes/"
     headers = {"X-Identidade": IDENTIDADE_1}
@@ -293,8 +297,9 @@ def test_nova_avaliacao_da_mesma_identidade_atualiza_sem_duplicar(
 
 
 def test_identidades_diferentes_criam_avaliacoes_separadas(
-    client: TestClient, db_session: Session
+    client: TestClient, db_session: Session, definir_agora
 ):
+    definir_agora(2026, 9, 15, 12)
     cardapio = criar_cardapio_de_teste(db_session)
     url = f"/cardapios/{cardapio.id}/avaliacoes/"
 
