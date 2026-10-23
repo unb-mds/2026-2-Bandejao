@@ -12,6 +12,7 @@ if TYPE_CHECKING:
     from app.models.avaliacao import Avaliacao
     from app.models.campus import Campus
     from app.models.item_cardapio import ItemCardapio
+    from app.models.reclamacao import Reclamacao
 
 
 class Cardapio(Base):
@@ -37,5 +38,8 @@ class Cardapio(Base):
         back_populates="cardapio", cascade="all, delete-orphan"
     )
     avaliacoes: Mapped[list["Avaliacao"]] = relationship(
+        back_populates="cardapio", cascade="all, delete-orphan"
+    )
+    reclamacoes: Mapped[list["Reclamacao"]] = relationship(
         back_populates="cardapio", cascade="all, delete-orphan"
     )

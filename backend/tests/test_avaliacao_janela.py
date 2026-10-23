@@ -19,7 +19,9 @@ def _avaliar(client: TestClient, cardapio_id: int, nota: int = 4, identidade: st
     )
 
 
-def test_antes_do_inicio_recusa_com_mensagem(client: TestClient, db_session: Session, definir_agora):
+def test_antes_do_inicio_recusa_com_mensagem(
+    client: TestClient, db_session: Session, definir_agora
+):
     cardapio = criar_cardapio_de_teste(db_session)
     definir_agora(2026, 9, 15, 10, 59, 59)
 

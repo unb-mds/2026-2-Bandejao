@@ -3,6 +3,11 @@ from app.schemas.campus import CampusRead
 from app.schemas.cardapio import CardapioImportacao, CardapioRead, ImportacaoResultado
 from app.schemas.checkin import CheckInRead
 from app.schemas.item_cardapio import ItemCardapioRead
+from app.schemas.reclamacao import (
+    ReclamacaoConfirmacao,
+    ReclamacaoCreate,
+    ReclamacaoEquipeRead,
+)
 
 __all__ = [
     "AvaliacaoCreate",
@@ -13,4 +18,7 @@ __all__ = [
     "CheckInRead",
     "ItemCardapioRead",
     "ImportacaoResultado",
+    "ReclamacaoConfirmacao",
+    "ReclamacaoCreate",
+    "ReclamacaoEquipeRead",
 ]

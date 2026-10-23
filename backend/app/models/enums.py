@@ -29,3 +29,10 @@ class TipoDieta(str, enum.Enum):
     PADRAO = "padrao"
     OVOLACTOVEGETARIANO = "ovolactovegetariano"
     VEGETARIANO_ESTRITO = "vegetariano_estrito"
+
+
+class CategoriaReclamacao(str, enum.Enum):
+    QUALIDADE = "qualidade"
+    HIGIENE = "higiene"
+    ATENDIMENTO = "atendimento"
+    OUTROS = "outros"
