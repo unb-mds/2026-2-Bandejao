@@ -1,4 +1,5 @@
-from datetime import date
+from datetime import UTC, date, datetime
+from uuid import UUID
 
 import pytest
 from fastapi.testclient import TestClient
@@ -275,6 +276,47 @@ def test_cria_avaliacao_para_cardapio_existente(
     assert avaliacoes[0]["id"] == response.json()["id"]
     assert all("identidade" not in avaliacao for avaliacao in avaliacoes)
     assert client.get("/cardapios/999/avaliacoes/").status_code == 404
+
+
+def test_historico_retorna_so_a_refeicao_escolhida_em_ordem_decrescente(
+    client: TestClient, db_session: Session
+):
+    cardapio = criar_cardapio_de_teste(db_session)
+    outro_cardapio = Cardapio(
+        campus_id=cardapio.campus_id,
+        data=date(2026, 9, 15),
+        tipo_refeicao=TipoRefeicao.JANTAR,
+    )
+    db_session.add(outro_cardapio)
+    db_session.flush()
+    antiga = Avaliacao(
+        cardapio_id=cardapio.id,
+        identidade=UUID(IDENTIDADE_1),
+        nota=3,
+        comentario="Regular",
+        criado_em=datetime(2026, 9, 15, 15, tzinfo=UTC),
+    )
+    recente = Avaliacao(
+        cardapio_id=cardapio.id,
+        identidade=UUID(IDENTIDADE_2),
+        nota=5,
+        comentario="Muito bom",
+        criado_em=datetime(2026, 9, 15, 18, tzinfo=UTC),
+    )
+    outra_refeicao = Avaliacao(
+        cardapio_id=outro_cardapio.id,
+        identidade=UUID(IDENTIDADE_1),
+        nota=1,
+        criado_em=datetime(2026, 9, 15, 19, tzinfo=UTC),
+    )
+    db_session.add_all([antiga, recente, outra_refeicao])
+    db_session.commit()
+
+    response = client.get(f"/cardapios/{cardapio.id}/avaliacoes/")
+
+    assert response.status_code == 200
+    assert [avaliacao["id"] for avaliacao in response.json()] == [recente.id, antiga.id]
+    assert all(avaliacao["cardapio_id"] == cardapio.id for avaliacao in response.json())
 
 
 def test_nova_avaliacao_da_mesma_identidade_atualiza_sem_duplicar(
