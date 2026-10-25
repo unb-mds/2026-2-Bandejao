@@ -208,11 +208,11 @@ Os caminhos abaixo são pontos de inspeção na versão-base `717d960`, não com
 | RF01 | Visão: consultar cardápio | `backend/app/api/routes/cardapio.py`; `backend/tests/test_cardapio_api.py` | Interface integrada, origem/atualização visíveis e indisponibilidade. |
 | RF02 | Visão: consultar por campus | `backend/app/api/routes/campus.py`; filtros em `cardapio.py` | Seleção dos cinco campi e troca na interface. |
 | RF03 | Visão: restrições alimentares | Filtros em `cardapio.py`, `MealContent.tsx` e `FiltrosAlimentares.tsx`; contrato de importação | Semântica inclusiva de D02 implementada e aviso visível; revisar marcações com o conjunto de PDFs da sprint de verificação. |
-| RF04 | Visão: avaliar refeições | `backend/app/api/routes/avaliacao.py`; `backend/app/schemas/avaliacao.py` | API atual não verifica horário de elegibilidade nem limita uma avaliação por identidade; D03/D04 pendentes. |
-| RF05 | Visão: consultar avaliações | Listagem em `avaliacao.py`; contrato de reimportação | Verificar persistência e histórico na interface. |
+| RF04 | Visão: avaliar refeições | `backend/app/api/routes/avaliacao.py`; `frontend/src/screens/AvaliacaoForm.tsx`; testes de janela e cliente | Nota e comentário são enviados com identidade anônima; a API valida campos e janela e a interface apresenta o motivo de recusas. |
+| RF05 | Visão: consultar avaliações | `listar_avaliacoes`; `frontend/src/screens/AvaliacaoHistorico.tsx`; testes de API e adaptação | Histórico integrado à API, isolado pela refeição, ordenado do mais recente ao mais antigo e persistente após recarga. |
 | RF06 | Sprint 02: substituir check-in | `scrum/sprint02.md` | Planejamento pendente; implementar identidade anônima por navegador (D04) e rota de intenções. |
 | RF07 | Visão: estimar movimento | Dependência de RF06 documentada | Implementar demanda por refeição com amostra mínima (D05); sem horário de pico. |
-| RF08 | Sprint 02: reclamações independentes | Visão e Sprint 02 | Implementar modelo e rotas; ajustar o protótipo (4 categorias, sem nome nem foto, sem lista pública). |
+| RF08 | Sprint 02: reclamações independentes | Modelo, migração e rotas em `backend/app/api/routes/reclamacao.py` | Integrar a tela ao contrato persistido; manter quatro categorias, sem nome, foto ou lista pública. |
 | RNF01 | v1.0: desempenho no pico | Critério agora quantificado | Aprovar cenário e executar medição. |
 | RNF02 | v1.0: atualização semanal | `extracao/extracao/sincronizar.py`; `extracao/tests/test_sincronizar.py` | Evidenciar agendamento, prazo e última atualização. |
 | RNF03 | v1.0: resiliência | `extracao/tests/test_main.py`; `extracao/tests/test_cobertura_total.py` | Revisar conjunto de referência e verificar cenários propostos. |
@@ -222,7 +222,7 @@ Os caminhos abaixo são pontos de inspeção na versão-base `717d960`, não com
 
 ### Integração local do frontend — 01/10/2026
 
-A tabela acima preserva a inspeção da versão-base. A aplicação local agora incorpora as telas React/TypeScript/Tailwind da equipe e consulta campi/cardápios pela API. Origem PDF, estados de falha/indisponibilidade e filtros sobre os marcadores publicados estão implementados; D02 foi aplicada na API e na interface, com aviso sobre informação não marcada. Atualização dos dados, integração completa de D01 e aceite operacional continuam pendentes. Avaliações, reclamações, planejamento e lotação permanecem demonstrações sem persistência integrada. Checks locais e respostas simuladas no navegador não comprovam aceite dos RFs. Consulte [Arquitetura](Arquitetura.md) e [Protótipos](prototipos.md).
+A tabela acima preserva a inspeção da versão-base. A aplicação local incorpora as telas React/TypeScript/Tailwind da equipe e consulta campi/cardápios pela API. Origem PDF, estados de falha/indisponibilidade, filtros sobre os marcadores publicados e avaliações persistentes estão implementados. D02 foi aplicada na API e na interface, com aviso sobre informação não marcada. A interface envia nota e comentário com identidade anônima e consulta o histórico da refeição, sem misturar datas, campi ou tipos de refeição. Atualização dos dados, integração completa de D01 e aceite operacional continuam pendentes. Reclamações na interface, planejamento e lotação permanecem demonstrações locais. Checks automatizados não substituem o aceite dos RFs. Consulte [Arquitetura](Arquitetura.md) e [Protótipos](prototipos.md).
 
 ### Registro de validação
 

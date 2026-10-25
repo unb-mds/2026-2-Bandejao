@@ -19,7 +19,8 @@ Em Linux/macOS, use `cp .env.example .env`. Abra <http://localhost:5173>. `VITE_
 - `src/App.tsx`: estado das telas, carregamento dos campi/cardápios e ações do protótipo.
 - `src/screens/`: Hoje, Cardápio, Avaliação e Lotação.
 - `src/components/`: cabeçalho, navegação, acessibilidade e componentes das telas.
-- `src/api.ts`: cliente tipado para `GET /campi/` e `GET /cardapios/`; erros HTTP e cancelamento de consultas.
+- `src/api.ts`: cliente tipado para campi, cardápios e avaliações; erros HTTP, validações da API e cancelamento de consultas.
+- `src/avaliacoes.ts`: ordenação e apresentação do histórico persistido no fuso de Brasília.
 - `src/cardapios.ts`: adaptação do contrato da API, datas e organização semanal, preservando todos os itens.
 - `src/data.ts`: constantes visuais e exemplos de lotação; não fornece cardápios ou avaliações para a consulta.
 - `src/index.css`: Tailwind v4, tokens do tema e estilos de acessibilidade. O plugin está em `vite.config.ts`.
@@ -31,7 +32,8 @@ Em Linux/macOS, use `cp .env.example .env`. Abra <http://localhost:5173>. `VITE_
 | Campus e cardápio | Consulta a API. A semana inicial é a atual, de domingo a sábado; é possível escolher outra semana. Os dias e refeições são selecionados na interface. |
 | Origem e indisponibilidade | Link para o PDF, carregamento, erro com nova tentativa e mensagens sem inferir fechamento do RU. |
 | Dieta e alérgenos | Filtros locais sobre os itens retornados, usando `tipo_dieta` e os marcadores `contem_*`. O filtro ovolactovegetariano inclui também itens vegetarianos estritos; as demais classes permanecem exatas, conforme D02. |
-| Avaliações e reclamações | Telas do protótipo; registros somente no estado do React, perdidos ao recarregar. Não são enviados à API nem ao RU. A API de avaliação existente ainda precisa de adaptação ao formulário. |
+| Avaliações | Nota geral e comentário são enviados à API com a identidade anônima do navegador. O histórico consulta somente a refeição selecionada, mostra data/hora em Brasília e permanece após recarregar a página. |
+| Reclamações | A tela ainda mantém os registros somente no estado do React e não os envia ao RU. |
 | Planejamento | Demonstração por campus e data, apenas nesta sessão; sem persistência ou previsão. |
 | Lotação | Exemplos visuais e relatos desta sessão; sem consulta a dados reais nem estimativa operacional. |
 

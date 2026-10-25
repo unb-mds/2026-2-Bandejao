@@ -1,5 +1,16 @@
 # Histórico de mudanças da documentação
 
+## 24/10/2026 — Avaliações integradas à API
+
+**Escopo:** implementação da issue 51 e dos critérios de RF04/RF05.
+
+- O formulário envia nota geral e comentário com a identidade anônima do navegador e apresenta os erros devolvidos pela API.
+- O histórico consulta o ID exato da refeição, apresenta data/hora no fuso de Brasília e mantém a ordem do registro mais recente para o mais antigo.
+- Refeições sem registros exibem “sem avaliações”, sem preencher notas fictícias; os dados permanecem após recarregar a página.
+- Campos demonstrativos que não pertenciam ao contrato persistido foram retirados da avaliação.
+
+**Verificação local:** 92 testes do backend passaram com 100% de cobertura; 19 testes do frontend e TypeScript aprovados.
+
 ## 18/10/2026 — Filtro de dieta inclusivo
 
 **Escopo:** implementação da decisão D02 e dos critérios de RF03.
