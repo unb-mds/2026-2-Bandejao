@@ -9,8 +9,9 @@ import CardapioTab from '@/screens/CardapioTab'
 import LotacaoTab from '@/screens/LotacaoTab'
 
 import { DIAS_SEMANA } from './data'
-import { listarCampi, listarCardapios, salvarAvaliacao } from './api'
+import { listarAvaliacoes, listarCampi, listarCardapios, salvarAvaliacao } from './api'
 import type { CardapioApi } from './api'
+import { adaptarHistoricoAvaliacoes } from './avaliacoes'
 import { inicioSemana, dataDaSemana, montarSemana } from './cardapios'
 import { obterIdentidadeAnonima } from './identidade'
 import type { Campus } from './types'
@@ -69,7 +70,7 @@ export default function App() {
       })
     return () => controller.abort()
   }, [campus.id, semanaInicio, estadoCampi, tentativa])
-  const [refeicao, setRefeicao] = useState<Refeicao>('almoco')
+  const [refeicao, setRefeicao] = useState<Refeicao>(() => getCurrentMealInfo().tipo)
   const [tab, setTab] = useState<'hoje' | 'cardapio' | 'lotacao' | 'avaliar'>('hoje')
   const [diaSemana, setDiaSemana] = useState<number>(new Date().getDay())
   const [tabAvaliar, setTabAvaliar] = useState<'form' | 'historico' | 'reclamacao'>('form')
@@ -123,17 +124,14 @@ export default function App() {
                        currentLotacao?.predominante === 'moderado' ? '#F59E0B' : '#22C55E'
 
   const [avaliacoes, setAvaliacoes] = useState<Avaliacao[]>([])
+  const [cardapioAvaliacoesId, setCardapioAvaliacoesId] = useState<number | null>(null)
+  const [estadoAvaliacoes, setEstadoAvaliacoes] = useState<'inativo' | 'carregando' | 'pronto' | 'erro'>('inativo')
+  const [erroAvaliacoes, setErroAvaliacoes] = useState('')
+  const [tentativaAvaliacoes, setTentativaAvaliacoes] = useState(0)
   const [reclamacoes, setReclamacoes] = useState<Reclamacao[]>([])
 
-  const [avNome, setAvNome] = useState('')
-  const [avSabor, setAvSabor] = useState(0)
-  const [avSal, setAvSal] = useState(0)
-  const [avTemp, setAvTemp] = useState(0)
-  const [avApres, setAvApres] = useState(0)
-  const [avQtd, setAvQtd] = useState(0)
   const [avGeral, setAvGeral] = useState(0)
   const [avComentario, setAvComentario] = useState('')
-  const [avFoto, setAvFoto] = useState<string | undefined>()
   const [avSuccess, setAvSuccess] = useState(false)
   const [avErro, setAvErro] = useState('')
   const [avEnviando, setAvEnviando] = useState(false)
@@ -145,30 +143,15 @@ export default function App() {
   const [recSuccess, setRecSuccess] = useState(false)
   const recFotoRef = useRef<HTMLInputElement>(null)
 
-  const fileRef = useRef<HTMLInputElement>(null)
-  const [dragging, setDragging] = useState(false)
-
   const handleCampusChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const c = campi.find(x => x.id === e.target.value)
     if (!c) return
     setCampus(c)
   }
 
-  const handleFoto = (file: File) => {
-    const reader = new FileReader()
-    reader.onload = () => setAvFoto(reader.result as string)
-    reader.readAsDataURL(file)
-  }
-
-  const handleDrop = (e: React.DragEvent) => {
-    e.preventDefault(); setDragging(false)
-    const file = e.dataTransfer.files[0]
-    if (file?.type.startsWith('image/')) handleFoto(file)
-  }
-
   const handleSubmitAvaliacao = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!avSabor || !avSal || !avTemp || !avApres || !avQtd || !avGeral) return
+    if (!avGeral) return
     const cardapioAtual = cardapioDia[refeicao]
     if (!cardapioAtual.id) {
       setAvErro('Não foi possível identificar a refeição selecionada.')
@@ -190,19 +173,15 @@ export default function App() {
       return
     }
 
-    const nova: Avaliacao = {
-      id: avaliacaoSalva.id, autor: avNome || 'Anônimo',
-      refeicao: cardapioAtual.label,
-      campus: campus.name,
-      sabor: avSabor, sal: avSal, temperatura: avTemp,
-      apresentacao: avApres, quantidade: avQtd, geral: avGeral,
-      comentario: avComentario, foto: avFoto,
-      data: new Date().toLocaleDateString('pt-BR'),
-      horario: new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }),
-    }
+    const [nova] = adaptarHistoricoAvaliacoes(
+      [avaliacaoSalva],
+      { refeicao: cardapioAtual.label, campus: campus.name },
+    )
     setAvaliacoes(prev => [nova, ...prev.filter(avaliacao => avaliacao.id !== nova.id)])
-    setAvNome(''); setAvSabor(0); setAvSal(0); setAvTemp(0); setAvApres(0); setAvQtd(0); setAvGeral(0)
-    setAvComentario(''); setAvFoto(undefined)
+    setCardapioAvaliacoesId(cardapioAtual.id)
+    setEstadoAvaliacoes('pronto')
+    setAvGeral(0)
+    setAvComentario('')
     setAvSuccess(true)
     setAvEnviando(false)
     setTimeout(() => { setAvSuccess(false); setTab('avaliar'); setTabAvaliar('historico') }, 1800)
@@ -230,10 +209,42 @@ export default function App() {
   const cardapio = cardapioDia[refeicao]
   const diasDisponiveis = [0,1,2,3,4,5,6]
 
-  // ── Avaliações e média por campus ──
-  const avaliacoesDoCampus = avaliacoes.filter(a => !a.campus || a.campus === campus.name)
-  const mediaGeral = avaliacoesDoCampus.length
-    ? (avaliacoesDoCampus.reduce((s, a) => s + a.geral, 0) / avaliacoesDoCampus.length).toFixed(1) : '—'
+  const cardapioSelecionadoId = cardapio.id ?? null
+
+  useEffect(() => {
+    if (!cardapioSelecionadoId) return
+
+    const controller = new AbortController()
+    listarAvaliacoes(cardapioSelecionadoId, { signal: controller.signal })
+      .then(resultado => {
+        if (controller.signal.aborted) return
+        setAvaliacoes(adaptarHistoricoAvaliacoes(
+          resultado,
+          { refeicao: cardapio.label, campus: campus.name },
+        ))
+        setCardapioAvaliacoesId(cardapioSelecionadoId)
+        setEstadoAvaliacoes('pronto')
+      })
+      .catch((erro: unknown) => {
+        if (controller.signal.aborted) return
+        setAvaliacoes([])
+        setCardapioAvaliacoesId(cardapioSelecionadoId)
+        setErroAvaliacoes(erro instanceof Error ? erro.message : 'Erro desconhecido.')
+        setEstadoAvaliacoes('erro')
+      })
+    return () => controller.abort()
+  }, [cardapioSelecionadoId, cardapio.label, campus.name, tentativaAvaliacoes])
+
+  // O endpoint é consultado pelo ID da refeição; avaliações de outras refeições não entram na média.
+  const historicoAtual = cardapioAvaliacoesId === cardapioSelecionadoId ? avaliacoes : []
+  const estadoHistorico = !cardapioSelecionadoId
+    ? 'inativo'
+    : cardapioAvaliacoesId !== cardapioSelecionadoId
+      ? 'carregando'
+      : estadoAvaliacoes
+  const mediaGeral = historicoAtual.length
+    ? (historicoAtual.reduce((soma, avaliacao) => soma + avaliacao.geral, 0) / historicoAtual.length).toFixed(1)
+    : '—'
 
   const hoje = new Date(agora)
   const hojeIdx = hoje.getDay()
@@ -267,7 +278,7 @@ export default function App() {
 
     <A11yFloat a11yOpen={a11yOpen} setA11yOpen={setA11yOpen} fontSize={fontSize} setFontSize={setFontSize} altoContraste={altoContraste} setAltoContraste={setAltoContraste} espacamento={espacamento} setEspacamento={setEspacamento} sublinharLinks={sublinharLinks} setSublinharLinks={setSublinharLinks} />
 
-    <AppHeader campi={campi} campus={campus} hoje={hoje} mediaGeral={mediaGeral} totalAvaliacoes={avaliacoesDoCampus.length} planejadosCount={planejadosCount} handleCampusChange={handleCampusChange} />
+    <AppHeader campi={campi} campus={campus} hoje={hoje} mediaGeral={mediaGeral} totalAvaliacoes={historicoAtual.length} planejadosCount={planejadosCount} handleCampusChange={handleCampusChange} />
 
     <AppNav tab={tab} setTab={novaTab => { if (novaTab === 'hoje') setSemanaInicio(inicioSemana(new Date())); setTab(novaTab) }} />
 
@@ -303,16 +314,16 @@ export default function App() {
               planejadosCount={planejadosCount}
               diasPlanejados={diasPlanejadosHome}
               mediaAvaliacoes={mediaGeral}
-              totalAvaliacoes={avaliacoesDoCampus.length}
-              avaliacoesHoje={avaliacoesDoCampus.filter(a => {
+              totalAvaliacoes={historicoAtual.length}
+              avaliacoesHoje={historicoAtual.filter(a => {
                 if (!hojeMeal || a.refeicao !== hojeMeal.label) return false
                 const hojeStr = hoje.toLocaleDateString('pt-BR')
                 return a.data === hojeStr || a.data === 'hoje'
               })}
               onVerCardapio={() => { setSemanaInicio(inicioSemana(new Date())); setTab('cardapio'); setDiaSemana(hojeIdx); setRefeicao(mealInfo.tipo) }}
               onVerLotacao={() => setTab('lotacao')}
-              onAvaliar={() => { setTab('avaliar'); setTabAvaliar('form'); setRefeicao(mealInfo.tipo) }}
-              onVerHistorico={() => { setTab('avaliar'); setTabAvaliar('historico') }}
+              onAvaliar={() => { setDiaSemana(hojeIdx); setRefeicao(mealInfo.tipo); setTab('avaliar'); setTabAvaliar('form') }}
+              onVerHistorico={() => { setDiaSemana(hojeIdx); setRefeicao(mealInfo.tipo); setTab('avaliar'); setTabAvaliar('historico') }}
               onReclamar={() => { setTab('avaliar'); setTabAvaliar('reclamacao') }}
               onPlanejar={() => { setSemanaInicio(inicioSemana(new Date())); setTab('cardapio'); setDiaSemana(hojeIdx) }}
             />
@@ -331,8 +342,8 @@ export default function App() {
       <AvaliarTab
         tabAvaliar={tabAvaliar}
         setTabAvaliar={setTabAvaliar}
-        formProps={{ cardapioDia, refeicao, setRefeicao, campus, avNome, setAvNome, avSabor, setAvSabor, avSal, setAvSal, avTemp, setAvTemp, avApres, setAvApres, avQtd, setAvQtd, avGeral, setAvGeral, avComentario, setAvComentario, avFoto, setAvFoto, avSuccess, avErro, avEnviando, fileRef, dragging, setDragging, handleFoto, handleDrop, submitAvaliacao: handleSubmitAvaliacao }}
-        historicoProps={{ avaliacoes: avaliacoesDoCampus, mediaGeral, setTab }}
+        formProps={{ cardapioDia, refeicao, setRefeicao, avGeral, setAvGeral, avComentario, setAvComentario, avSuccess, avErro, avEnviando, submitAvaliacao: handleSubmitAvaliacao }}
+        historicoProps={{ cardapioDia, refeicao, setRefeicao, avaliacoes: historicoAtual, mediaGeral, estado: estadoHistorico, erro: erroAvaliacoes, onTentarNovamente: () => { setEstadoAvaliacoes('carregando'); setErroAvaliacoes(''); setTentativaAvaliacoes(valor => valor + 1) }, onAvaliar: () => setTabAvaliar('form') }}
         reclamacoesProps={{ recSuccess, recCategoria, setRecCategoria, recNome, setRecNome, recDescricao, setRecDescricao, recFoto, setRecFoto, recFotoRef, submitReclamacao, reclamacoes }}
       />
     )}
