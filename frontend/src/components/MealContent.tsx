@@ -1,5 +1,5 @@
 import { AlergDots, SectionLabel } from '@/components/ui'
-import { alergenosDoItem, CATEGORIAS, dietaCompativelComFiltros, DIETAS } from '@/cardapios'
+import { alergenosDoItem, CATEGORIAS, dietaCompativelComFiltros, DIETAS, formatarInstanteImportacao } from '@/cardapios'
 import type { FiltrosAlimentares, Refeicao, RefeicaoData } from '@/types'
 
 export interface MealContentProps {
@@ -7,9 +7,11 @@ export interface MealContentProps {
   dia?: number
   refeicao: Refeicao
   filtros?: FiltrosAlimentares
+  ultimaImportacaoEm?: string | null
+  ultimaFontePdfUrl?: string | null
 }
 
-export default function MealContent({ data, filtros }: MealContentProps) {
+export default function MealContent({ data, filtros, ultimaImportacaoEm, ultimaFontePdfUrl }: MealContentProps) {
   const itens = data.itensApi ?? []
   const visiveis = itens.filter(item => {
     if (filtros?.alergenos.some(alergeno => alergenosDoItem(item).includes(alergeno))) return false
@@ -48,7 +50,26 @@ export default function MealContent({ data, filtros }: MealContentProps) {
           <p className="text-xs text-muted-foreground">Os filtros usam as marcações publicadas pelo RU. “Sem marcação” significa “não marcado na fonte”, não “livre de”. A legenda validada não informa frutos do mar; confira a fonte oficial.</p>
         </>
       )}
-      {data.fontePdfUrl && <a className="inline-block text-sm font-semibold text-primary underline" href={data.fontePdfUrl} target="_blank" rel="noreferrer">Ver PDF da fonte ↗</a>}
+      <div
+        className="rounded-xl border border-border bg-card p-4 text-sm"
+        aria-label="Origem e atualização do cardápio"
+      >
+        <p className="text-muted-foreground">
+          {ultimaImportacaoEm
+            ? <>Última importação bem-sucedida: <time dateTime={ultimaImportacaoEm}>{formatarInstanteImportacao(ultimaImportacaoEm)}</time>.</>
+            : 'Última importação bem-sucedida ainda não registrada.'}
+        </p>
+        {(ultimaImportacaoEm ? ultimaFontePdfUrl : data.fontePdfUrl) && (
+          <a
+            className="mt-2 inline-block font-semibold text-primary underline"
+            href={(ultimaImportacaoEm ? ultimaFontePdfUrl : data.fontePdfUrl) ?? undefined}
+            target="_blank"
+            rel="noreferrer"
+          >
+            {ultimaImportacaoEm ? 'Ver PDF da última importação ↗' : 'Ver PDF da fonte ↗'}
+          </a>
+        )}
+      </div>
     </div>
   )
 }

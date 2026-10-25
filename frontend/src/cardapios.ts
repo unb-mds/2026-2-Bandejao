@@ -38,6 +38,22 @@ export function dataDaSemana(inicio: string, dia: number): string {
   data.setDate(data.getDate() + dia)
   return dataLocal(data)
 }
+export function formatarInstanteImportacao(instante: string): string {
+  const data = new Date(instante)
+  const dataFormatada = new Intl.DateTimeFormat('pt-BR', {
+    timeZone: 'America/Sao_Paulo',
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+  }).format(data)
+  const horaFormatada = new Intl.DateTimeFormat('pt-BR', {
+    timeZone: 'America/Sao_Paulo',
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false,
+  }).format(data)
+  return `${dataFormatada} às ${horaFormatada}`
+}
 export function refeicaoVazia(refeicao: Refeicao, data: string): RefeicaoData {
   return {
     label: ROTULOS[refeicao], horario: 'Consulte os horários oficiais', data,

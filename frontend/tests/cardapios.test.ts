@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
-import { adaptarCardapio, alergenosDoItem, dataDaSemana, dietaCompativelComFiltros, inicioSemana, montarSemana } from '../src/cardapios.ts'
+import { adaptarCardapio, alergenosDoItem, dataDaSemana, dietaCompativelComFiltros, formatarInstanteImportacao, inicioSemana, montarSemana } from '../src/cardapios.ts'
 import type { CardapioApi, ItemApi } from '../src/api.ts'
 import type { FiltrosAlimentares } from '../src/types.ts'
 
@@ -67,4 +67,11 @@ test('traduz somente marcadores positivos da API para os filtros da interface', 
 test('intervalo semanal atravessa mês e ano sem deslocar a data local', () => {
   assert.equal(inicioSemana(new Date('2027-01-01T12:00:00')), '2026-12-27')
   assert.equal(dataDaSemana('2026-12-27', 6), '2027-01-02')
+})
+
+test('apresenta a última importação no fuso de Brasília', () => {
+  assert.equal(
+    formatarInstanteImportacao('2026-10-24T18:45:00Z'),
+    '24/10/2026 às 15:45',
+  )
 })
