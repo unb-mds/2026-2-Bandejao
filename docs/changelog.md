@@ -1,5 +1,17 @@
 # Histórico de mudanças da documentação
 
+## 24/10/2026 — Última importação bem-sucedida por campus
+
+**Escopo:** implementação da issue 50, CA-RF01-03 e CA-RNF02-03.
+
+- O campus passa a guardar, de forma atômica, o instante em UTC e a URL da fonte da última importação confirmada.
+- A API devolve os metadados nas consultas de campus e na resposta da importação.
+- A tela do cardápio apresenta data/hora no fuso de Brasília junto ao link da fonte.
+- Requisições inválidas e falhas anteriores à confirmação preservam o último sucesso conhecido.
+- Uma migração reversível adiciona as duas colunas sem inventar valores para dados anteriores.
+
+**Verificação local:** 93 testes do backend passaram com 100% de cobertura; 17 testes do frontend, Ruff e TypeScript aprovados.
+
 ## 18/10/2026 — Filtro de dieta inclusivo
 
 **Escopo:** implementação da decisão D02 e dos critérios de RF03.

@@ -1,4 +1,9 @@
-export interface CampusApi { id: number; nome: string }
+export interface CampusApi {
+  id: number
+  nome: string
+  ultima_importacao_em: string | null
+  ultima_fonte_pdf_url: string | null
+}
 export interface ItemApi {
   id: number
   categoria: string

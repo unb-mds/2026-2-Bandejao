@@ -99,7 +99,9 @@ O endpoint responde `200 OK`:
 {
   "campus_id": 1,
   "cardapios_processados": 1,
-  "itens_processados": 1
+  "itens_processados": 1,
+  "ultima_importacao_em": "2026-10-24T18:45:00Z",
+  "fonte_pdf_url": "https://ru.unb.br/wp-content/uploads/2026/10/Gama-Semana-04.pdf"
 }
 ```
 
@@ -111,6 +113,9 @@ A chave lógica de uma refeição é `(campus, data, tipo_refeicao)`.
 - Se não existir um cardápio com essa chave, ele e seus itens são inseridos.
 - Se já existir, a `fonte_pdf_url` é atualizada, os itens anteriores daquela
   refeição são removidos e os novos itens são inseridos.
+- Quando toda a operação é confirmada, o campus recebe `ultima_importacao_em`
+  em UTC e `ultima_fonte_pdf_url`. Validação, autenticação, extração ou gravação
+  com falha não alteram o último sucesso armazenado.
 
 Assim, reenviar um PDF corrigido ou executar a sincronização novamente não cria
 duplicatas. As avaliações já vinculadas ao cardápio são preservadas, porque o

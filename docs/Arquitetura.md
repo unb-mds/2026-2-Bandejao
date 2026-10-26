@@ -68,12 +68,13 @@ flowchart LR
 3. Converte o resultado em um payload normalizado e envia `POST /cardapios/importacao`, autenticado pelo segredo `IMPORTACAO_TOKEN` no cabeçalho Bearer.
 4. A API valida primeiro o token e depois campos, enums e alérgenos; requisição não autorizada não grava dados.
 5. A chave lógica de uma refeição é `(campus, data, tipo_refeicao)`. Reimportar essa chave substitui os itens anteriores, atualiza a URL de origem e preserva o registro do cardápio e suas avaliações.
+6. Na mesma transação, a API grava no campus o instante e a URL da fonte da importação bem-sucedida. Falhas anteriores à confirmação preservam o par registrado anteriormente.
 
 A rotina isola falhas por campus durante o processamento. A disponibilidade e a qualidade do cardápio dependem da publicação do RU e da execução bem-sucedida da extração. Sem segredo configurado, a API recusa importações. O token protege a escrita administrativa, mas não substitui HTTPS, rotação de segredo ou isolamento de rede em uma implantação pública.
 
 ### 4.2 Consulta e feedback
 
-O frontend consulta `GET /campi/` e `GET /cardapios/`, enviando o campus cadastrado e o intervalo da semana escolhida. A apresentação começa na semana atual (domingo a sábado) e permite outra semana; a refeição é selecionada entre os resultados carregados. A URL é configurável por `VITE_API_BASE_URL`; a API habilita CORS para as origens em `CORS_ORIGINS`. Os filtros aplicam D02: ovolactovegetariano inclui vegetariano estrito, enquanto as demais classes são exatas. As exclusões usam somente os marcadores publicados e a tela esclarece que ausência de marcação não significa ingrediente ausente. A integração completa de D01 na apresentação permanece pendente. Lista vazia não indica fechamento do RU; o backend não informa instante de atualização dos dados.
+O frontend consulta `GET /campi/` e `GET /cardapios/`, enviando o campus cadastrado e o intervalo da semana escolhida. A apresentação começa na semana atual (domingo a sábado) e permite outra semana; a refeição é selecionada entre os resultados carregados. A URL é configurável por `VITE_API_BASE_URL`; a API habilita CORS para as origens em `CORS_ORIGINS`. Os filtros aplicam D02: ovolactovegetariano inclui vegetariano estrito, enquanto as demais classes são exatas. As exclusões usam somente os marcadores publicados e a tela esclarece que ausência de marcação não significa ingrediente ausente. A tela apresenta o instante da última importação bem-sucedida do campus no fuso de Brasília junto à URL da respectiva fonte. A integração completa de D01 na apresentação permanece pendente. Lista vazia não indica fechamento do RU.
 
 As rotas para registrar e consultar avaliações existem em `/cardapios/{cardapio_id}/avaliacoes`. A tela do protótipo está incorporada, mas ainda registra avaliações apenas na sessão; a adaptação do formulário ao contrato da API permanece pendente. Reclamações separadas das notas são requisito da Release 1, mas ainda não têm modelo, migração ou endpoint.
 
@@ -95,7 +96,7 @@ erDiagram
 
 | Entidade | Dados principais | Relações e regras |
 |---|---|---|
-| `Campus` | Identificador e nome único | Um campus possui vários cardápios e check-ins legados. |
+| `Campus` | Identificador, nome único, instante e URL da última importação bem-sucedida | Um campus possui vários cardápios e check-ins legados; os metadados só mudam quando a transação de importação é confirmada. |
 | `Cardapio` | Campus, data, tipo de refeição e URL do PDF | Único por campus + data + tipo de refeição; possui itens e avaliações. |
 | `ItemCardapio` | Categoria, tipo de dieta, nome e indicadores booleanos de alérgenos | Pertence a um cardápio; os itens são substituídos ao reimportar a mesma refeição. |
 | `Avaliacao` | Nota de 1 a 5, comentário opcional e data de criação | Pertence a um cardápio; o banco também impõe o intervalo da nota. |
@@ -108,7 +109,7 @@ Não há uma entidade separada `Refeicao`: no schema atual, `Cardapio` represent
 | Dado | Fonte | Frequência/atualização | Disponibilidade e risco |
 |---|---|---|---|
 | Cardápio | PDFs ligados pela página oficial `https://ru.unb.br/cardapio-refeitorio/` | A publicação é semanal; a extração busca os links quando é executada. | Não há API oficial. Links, tabelas e ícones podem mudar sem aviso; o cardápio também pode ser alterado pelo RU. |
-| Campus | Nome extraído do arquivo ou já cadastrado no banco | Criado durante importação quando ainda não existe | A identificação depende dos nomes/formatos usados nos links dos PDFs. |
+| Campus | Nome extraído do arquivo ou já cadastrado no banco | Criado durante importação quando ainda não existe; guarda o último sucesso e a fonte | A identificação depende dos nomes/formatos usados nos links dos PDFs. |
 | Avaliação | Envio da pessoa usuária pela API | Registrada no envio | A API permite listar avaliações; a tela local é demonstração e sua persistência pela API está pendente. Não há conta de usuário associada no schema atual. |
 | Reclamação | Prevista para a Release 1 | A definir | Ainda não há armazenamento ou endpoint; definir privacidade e política de retenção ao projetar. |
 | Planejamento | Previsto para a Release 2 | A definir | Ainda não existe. A granularidade do horário precisa ser definida antes da previsão. |

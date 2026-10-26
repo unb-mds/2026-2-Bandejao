@@ -37,7 +37,12 @@ export default function App() {
     const controller = new AbortController()
     listarCampi({ signal: controller.signal }).then(resultado => {
       if (controller.signal.aborted) return
-      const disponiveis = resultado.map(c => ({ id: String(c.id), name: c.nome }))
+      const disponiveis = resultado.map(c => ({
+        id: String(c.id),
+        name: c.nome,
+        ultimaImportacaoEm: c.ultima_importacao_em,
+        ultimaFontePdfUrl: c.ultima_fonte_pdf_url,
+      }))
       setCampi(disponiveis)
       setCampus(atual => disponiveis.find(c => c.id === atual.id) ?? disponiveis[0] ?? { id: '', name: 'Nenhum campus disponível' })
       setEstadoCampi('pronto')
@@ -320,7 +325,7 @@ export default function App() {
         )}
 
     {tab === 'cardapio' && estadoCampi === 'pronto' && estadoCardapios === 'pronto' && campus.id && (
-      <CardapioTab cardapioDia={cardapioDia} diaSemana={diaSemana} setDiaSemana={setDiaSemana} diasDisponiveis={diasDisponiveis} refeicao={refeicao} setRefeicao={setRefeicao} isPlanejada={isPlanejada} planejadosCount={planejadosCount} cardapio={cardapio} togglePlanejada={togglePlanejada} />
+      <CardapioTab campus={campus} cardapioDia={cardapioDia} diaSemana={diaSemana} setDiaSemana={setDiaSemana} diasDisponiveis={diasDisponiveis} refeicao={refeicao} setRefeicao={setRefeicao} isPlanejada={isPlanejada} planejadosCount={planejadosCount} cardapio={cardapio} togglePlanejada={togglePlanejada} />
     )}
 
     {tab === 'lotacao' && campus.id && (

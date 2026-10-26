@@ -2,9 +2,10 @@ import { useState } from 'react'
 import MealContent from '@/components/MealContent'
 import FiltrosAlimentares from '@/components/FiltrosAlimentares'
 import { DIAS_SEMANA, DIAS_SEMANA_COMPLETO } from '@/data'
-import type { CardapioRefeicoes, Refeicao, RefeicaoData, FiltrosAlimentares as Filtros } from '@/types'
+import type { Campus, CardapioRefeicoes, Refeicao, RefeicaoData, FiltrosAlimentares as Filtros } from '@/types'
 
 export interface CardapioTabProps {
+  campus: Campus
   cardapioDia: CardapioRefeicoes
   diaSemana: number
   setDiaSemana: (d: number) => void
@@ -17,7 +18,7 @@ export interface CardapioTabProps {
   togglePlanejada: (dia: number, refeicao: Refeicao) => void
 }
 
-export default function CardapioTab({ cardapioDia, diaSemana, setDiaSemana, diasDisponiveis, refeicao, setRefeicao, isPlanejada, planejadosCount, cardapio, togglePlanejada }: CardapioTabProps) {
+export default function CardapioTab({ campus, cardapioDia, diaSemana, setDiaSemana, diasDisponiveis, refeicao, setRefeicao, isPlanejada, planejadosCount, cardapio, togglePlanejada }: CardapioTabProps) {
   const [filtros, setFiltros] = useState<Filtros>({
     vegetariano: false,
     vegetarianoEstrito: false,
@@ -153,7 +154,14 @@ export default function CardapioTab({ cardapioDia, diaSemana, setDiaSemana, dias
           aria-pressed={isPlanejada(diaSemana, refeicao)} onClick={() => togglePlanejada(diaSemana, refeicao)}>
           {isPlanejada(diaSemana, refeicao) ? 'Remover do planejamento desta sessão' : 'Planejar esta refeição nesta sessão'}
         </button>}
-        <MealContent data={cardapio} dia={diaSemana} refeicao={refeicao} filtros={filtros} />
+        <MealContent
+          data={cardapio}
+          dia={diaSemana}
+          refeicao={refeicao}
+          filtros={filtros}
+          ultimaImportacaoEm={campus.ultimaImportacaoEm}
+          ultimaFontePdfUrl={campus.ultimaFontePdfUrl}
+        />
       </div>
     </div>
   )
