@@ -6,10 +6,23 @@
 
 - O formulário envia nota geral e comentário com a identidade anônima do navegador e apresenta os erros devolvidos pela API.
 - O histórico consulta o ID exato da refeição, apresenta data/hora no fuso de Brasília e mantém a ordem do registro mais recente para o mais antigo.
-- Refeições sem registros exibem “sem avaliações”, sem preencher notas fictícias; os dados permanecem após recarregar a página.
+- Refeições sem registros exibem "sem avaliações", sem preencher notas fictícias; os dados permanecem após recarregar a página.
 - Campos demonstrativos que não pertenciam ao contrato persistido foram retirados da avaliação.
 
 **Verificação local:** 92 testes do backend passaram com 100% de cobertura; 19 testes do frontend e TypeScript aprovados.
+
+## 24/10/2026 — Última importação bem-sucedida por campus
+
+**Escopo:** implementação da issue 50, CA-RF01-03 e CA-RNF02-03.
+
+- O campus passa a guardar, de forma atômica, o instante em UTC e a URL da fonte da última importação confirmada.
+- A API devolve os metadados nas consultas de campus e na resposta da importação.
+- A tela do cardápio apresenta data/hora no fuso de Brasília junto ao link da fonte.
+- Requisições inválidas e falhas anteriores à confirmação preservam o último sucesso conhecido.
+- Uma migração reversível adiciona as duas colunas sem inventar valores para dados anteriores.
+
+**Verificação local:** 93 testes do backend passaram com 100% de cobertura; 17 testes do frontend, Ruff e TypeScript aprovados.
+
 
 ## 18/10/2026 — Filtro de dieta inclusivo
 

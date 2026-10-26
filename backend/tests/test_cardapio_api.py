@@ -1,6 +1,7 @@
 from datetime import UTC, date, datetime
 from uuid import UUID
 
+
 import pytest
 from fastapi.testclient import TestClient
 from pydantic import SecretStr
@@ -135,7 +136,12 @@ def test_obtem_campus_e_retorna_404_quando_nao_existe(client: TestClient, db_ses
     response = client.get(f"/campi/{campus.id}")
 
     assert response.status_code == 200
-    assert response.json() == {"id": campus.id, "nome": "Darcy Ribeiro"}
+    assert response.json() == {
+        "id": campus.id,
+        "nome": "Darcy Ribeiro",
+        "ultima_importacao_em": None,
+        "ultima_fonte_pdf_url": None,
+    }
     assert client.get("/campi/999").status_code == 404
 
 
@@ -189,8 +195,9 @@ def test_rejeita_alergeno_desconhecido(client: TestClient):
 
 
 def test_importa_cardapio_e_substitui_itens_ao_reprocessar(
-    client: TestClient, db_session: Session, importacao_headers
+    client: TestClient, db_session: Session, importacao_headers, definir_agora
 ):
+    definir_agora(2026, 10, 24, 9, 30)
     payload = {
         "campus": "Gama",
         "fonte_pdf_url": "https://ru.unb.br/gama-semana.pdf",
@@ -213,20 +220,70 @@ def test_importa_cardapio_e_substitui_itens_ao_reprocessar(
     primeira_resposta = client.post("/cardapios/importacao", json=payload, headers=importacao_headers)
     assert primeira_resposta.status_code == 200
     assert primeira_resposta.json()["itens_processados"] == 1
+    assert primeira_resposta.json()["ultima_importacao_em"] == "2026-10-24T12:30:00Z"
+    assert primeira_resposta.json()["fonte_pdf_url"] == payload["fonte_pdf_url"]
+    campus_api = client.get("/campi/").json()[0]
+    assert campus_api["ultima_importacao_em"] == "2026-10-24T12:30:00Z"
+    assert campus_api["ultima_fonte_pdf_url"] == payload["fonte_pdf_url"]
     assert client.get("/cardapios/", params={"excluir_alergenos": "amendoim"}).json()[0][
         "itens"
     ] == []
 
     payload["refeicoes"][0]["itens"][0]["nome"] = "Lentilha"
     payload["refeicoes"][0]["itens"][0]["alergenos"] = []
+    payload["fonte_pdf_url"] = "https://ru.unb.br/gama-semana-corrigida.pdf"
+    definir_agora(2026, 10, 24, 15, 45)
     segunda_resposta = client.post("/cardapios/importacao", json=payload, headers=importacao_headers)
 
     assert segunda_resposta.status_code == 200
+    assert segunda_resposta.json()["ultima_importacao_em"] == "2026-10-24T18:45:00Z"
+    assert segunda_resposta.json()["fonte_pdf_url"] == payload["fonte_pdf_url"]
     assert db_session.query(Campus).filter_by(nome="Gama").count() == 1
     cardapio = db_session.query(Cardapio).filter_by(data=date(2026, 9, 21)).one()
     assert [(item.nome, item.contem_soja, item.contem_amendoim) for item in cardapio.itens] == [
         ("Lentilha", False, False)
     ]
+
+
+def test_falha_de_importacao_preserva_ultimo_sucesso(
+    client: TestClient, db_session: Session, importacao_headers, definir_agora
+):
+    campus = Campus(
+        nome="Gama",
+        ultima_importacao_em=definir_agora(2026, 10, 24, 9).astimezone(UTC),
+        ultima_fonte_pdf_url="https://ru.unb.br/ultima-fonte-valida.pdf",
+    )
+    db_session.add(campus)
+    db_session.commit()
+    definir_agora(2026, 10, 24, 16)
+
+    response = client.post(
+        "/cardapios/importacao",
+        headers=importacao_headers,
+        json={
+            "campus": "Gama",
+            "fonte_pdf_url": "https://ru.unb.br/fonte-com-falha.pdf",
+            "refeicoes": [
+                {
+                    "data": "2026-10-24",
+                    "tipo_refeicao": "almoco",
+                    "itens": [
+                        {
+                            "categoria": "sobremesa",
+                            "tipo_dieta": "comum",
+                            "nome": "Pudim",
+                            "alergenos": ["desconhecido"],
+                        }
+                    ],
+                }
+            ],
+        },
+    )
+
+    assert response.status_code == 422
+    campus_api = client.get(f"/campi/{campus.id}").json()
+    assert campus_api["ultima_importacao_em"] == "2026-10-24T12:00:00Z"
+    assert campus_api["ultima_fonte_pdf_url"] == "https://ru.unb.br/ultima-fonte-valida.pdf"
 
 
 def test_importacao_rejeita_alergeno_fora_do_contrato(client: TestClient, importacao_headers):

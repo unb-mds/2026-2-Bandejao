@@ -16,11 +16,24 @@ test('carrega campi pela rota da API', async () => {
     baseUrl: 'https://api.exemplo.test',
     fetchImpl: async (url) => {
       urlRecebida = new URL(url)
-      return { ok: true, json: async () => [{ id: 2, nome: 'Gama' }] }
+      return {
+        ok: true,
+        json: async () => [{
+          id: 2,
+          nome: 'Gama',
+          ultima_importacao_em: '2026-10-24T18:45:00Z',
+          ultima_fonte_pdf_url: 'https://ru.unb.br/gama.pdf',
+        }],
+      }
     },
   })
 
-  assert.deepEqual(resultado, [{ id: 2, nome: 'Gama' }])
+  assert.deepEqual(resultado, [{
+    id: 2,
+    nome: 'Gama',
+    ultima_importacao_em: '2026-10-24T18:45:00Z',
+    ultima_fonte_pdf_url: 'https://ru.unb.br/gama.pdf',
+  }])
   assert.equal(urlRecebida.pathname, '/campi/')
 })
 

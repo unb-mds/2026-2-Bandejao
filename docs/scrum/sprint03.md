@@ -77,7 +77,7 @@ A validação desta branch deve distinguir:
 - Configuração/documentação: `docker compose config --quiet`, validação do YAML, `git diff --check` e `mkdocs build --strict` aprovados.
 - Actions: SHAs de checkout, setup-python, upload-artifact e CodeQL conferidos nas fontes oficiais; execução real aprovada e artefatos inspecionados.
 
-O instante da última importação bem-sucedida ainda não é persistido no modelo `Cardapio`. O agendamento e os logs não representam atendimento completo de RNF02 nem do critério de exibição de atualização em RF01.
+O instante e a fonte da última importação bem-sucedida passaram a ser persistidos por campus e exibidos no cardápio na entrega da issue 50. A execução contínua no ambiente escolhido ainda precisa ser evidenciada para o aceite operacional completo de RNF02.
 
 ## Pendências e próximos passos
 

@@ -15,6 +15,8 @@ export type CardapiosPorCampus = Record<string, CardapioRefeicoes[]>
 export interface Campus {
   id: string
   name: string
+  ultimaImportacaoEm?: string | null
+  ultimaFontePdfUrl?: string | null
 }
 
 export type RefeicaoData = {

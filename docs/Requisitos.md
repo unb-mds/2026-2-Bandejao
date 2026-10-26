@@ -205,7 +205,7 @@ Os caminhos abaixo são pontos de inspeção na versão-base `717d960`, não com
 
 | Requisito | Origem | Evidência existente / ponto de inspeção | Lacuna para aceitação |
 |---|---|---|---|
-| RF01 | Visão: consultar cardápio | `backend/app/api/routes/cardapio.py`; `backend/tests/test_cardapio_api.py` | Interface integrada, origem/atualização visíveis e indisponibilidade. |
+| RF01 | Visão: consultar cardápio | `Campus.ultima_importacao_em`; rota de importação; `MealContent.tsx`; testes de API e migração | Origem e última importação bem-sucedida são persistidas por campus, devolvidas pela API e exibidas juntas; uma falha preserva o último sucesso. |
 | RF02 | Visão: consultar por campus | `backend/app/api/routes/campus.py`; filtros em `cardapio.py` | Seleção dos cinco campi e troca na interface. |
 | RF03 | Visão: restrições alimentares | Filtros em `cardapio.py`, `MealContent.tsx` e `FiltrosAlimentares.tsx`; contrato de importação | Semântica inclusiva de D02 implementada e aviso visível; revisar marcações com o conjunto de PDFs da sprint de verificação. |
 | RF04 | Visão: avaliar refeições | `backend/app/api/routes/avaliacao.py`; `frontend/src/screens/AvaliacaoForm.tsx`; testes de janela e cliente | Nota e comentário são enviados com identidade anônima; a API valida campos e janela e a interface apresenta o motivo de recusas. |
@@ -214,7 +214,7 @@ Os caminhos abaixo são pontos de inspeção na versão-base `717d960`, não com
 | RF07 | Visão: estimar movimento | Dependência de RF06 documentada | Implementar demanda por refeição com amostra mínima (D05); sem horário de pico. |
 | RF08 | Sprint 02: reclamações independentes | Modelo, migração e rotas em `backend/app/api/routes/reclamacao.py` | Integrar a tela ao contrato persistido; manter quatro categorias, sem nome, foto ou lista pública. |
 | RNF01 | v1.0: desempenho no pico | Critério agora quantificado | Aprovar cenário e executar medição. |
-| RNF02 | v1.0: atualização semanal | `extracao/extracao/sincronizar.py`; `extracao/tests/test_sincronizar.py` | Evidenciar agendamento, prazo e última atualização. |
+| RNF02 | v1.0: atualização semanal | Sincronização a cada seis horas; metadados de importação no campus; testes de falha | Evidenciar a execução contínua no ambiente escolhido e o cumprimento do prazo operacional. |
 | RNF03 | v1.0: resiliência | `extracao/tests/test_main.py`; `extracao/tests/test_cobertura_total.py` | Revisar conjunto de referência e verificar cenários propostos. |
 | RNF04 | v1.0: acesso para avaliação | Link de protótipo no README | Validar versão integrada e janela de avaliação. |
 | RNF05 | v1.0: SAST | `.github/workflows/sast.yml`; `scripts/security/POLICY.md`; [evidência da issue 60](evidencias/sast-issue-60.md) | Bandit e CodeQL confirmados em PR real, com artefatos preservados e ambos os checks obrigatórios no ruleset ativo da `main`. |
@@ -222,7 +222,7 @@ Os caminhos abaixo são pontos de inspeção na versão-base `717d960`, não com
 
 ### Integração local do frontend — 01/10/2026
 
-A tabela acima preserva a inspeção da versão-base. A aplicação local incorpora as telas React/TypeScript/Tailwind da equipe e consulta campi/cardápios pela API. Origem PDF, estados de falha/indisponibilidade, filtros sobre os marcadores publicados e avaliações persistentes estão implementados. D02 foi aplicada na API e na interface, com aviso sobre informação não marcada. A interface envia nota e comentário com identidade anônima e consulta o histórico da refeição, sem misturar datas, campi ou tipos de refeição. Atualização dos dados, integração completa de D01 e aceite operacional continuam pendentes. Reclamações na interface, planejamento e lotação permanecem demonstrações locais. Checks automatizados não substituem o aceite dos RFs. Consulte [Arquitetura](Arquitetura.md) e [Protótipos](prototipos.md).
+A tabela acima preserva a inspeção da versão-base. A aplicação local incorpora as telas React/TypeScript/Tailwind da equipe e consulta campi/cardápios pela API. Origem PDF, última importação bem-sucedida, estados de falha/indisponibilidade, filtros sobre os marcadores publicados e avaliações persistentes estão implementados; D02 foi aplicada na API e na interface, com aviso sobre informação não marcada. A data da última importação só muda na mesma transação que confirma uma importação válida. A interface envia nota e comentário com identidade anônima e consulta o histórico da refeição, sem misturar datas, campi ou tipos de refeição. A integração completa de D01 e o aceite operacional continuam pendentes. Reclamações na interface, planejamento e lotação permanecem demonstrações locais. Checks automatizados não substituem o aceite dos RFs. Consulte [Arquitetura](Arquitetura.md) e [Protótipos](prototipos.md).
 
 ### Registro de validação
 

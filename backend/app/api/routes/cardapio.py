@@ -1,10 +1,11 @@
-from datetime import date
+from datetime import UTC, date, datetime
 
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session, selectinload
 
 from app.db.session import get_db
 from app.core.security import exigir_token_importacao
+from app.core.tempo import agora
 from app.models import Campus, Cardapio, ItemCardapio
 from app.models.enums import TipoDieta, TipoRefeicao
 from app.schemas.cardapio import (
@@ -77,7 +78,9 @@ def listar_cardapios(
     dependencies=[Depends(exigir_token_importacao)],
 )
 def importar_cardapio(
-    importacao: CardapioImportacao, db: Session = Depends(get_db)
+    importacao: CardapioImportacao,
+    db: Session = Depends(get_db),
+    instante: datetime = Depends(agora),
 ) -> ImportacaoResultado:
     """Insere a saída da extração e permite reprocessar a mesma semana sem duplicar dados."""
     campus = db.query(Campus).filter(Campus.nome == importacao.campus).first()
@@ -131,11 +134,18 @@ def importar_cardapio(
             )
             itens_processados += 1
 
+    # O horário e a fonte formam um único registro de sucesso e só são confirmados
+    # junto com os cardápios na mesma transação.
+    campus.ultima_importacao_em = instante.astimezone(UTC)
+    campus.ultima_fonte_pdf_url = importacao.fonte_pdf_url
     db.commit()
+    db.refresh(campus)
     return ImportacaoResultado(
         campus_id=campus.id,
         cardapios_processados=len(importacao.refeicoes),
         itens_processados=itens_processados,
+        ultima_importacao_em=campus.ultima_importacao_em,
+        fonte_pdf_url=campus.ultima_fonte_pdf_url,
     )
 
 

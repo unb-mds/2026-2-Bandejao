@@ -30,14 +30,14 @@ Em Linux/macOS, use `cp .env.example .env`. Abra <http://localhost:5173>. `VITE_
 | Fluxo | Estado |
 |---|---|
 | Campus e cardápio | Consulta a API. A semana inicial é a atual, de domingo a sábado; é possível escolher outra semana. Os dias e refeições são selecionados na interface. |
-| Origem e indisponibilidade | Link para o PDF, carregamento, erro com nova tentativa e mensagens sem inferir fechamento do RU. |
+| Origem e indisponibilidade | Link para o PDF, data/hora da última importação bem-sucedida do campus, carregamento, erro com nova tentativa e mensagens sem inferir fechamento do RU. |
 | Dieta e alérgenos | Filtros locais sobre os itens retornados, usando `tipo_dieta` e os marcadores `contem_*`. O filtro ovolactovegetariano inclui também itens vegetarianos estritos; as demais classes permanecem exatas, conforme D02. |
 | Avaliações | Nota geral e comentário são enviados à API com a identidade anônima do navegador. O histórico consulta somente a refeição selecionada, mostra data/hora em Brasília e permanece após recarregar a página. |
 | Reclamações | A tela ainda mantém os registros somente no estado do React e não os envia ao RU. |
 | Planejamento | Demonstração por campus e data, apenas nesta sessão; sem persistência ou previsão. |
 | Lotação | Exemplos visuais e relatos desta sessão; sem consulta a dados reais nem estimativa operacional. |
 
-A convenção de domingo a sábado é uma escolha de apresentação da integração, não uma resolução de D01. O backend não informa horário de funcionamento nem instante de atualização/importação. A tela Hoje escolhe a refeição por faixas horárias do protótipo, sem afirmar que o restaurante está aberto.
+A convenção de domingo a sábado é uma escolha de apresentação da integração, não uma resolução de D01. O backend informa a última importação bem-sucedida, mas não o horário de funcionamento. A tela Hoje escolhe a refeição por faixas horárias do protótipo, sem afirmar que o restaurante está aberto.
 
 Os filtros usam apenas as marcações recebidas; não inferem ingredientes pelo nome. “Sem marcação” significa “não marcado na fonte”, não “livre de”. A legenda dos PDFs validada em 30/09/2026 não tem símbolo separado para frutos do mar. Confira a fonte oficial e os critérios de aceitação em [Requisitos](../docs/Requisitos.md).
 
