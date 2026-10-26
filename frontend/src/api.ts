@@ -51,6 +51,44 @@ interface Opcoes {
 type Parametros = Record<string, string | number | null | undefined>
 const API_BASE_URL = import.meta.env?.VITE_API_BASE_URL || 'http://localhost:8000'
 
+interface ErroValidacaoApi {
+  loc?: unknown[]
+  msg?: string
+  type?: string
+  ctx?: Record<string, unknown>
+}
+
+function mensagemValidacao(erro: ErroValidacaoApi): string {
+  const tipo = erro.type ?? ''
+  const contexto = erro.ctx ?? {}
+
+  if (tipo === 'string_too_long' && typeof contexto.max_length === 'number') {
+    return `deve ter no máximo ${contexto.max_length} caracteres`
+  }
+  if (tipo === 'greater_than_equal' && contexto.ge !== undefined) {
+    return `deve ser maior ou igual a ${contexto.ge}`
+  }
+  if (tipo === 'less_than_equal' && contexto.le !== undefined) {
+    return `deve ser menor ou igual a ${contexto.le}`
+  }
+  if (tipo === 'int_parsing' || tipo === 'int_type') return 'deve ser um número inteiro'
+  return erro.msg || 'possui um valor inválido'
+}
+
+export function mensagemErroApi(corpo: unknown, status: number): string {
+  if (typeof corpo === 'object' && corpo !== null && 'detail' in corpo) {
+    const detalhe = (corpo as { detail?: unknown }).detail
+    if (typeof detalhe === 'string') return detalhe
+    if (Array.isArray(detalhe) && detalhe.length > 0) {
+      const erro = detalhe[0] as ErroValidacaoApi
+      const campo = erro.loc?.at(-1)
+      const prefixo = typeof campo === 'string' ? `Campo “${campo}”: ` : 'Dados inválidos: '
+      return `${prefixo}${mensagemValidacao(erro)}.`
+    }
+  }
+  return `A API respondeu com HTTP ${status}.`
+}
+
 export async function requisitarJson<T>(caminho: string, parametros: Parametros = {}, opcoes: Opcoes = {}): Promise<T> {
   const {
     signal,
@@ -73,8 +111,7 @@ export async function requisitarJson<T>(caminho: string, parametros: Parametros 
   })
   if (!resposta.ok) {
     const corpo = await resposta.json().catch(() => null)
-    const detalhe = typeof corpo?.detail === 'string' ? corpo.detail : null
-    throw new Error(detalhe || `A API respondeu com HTTP ${resposta.status}.`)
+    throw new Error(mensagemErroApi(corpo, resposta.status))
   }
   return resposta.json()
 }
@@ -83,6 +120,9 @@ export function listarCampi(opcoes?: Opcoes) {
 }
 export function listarCardapios(filtros: Parametros, opcoes?: Opcoes) {
   return requisitarJson<CardapioApi[]>('cardapios/', filtros, opcoes)
+}
+export function listarAvaliacoes(cardapioId: number, opcoes?: Opcoes) {
+  return requisitarJson<AvaliacaoApi[]>(`cardapios/${cardapioId}/avaliacoes/`, {}, opcoes)
 }
 export function salvarAvaliacao(
   cardapioId: number,

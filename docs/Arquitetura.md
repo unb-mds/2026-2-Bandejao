@@ -8,7 +8,7 @@
 
 ## 1. Propósito e estado
 
-Este documento apresenta a arquitetura do Bandejão nos níveis de **Contexto** e **Containers** do modelo C4, o modelo de dados existente e os fluxos principais. Os diagramas distinguem a arquitetura pretendida do estado implementado: backend, banco e extração já têm código; a interface React/TypeScript/Tailwind incorpora as telas da equipe e consulta campi e cardápios pela API. Filtros locais usam os marcadores dos itens; avaliações, reclamações, planejamento e lotação permanecem demonstrações, sem persistência integrada.
+Este documento apresenta a arquitetura do Bandejão nos níveis de **Contexto** e **Containers** do modelo C4, o modelo de dados existente e os fluxos principais. Os diagramas distinguem a arquitetura pretendida do estado implementado: backend, banco e extração já têm código; a interface React/TypeScript/Tailwind consulta campi, cardápios e avaliações pela API. Filtros locais usam os marcadores dos itens. Reclamações possuem persistência no backend, mas a tela ainda é local; planejamento e lotação permanecem demonstrações.
 
 O Bandejão centraliza os cardápios publicados em PDF pelos Restaurantes Universitários da UnB. A Release 1 prevê consulta do cardápio por campus, filtros alimentares, avaliações e reclamações. O planejamento semanal e a estimativa de movimento pertencem à Release 2.
 
@@ -54,8 +54,8 @@ flowchart LR
 
 | Container | Responsabilidade | Implementação observada |
 |---|---|---|
-| Frontend Web | Seleção de campus e consulta de cardápios por período e refeição | React 19, Vite 8, TypeScript e Tailwind v4, a partir das telas da equipe. Consulta `GET /campi/` e `GET /cardapios/`, com URL configurável por `VITE_API_BASE_URL`; filtros locais usam os marcadores retornados. Avaliações/reclamações e planejamento são demonstrações em memória; lotação usa exemplos. |
-| API REST | Validar importações, consultar cardápios e receber avaliações | FastAPI e SQLAlchemy; rotas de campus, cardápio/importação e avaliação existentes. CORS permite origens configuradas em `CORS_ORIGINS`. Reclamações e planejamento não existem ainda. |
+| Frontend Web | Consultar cardápios e registrar/consultar avaliações | React 19, Vite 8, TypeScript e Tailwind v4. Consulta campi, cardápios e o histórico da refeição; envia nota e comentário com identidade anônima. Filtros locais usam os marcadores retornados. Reclamações, planejamento e lotação ainda possuem partes demonstrativas. |
+| API REST | Validar importações, consultar cardápios e persistir avaliações e reclamações | FastAPI e SQLAlchemy; rotas de campus, cardápio/importação, avaliação e reclamação existentes. CORS permite origens configuradas em `CORS_ORIGINS`. Planejamento ainda não existe. |
 | PostgreSQL | Persistir campi, cardápios, itens, avaliações e check-ins legados | PostgreSQL 16 no Docker Compose; schema gerenciado pelo Alembic. |
 | Processo de extração | Encontrar PDFs, extrair e normalizar dados e enviá-los à API | Pacote Python separado e serviço opcional `sincronizador`; roda uma vez ao iniciar e repete a cada seis horas, sem sobreposição. A publicação consultada em 30/09/2026 foi validada; ver [relatório dos PDFs](validacao-extracao-pdfs.md). Formatos futuros precisam de nova conferência. |
 
@@ -76,7 +76,7 @@ A rotina isola falhas por campus durante o processamento. A disponibilidade e a 
 
 O frontend consulta `GET /campi/` e `GET /cardapios/`, enviando o campus cadastrado e o intervalo da semana escolhida. A apresentação começa na semana atual (domingo a sábado) e permite outra semana; a refeição é selecionada entre os resultados carregados. A URL é configurável por `VITE_API_BASE_URL`; a API habilita CORS para as origens em `CORS_ORIGINS`. Os filtros aplicam D02: ovolactovegetariano inclui vegetariano estrito, enquanto as demais classes são exatas. As exclusões usam somente os marcadores publicados e a tela esclarece que ausência de marcação não significa ingrediente ausente. A tela apresenta o instante da última importação bem-sucedida do campus no fuso de Brasília junto à URL da respectiva fonte. A integração completa de D01 na apresentação permanece pendente. Lista vazia não indica fechamento do RU.
 
-As rotas para registrar e consultar avaliações existem em `/cardapios/{cardapio_id}/avaliacoes`. A tela do protótipo está incorporada, mas ainda registra avaliações apenas na sessão; a adaptação do formulário ao contrato da API permanece pendente. Reclamações separadas das notas são requisito da Release 1, mas ainda não têm modelo, migração ou endpoint.
+As rotas para registrar e consultar avaliações existem em `/cardapios/{cardapio_id}/avaliacoes`. A interface envia nota e comentário com `X-Identidade` e consulta o histórico pelo ID da refeição. A listagem permanece disponível após o prazo, retorna somente os registros daquela refeição e vem ordenada do mais recente ao mais antigo. Reclamações separadas das notas possuem modelo, migração e endpoints; a integração da respectiva tela continua pendente.
 
 ### 4.3 Planejamento e previsão — Release 2
 
@@ -110,8 +110,8 @@ Não há uma entidade separada `Refeicao`: no schema atual, `Cardapio` represent
 |---|---|---|---|
 | Cardápio | PDFs ligados pela página oficial `https://ru.unb.br/cardapio-refeitorio/` | A publicação é semanal; a extração busca os links quando é executada. | Não há API oficial. Links, tabelas e ícones podem mudar sem aviso; o cardápio também pode ser alterado pelo RU. |
 | Campus | Nome extraído do arquivo ou já cadastrado no banco | Criado durante importação quando ainda não existe; guarda o último sucesso e a fonte | A identificação depende dos nomes/formatos usados nos links dos PDFs. |
-| Avaliação | Envio da pessoa usuária pela API | Registrada no envio | A API permite listar avaliações; a tela local é demonstração e sua persistência pela API está pendente. Não há conta de usuário associada no schema atual. |
-| Reclamação | Prevista para a Release 1 | A definir | Ainda não há armazenamento ou endpoint; definir privacidade e política de retenção ao projetar. |
+| Avaliação | Envio da pessoa usuária pela interface, com identidade anônima | Registrada ou atualizada no envio | A interface lista o histórico persistido da refeição escolhida. Não há conta de usuário associada; o código anônimo não aparece nas respostas. |
+| Reclamação | Envio privado pela API | Registrada no envio | Há modelo, migração e endpoints; a tela ainda precisa substituir o estado local por esse contrato. |
 | Planejamento | Previsto para a Release 2 | A definir | Ainda não existe. A granularidade do horário precisa ser definida antes da previsão. |
 
 ## 7. Tecnologias

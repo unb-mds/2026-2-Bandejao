@@ -26,78 +26,25 @@ export function StarRating({ value, onChange, label, id }: { value: number; onCh
   )
 }
 
-export function RatingBar({ label, value }: { label: string; value: number }) {
-  const color = value >= 4 ? '#2D6A3F' : value === 3 ? '#92600A' : '#CC2C2C'
-  return (
-    <div className="flex items-center gap-3">
-      <span className="text-xs text-[var(--muted-foreground)] w-14 shrink-0">{label}</span>
-      <div className="flex-1 h-1.5 rounded-full bg-[var(--muted)] overflow-hidden">
-        <div className="h-full rounded-full transition-all" style={{ width: `${(value/5)*100}%`, background: color }} />
-      </div>
-      <span className="text-xs font-bold w-6 text-right" style={{ color }}>{value}</span>
-    </div>
-  )
-}
-
 export function AvaliacaoCard({ av }: { av: Avaliacao }) {
-  const [expanded, setExpanded] = useState(false)
-  const [photoOpen, setPhotoOpen] = useState(false)
   return (
-    <div className="bg-[var(--card)] border border-[var(--border)] rounded-2xl overflow-hidden">
-      <div className="p-5">
-        <div className="flex items-start justify-between mb-3">
-          <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-full flex items-center justify-center text-sm font-bold text-white shrink-0"
-              style={{ background: 'linear-gradient(135deg,#1E5631,#2D6A3F)' }}>
-              {av.autor.charAt(0)}
-            </div>
-            <div>
-              <p className="font-semibold text-sm leading-tight">{av.autor}</p>
-              <p className="text-xs text-[var(--muted-foreground)]">{av.refeicao}{av.campus ? ` · ${av.campus}` : ''} · {av.data}</p>
-            </div>
-          </div>
-          <div className="flex items-center gap-1 px-2.5 py-1 rounded-full" style={{ background: '#FEF3E2' }}>
-            <span className="text-[#E8570A] font-bold text-sm">{av.geral}</span>
-            <span className="text-[#E8570A] text-xs">★</span>
-          </div>
+    <div className="bg-[var(--card)] border border-[var(--border)] rounded-2xl p-5">
+      <div className="flex items-start justify-between gap-3 mb-3">
+        <div>
+          <p className="font-semibold text-sm leading-tight">Avaliação anônima</p>
+          <p className="text-xs text-[var(--muted-foreground)]">
+            {av.refeicao}{av.campus ? ` · ${av.campus}` : ''} · {av.data}
+            {av.horario ? ` às ${av.horario}` : ''}
+          </p>
         </div>
-        <p className="text-sm text-[var(--foreground)] leading-relaxed">{av.comentario}</p>
-        <div className="mt-3 flex items-center gap-3">
-          <button
-            onClick={() => setExpanded(!expanded)}
-            className="text-xs font-semibold text-[var(--primary)] flex items-center gap-1"
-          >
-            {expanded ? 'Ocultar detalhes ↑' : 'Ver notas por critério ↓'}
-          </button>
-          {av.foto && (
-            <button
-              onClick={() => setPhotoOpen(v => !v)}
-              className="text-xs font-semibold flex items-center gap-1"
-              style={{ color: '#C9A84C' }}
-            >
-              <span aria-hidden="true">{photoOpen ? '🙈' : '📷'}</span>
-              {photoOpen ? 'Ocultar foto' : 'Ver foto'}
-            </button>
-          )}
+        <div className="flex items-center gap-1 px-2.5 py-1 rounded-full" style={{ background: '#FEF3E2' }}>
+          <span className="text-[#E8570A] font-bold text-sm">{av.geral}</span>
+          <span className="text-[#E8570A] text-xs">★</span>
         </div>
-        {photoOpen && av.foto && (
-          <img
-            src={av.foto}
-            alt="Foto da refeição"
-            className="mt-3 rounded-xl object-cover w-full max-h-52"
-            style={{ border: '1px solid var(--border)' }}
-          />
-        )}
       </div>
-      {expanded && (
-        <div className="px-5 pb-5 pt-2 border-t border-[var(--border)] space-y-2">
-          <RatingBar label="Sabor" value={av.sabor ?? 0} />
-          <RatingBar label="Sal" value={av.sal ?? 0} />
-          <RatingBar label="Temp." value={av.temperatura ?? 0} />
-          <RatingBar label="Apresent." value={av.apresentacao ?? 0} />
-          <RatingBar label="Qtd." value={av.quantidade ?? 0} />
-        </div>
-      )}
+      <p className="text-sm text-[var(--foreground)] leading-relaxed">
+        {av.comentario || 'Sem comentário.'}
+      </p>
     </div>
   )
 }

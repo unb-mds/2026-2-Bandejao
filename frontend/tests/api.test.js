@@ -1,7 +1,13 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
 
-import { listarCampi, listarCardapios, requisitarJson, salvarAvaliacao } from '../src/api.ts'
+import {
+  listarAvaliacoes,
+  listarCampi,
+  listarCardapios,
+  requisitarJson,
+  salvarAvaliacao,
+} from '../src/api.ts'
 
 test('carrega campi pela rota da API', async () => {
   let urlRecebida
@@ -117,4 +123,53 @@ test('envia avaliação com a identidade anônima no cabeçalho', async () => {
   assert.equal(opcoesRecebidas.headers['Content-Type'], 'application/json')
   assert.deepEqual(JSON.parse(opcoesRecebidas.body), { nota: 5, comentario: 'Muito bom' })
   assert.equal(resultado.id, 7)
+})
+
+test('consulta somente o histórico da refeição informada', async () => {
+  let urlRecebida
+
+  const resultado = await listarAvaliacoes(42, {
+    baseUrl: 'https://api.exemplo.test',
+    fetchImpl: async (url, opcoes) => {
+      urlRecebida = new URL(url)
+      assert.equal(opcoes.method, 'GET')
+      return {
+        ok: true,
+        status: 200,
+        json: async () => [
+          { id: 8, cardapio_id: 42, nota: 4, comentario: null, criado_em: '2026-10-24T14:00:00-03:00' },
+        ],
+      }
+    },
+  })
+
+  assert.equal(urlRecebida.pathname, '/cardapios/42/avaliacoes/')
+  assert.equal(resultado.length, 1)
+  assert.equal(resultado[0].cardapio_id, 42)
+})
+
+test('traduz erro de campo inválido retornado pela API', async () => {
+  await assert.rejects(
+    salvarAvaliacao(
+      42,
+      { nota: 6, comentario: null },
+      '123e4567-e89b-42d3-a456-426614174000',
+      {
+        baseUrl: 'https://api.exemplo.test',
+        fetchImpl: async () => ({
+          ok: false,
+          status: 422,
+          json: async () => ({
+            detail: [{
+              type: 'less_than_equal',
+              loc: ['body', 'nota'],
+              msg: 'Input should be less than or equal to 5',
+              ctx: { le: 5 },
+            }],
+          }),
+        }),
+      },
+    ),
+    { message: 'Campo “nota”: deve ser menor ou igual a 5.' },
+  )
 })
