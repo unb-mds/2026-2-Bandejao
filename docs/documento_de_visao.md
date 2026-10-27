@@ -5,6 +5,8 @@
 **Equipe:** 7 integrantes
 **Versão:** 1.0
 
+**Alinhamento com as decisões D01–D08:** revisado em 27/10/2026.
+
 ---
 
 ## 1. Introdução / Problema
@@ -19,7 +21,7 @@ Os Restaurantes Universitários (RU) da UnB, em seus diferentes campi (Darcy Rib
 
 ## 2. Objetivo do Projeto
 
-Criar uma aplicação que centralize o cardápio semanal dos RUs da UnB, abrangendo todos os campi, permita a avaliação das refeições e o registro independente de reclamações e, em uma etapa posterior, forneça uma estimativa de movimento com base no planejamento semanal dos usuários. A estimativa de horários dentro de uma refeição depende da coleta de faixas de chegada e da decisão D05 do [Documento de Requisitos](Requisitos.md).
+Criar uma aplicação que centralize o cardápio semanal dos RUs da UnB, abrangendo todos os campi, permita a avaliação das refeições e o registro independente de reclamações e, em uma etapa posterior, forneça uma estimativa de intenções com base no planejamento semanal dos usuários. A decisão D05 do [Documento de Requisitos](Requisitos.md) limita a estimativa à quantidade por campus, data e refeição, sem horário de chegada ou tempo de espera.
 
 ## 3. Escopo
 
@@ -33,7 +35,7 @@ A Release 1 acadêmica avalia a definição e a organização da solução; a Re
 
 ### Evolução do produto
 - Planejamento antecipado dos dias e refeições em que o usuário pretende comer no RU;
-- Estimativa de movimento a partir dos planejamentos por dia, refeição e campus. Estimar horários dentro de uma refeição depende de coletar faixas de chegada; essa decisão está pendente em D05 do Documento de Requisitos.
+- Estimativa de intenções a partir dos planejamentos por dia, refeição e campus, com amostra mínima de 10 intenções ativas, conforme D05 do Documento de Requisitos.
 
 ## 4. Público-alvo / Stakeholders
 
@@ -42,7 +44,7 @@ A Release 1 acadêmica avalia a definição e a organização da solução; a Re
 
 ## 5. Visão Geral da Solução
 
-O Bandejão é uma aplicação que consome o cardápio semanal publicado pelos RUs de todos os campi da UnB (atualmente em PDF), estrutura essa informação e a disponibiliza de forma organizada e filtrável para o usuário, por campus. Além de consultar o cardápio, o usuário pode avaliar as refeições que experimentou e registrar reclamações de forma independente. Em uma segunda etapa, o usuário poderá planejar antecipadamente os dias e refeições em que pretende comer no RU, e o sistema utilizará o volume desses planejamentos para estimar o movimento por refeição. A apresentação de horários depende dos dados adicionais e da definição de escopo registrados em D05.
+O Bandejão é uma aplicação que consome o cardápio semanal publicado pelos RUs de todos os campi da UnB (atualmente em PDF), estrutura essa informação e a disponibiliza de forma organizada e filtrável para o usuário, por campus. Além de consultar o cardápio, o usuário pode avaliar as refeições que experimentou e registrar reclamações de forma independente. Em uma segunda etapa, o usuário poderá planejar antecipadamente os dias e refeições em que pretende comer no RU, e o sistema utilizará o volume desses planejamentos para estimar intenções por refeição. Essa quantidade não representa medição da fila nem previsão de horário de chegada.
 
 O sistema é dividido em quatro camadas: extração de dados (Python), backend/API (FastAPI), banco de dados (PostgreSQL) e frontend (React).
 

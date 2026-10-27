@@ -24,10 +24,10 @@ Aplicação para consulta ao cardápio semanal dos Restaurantes Universitários 
 
 ## Status
 
-🚧 Em desenvolvimento — Sprint 03 (infraestrutura em preparação)
+🚧 Em desenvolvimento — situação revisada em 27/10/2026
 
 - **Protótipo Vercel:** [Aceder ao Protótipo](https://frontend-react-tan-gamma.vercel.app)
-- O frontend local usa React 19, Vite 8, TypeScript e Tailwind v4, incorporando as telas da equipe de [marilluantunes/frontend-react](https://github.com/marilluantunes/frontend-react). Campi e cardápios vêm da API; os filtros usam as marcações dos itens. Avaliações, reclamações, planejamento e lotação continuam como demonstrações sem persistência integrada.
+- O frontend local usa React 19, Vite 8, TypeScript e Tailwind v4, incorporando as telas da equipe de [marilluantunes/frontend-react](https://github.com/marilluantunes/frontend-react). Campi, cardápios e histórico de avaliações vêm da API; os filtros usam as marcações dos itens. Avaliações e reclamações são enviadas à API e persistidas no banco. Planejamento e lotação continuam como demonstrações sem persistência integrada.
 - Consulte [estrutura, execução e limites do frontend](frontend/README.md). O protótipo Vercel externo é uma publicação separada.
 
 ## Publicação da aplicação
@@ -145,7 +145,7 @@ O modo periódico registra campus, URL da fonte e instante de cada importação 
 
 ### Segurança estática no CI
 
-O workflow `.github/workflows/sast.yml` analisa Python com Bandit e JavaScript/TypeScript com CodeQL em cada PR. Achados altos/críticos e falhas de análise reprovam os checks; relatórios são guardados como artefatos. O bloqueio efetivo de merge exige que os checks sejam obrigatórios na proteção da `main`. Veja nomes, comandos e política de severidade em [SAST](scripts/security/POLICY.md).
+O workflow `.github/workflows/sast.yml` analisa Python com Bandit e JavaScript/TypeScript com CodeQL em cada PR. Achados altos/críticos e falhas de análise reprovam os checks; relatórios são guardados como artefatos. O ruleset ativo da `main` exige os dois checks, sem bypass, conforme a [evidência de ativação](docs/evidencias/sast-issue-60.md). Veja nomes, comandos e política de severidade em [SAST](scripts/security/POLICY.md).
 
 ## Documentação e GitHub Pages
 

@@ -84,7 +84,7 @@ docker compose --profile sincronizacao up -d --force-recreate sincronizador
 
 A política `unless-stopped` reinicia o serviço após falhas/reinício do Docker, exceto quando ele foi parado explicitamente. A rotina exige token antes de acessar a fonte. Uma falha de configuração deve ser corrigida antes de tentar novamente. Para execução manual fora do Docker, exporte `IMPORTACAO_TOKEN` com o mesmo valor da API; o extrator não lê o arquivo `.env` automaticamente. Os comandos estão no README.
 
-A cadência implementada não certifica disponibilidade contínua, publicação do RU dentro de prazo ou exibição de última atualização na interface. O modelo atual ainda não registra esse último instante.
+A cadência implementada não certifica disponibilidade contínua nem publicação do RU dentro do prazo. O campus registra o instante e a fonte da última importação bem-sucedida, exibidos na interface; uma falha preserva o último sucesso. A execução contínua no host ainda precisa de evidência operacional.
 
 ## SAST e proteção da branch
 
@@ -100,7 +100,7 @@ As instruções de execução sem Docker, testes com pytest e sincronização es
 
 Com Node 22.12+ e API/banco em execução, entre em `frontend/`, copie `.env.example` para `.env`, execute `npm ci` e `npm run dev`. Acesse <http://localhost:5173>. Configure `VITE_API_BASE_URL` e autorize a origem em `CORS_ORIGINS` no backend.
 
-O frontend usa React 19, Vite 8, TypeScript e Tailwind v4, incorporando as telas da equipe. `npm test`, `npm run lint` e `npm run build` são os checks da CI; o build inclui checagem de tipos. Campi/cardápios usam a API; os filtros operam sobre os itens carregados. Avaliações enviam nota e comentário com identidade anônima e recuperam o histórico persistido da refeição. Reclamações na interface, planejamento e lotação permanecem demonstrações locais. A integração não atualiza automaticamente a publicação Vercel externa.
+O frontend usa React 19, Vite 8, TypeScript e Tailwind v4, incorporando as telas da equipe. `npm test`, `npm run lint` (Oxlint) e `npm run build` são os checks da CI; o build inclui checagem de tipos. Campi/cardápios usam a API; os filtros operam sobre os itens carregados. Avaliações enviam nota e comentário com identidade anônima e recuperam o histórico persistido da refeição. Reclamações são enviadas à API e persistidas, sem listagem pública ou encaminhamento automático ao RU. Planejamento e lotação permanecem demonstrações locais. A integração não atualiza automaticamente a publicação Vercel externa.
 
 ## Diagnóstico da sincronização
 

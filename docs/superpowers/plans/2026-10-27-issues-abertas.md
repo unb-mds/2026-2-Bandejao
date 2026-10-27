@@ -42,9 +42,9 @@
 
 ## Entrega
 
-- [ ] SAST e suites no GitHub após a revisão local aprovada.
-- [ ] Publicar os commits com a conta pithzin, vinculando as issues e respeitando a proteção da main.
-- [ ] Gerar documento completo com antes/depois, arquivos, commits, execução, critérios e limitações reais.
+- [x] SAST e suítes no GitHub após a revisão local aprovada.
+- [x] Publicar os commits com a conta pithzin, vinculando as issues e respeitando a proteção da main.
+- [x] Gerar documento completo com antes/depois, arquivos, commits, execução, critérios e limitações reais.
 
 ## Registro da execução local
 
@@ -54,3 +54,9 @@
 - Revisão local independente: sem achados críticos/importantes pendentes após correções de redirecionamento HTTPS e erros de protocolo no verificador.
 
 O relatório final identifica o resultado remoto e a situação das issues. Itens de ativação não serão marcados como aceitos apenas por compilação/configuração.
+
+## Publicação no repositório
+
+O [PR 72](https://github.com/unb-mds/2026-2-Bandejao/pull/72) integrou os três commits na `main` em `b38cba0`: `00d8fcc` (#54), `6a22a51` (#53) e `0407165` (#55), com autoria e committer de Arthur Pitanga e associação à conta `pithzin`. CI da aplicação, SAST e documentação foram aprovados nesse commit de integração. A issue 53 foi encerrada; 54 e 55 permanecem abertas para as evidências operacionais descritas acima.
+
+O relatório da entrega foi disponibilizado em Markdown e PDF. Uma revisão posterior de consistência alinhou README, contexto, arquitetura, requisitos, desenvolvimento, visão e protótipos ao código integrado e identificou os registros antigos das sprints como históricos.

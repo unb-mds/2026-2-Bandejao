@@ -4,6 +4,8 @@
 
 **Objetivo:** preparar as decisões e a infraestrutura necessárias às próximas sprints: SAST no CI, sincronização a cada seis horas e proteção da importação, além das bases de tempo, dieta e identidade previstas no planejamento.
 
+> **Registro histórico:** as seções abaixo acompanham o recorte da Sprint 03 e suas atualizações. Para o estado após as integrações posteriores, consulte a [situação consolidada em 27/10/2026](#situacao-consolidada-em-27102026). As pendências do planejamento original não são uma lista atual do que falta implementar.
+
 ## Fonte das decisões e escopo desta entrega
 
 A [ata de 12/10](atas-reunioes/ata-sprint03.md) e o [Documento de Requisitos v1.2](../Requisitos.md) registram as decisões D01–D08. O texto de votação é a proposta anterior à ata. Não houve nova votação nesta entrega.
