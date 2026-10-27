@@ -119,6 +119,17 @@ npm run build
 
 ### Sincronizando o cardápio real
 
+#### GitHub Actions (ambiente publicado)
+
+O workflow `Sincronizar cardápios` executa às 00:23, 06:23, 12:23 e 18:23 UTC, além de permitir execução manual. Antes de ativá-lo na `main`, configure em **Settings → Secrets and variables → Actions**:
+
+- variável `BACKEND_URL`: URL HTTPS pública da API, sem token na URL;
+- secret `IMPORTACAO_TOKEN`: o mesmo valor configurado no backend publicado.
+
+Cada execução roda uma única sincronização, guarda por 30 dias os logs e metadados como artefato e impede sobreposição com `concurrency`. Agendamentos do GitHub Actions podem começar depois do horário previsto. Confira o [roteiro operacional](docs/desenvolvimento.md) e a [evidência da issue 54](docs/evidencias/sincronizacao-issue-54.md).
+
+#### Docker Compose (host próprio)
+
 Depois de configurar `IMPORTACAO_TOKEN`, iniciar a API e aplicar `alembic upgrade head`, ative o serviço opcional:
 
 ```bash

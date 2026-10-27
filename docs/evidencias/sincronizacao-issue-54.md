@@ -15,6 +15,7 @@ Os testes de regressão foram executados antes da correção: cinco falharam e d
 - Exceções inesperadas de um PDF tornam-se falha daquele campus; `KeyboardInterrupt` e `SystemExit` não são engolidos.
 - Importações bem-sucedidas registram JSON com campus, URL do PDF, instante UTC e instante devolvido pela API, sem registrar o token.
 - O serviço opcional do Compose mantém execução imediata e repetição a cada 21.600 segundos, com autenticação por variável de ambiente e sem sobrepor ciclos.
+- O workflow `Sincronizar cardápios` agenda execuções únicas a cada seis horas, usa variável/secret do GitHub e preserva logs e metadados por 30 dias.
 
 ## Fonte real
 
@@ -43,8 +44,16 @@ Os payloads reais dos cinco campi foram enviados duas vezes à API por `TestClie
 - Backend: 94 testes, 100% de cobertura, Ruff aprovado; teste de reimportação ampliado para preservar avaliações e reclamações após duas passagens.
 - Agendamento: testes de relógio simulado conferem 21.600 segundos entre inícios, repetição após falha, execução única e ciclos sem sobreposição. Não foi necessário aguardar seis horas.
 
+## Agendamento pelo GitHub Actions
+
+O arquivo `.github/workflows/sincronizacao.yml` usa o cron `23 */6 * * *`, equivalente a quatro tentativas por dia em UTC. Também permite execução manual. Cada disparo executa o extrator uma única vez; a próxima periodicidade pertence ao agendador, evitando um processo ocioso por seis horas. O grupo de concorrência não cancela nem sobrepõe ciclos.
+
+A URL da API vem da variável `BACKEND_URL` e precisa começar por `https://`. O token vem exclusivamente do secret `IMPORTACAO_TOKEN`. Configuração ausente encerra o job antes do acesso ao RU. O job guarda `inicio_utc`, `fim_utc`, ID, commit, código de saída e o log por campus em um artefato de 30 dias. O conteúdo não inclui o valor do token.
+
+Em pull requests, o workflow não importa dados: executa somente os testes do sincronizador e a regressão dos cinco PDFs reais. Disparos agendados só passam a existir quando o arquivo estiver na branch padrão.
+
 ## Operação e limites
 
-A rotina é um serviço opcional, iniciado conforme [Desenvolvimento](../desenvolvimento.md). O Docker e o host devem permanecer ativos. Não há ambiente Render acessível nesta entrega e não foi comprovada execução contínua em hospedagem; o aceite operacional de RNF02 depende desse ambiente.
+O Docker Compose continua como alternativa para host próprio, conforme [Desenvolvimento](../desenvolvimento.md). O GitHub Actions remove a necessidade de manter esse host ligado, mas ainda depende de uma API publicada e do mesmo segredo configurado nas duas pontas.
 
-Não foi adicionado agendamento pelo GitHub Actions. Caso a equipe o adote, eventos `schedule` podem atrasar ou ser descartados sob carga, conforme a [documentação oficial do GitHub](https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows#schedule); não representam garantia de horário exato.
+Não há API pública ativa nem `BACKEND_URL`/`IMPORTACAO_TOKEN` configurados no repositório nesta entrega, portanto nenhuma importação operacional foi disparada. Após a publicação, a primeira execução manual deve ser verificada antes de confiar no cron. Eventos `schedule` podem atrasar ou ser descartados sob carga, conforme a [documentação oficial do GitHub](https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows#schedule); não representam garantia de horário exato. O aceite integral de RNF02 exige guardar execuções bem-sucedidas dentro da janela de 24 horas.

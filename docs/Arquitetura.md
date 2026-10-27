@@ -29,7 +29,7 @@ flowchart LR
 
 ## 3. C4 — Diagrama de Containers
 
-O container de extração executa como serviço opcional do Docker Compose. O perfil `sincronizacao` aguarda a API ficar saudável, executa uma sincronização ao iniciar e repete a cada seis horas enquanto o host estiver ativo.
+O processo de extração possui duas formas de agendamento. No ambiente publicado, o GitHub Actions inicia uma execução isolada a cada seis horas. Em host próprio, o container opcional do Docker Compose aguarda a API, executa ao iniciar e repete enquanto o host estiver ativo.
 
 ```mermaid
 flowchart LR
@@ -40,7 +40,7 @@ flowchart LR
         web["Frontend Web<br/>React 19 + Vite 8<br/>TypeScript + Tailwind v4<br/>Cardápio, avaliações e reclamações integrados"]
         api["API REST<br/>FastAPI + SQLAlchemy<br/>Cardápio, avaliações e reclamações implementados"]
         banco[("PostgreSQL 16<br/>Estado: schema e migrações existentes")]
-        extracao["Sincronizador e extração<br/>Python, requests, BeautifulSoup,<br/>pdfplumber e Pillow<br/>Execução opcional a cada 6 horas"]
+        extracao["Sincronizador e extração<br/>Python, requests, BeautifulSoup,<br/>pdfplumber e Pillow<br/>GitHub Actions ou Docker a cada 6 horas"]
     end
 
     pessoa -->|"Navegador / HTTP"| web
@@ -57,7 +57,7 @@ flowchart LR
 | Frontend Web | Consultar cardápios e avaliações; enviar avaliações e reclamações | React 19, Vite 8, TypeScript e Tailwind v4. Consulta campi, cardápios e o histórico da refeição; envia nota e comentário com identidade anônima. Filtros locais usam os marcadores retornados. A tela envia reclamações à API, sem listagem pública ou encaminhamento automático ao RU. Planejamento e lotação seguem demonstrativos. |
 | API REST | Validar importações, consultar cardápios e persistir avaliações e reclamações | FastAPI e SQLAlchemy; rotas de campus, cardápio/importação, avaliação e reclamação existentes. CORS permite origens configuradas em `CORS_ORIGINS`. Planejamento ainda não existe. |
 | PostgreSQL | Persistir campi, cardápios, itens, avaliações, reclamações e check-ins legados | PostgreSQL 16 no Docker Compose; schema gerenciado pelo Alembic. |
-| Processo de extração | Encontrar PDFs, extrair e normalizar dados e enviá-los à API | Pacote Python separado e serviço opcional `sincronizador`; roda uma vez ao iniciar e repete a cada seis horas, sem sobreposição. Os cinco PDFs consultados em 27/10/2026 têm regressão offline; ver [evidência da sincronização](evidencias/sincronizacao-issue-54.md) e [validação anterior](validacao-extracao-pdfs.md). Formatos futuros precisam de nova conferência. |
+| Processo de extração | Encontrar PDFs, extrair e normalizar dados e enviá-los à API | Pacote Python separado. O workflow `Sincronizar cardápios` agenda execuções únicas a cada seis horas; o serviço opcional `sincronizador` oferece o mesmo intervalo em Docker. Ambos evitam sobreposição. Os cinco PDFs consultados em 27/10/2026 têm regressão offline; ver [evidência da sincronização](evidencias/sincronizacao-issue-54.md). |
 
 ## 4. Fluxos principais
 
@@ -160,4 +160,4 @@ A extração também pode ser iniciada fora do Docker com `python -m extracao.si
 
 ## Situação de publicação em 27/10/2026
 
-A preparação de HTTPS está no PR 71 da equipe; o ambiente proposto ainda não responde como aplicação integrada. URLs verificadas retornaram 404 e não há acesso Render nesta entrega. Consulte [verificação de publicação](verificacao-publicacao.md) para protocolo, evidências e ativação. A sincronização da issue 54 foi corrigida e validada com cinco PDFs reais e reimportação isolada; sua execução contínua na hospedagem ainda precisa ser observada. O aviso de [privacidade](privacidade.md) cobre a identidade do navegador e os envios persistidos.
+A preparação de HTTPS está no PR 71 da equipe; o ambiente proposto ainda não responde como aplicação integrada. URLs verificadas retornaram 404 e não há acesso Render nesta entrega. Consulte [verificação de publicação](verificacao-publicacao.md) para protocolo, evidências e ativação. A sincronização da issue 54 foi corrigida e validada com cinco PDFs reais e reimportação isolada; o workflow periódico está versionado, mas sua operação depende da API publicada e dos valores protegidos no GitHub. O aviso de [privacidade](privacidade.md) cobre a identidade do navegador e os envios persistidos.
