@@ -10,6 +10,7 @@ on:
       - "scripts/test_verificar_publicacao.py"
       - "docker-compose.yml"
       - ".github/workflows/ci.yml"
+      - ".github/workflows/sincronizacao.yml"
   push:
     branches: [main]
     paths:
@@ -20,6 +21,7 @@ on:
       - "scripts/test_verificar_publicacao.py"
       - "docker-compose.yml"
       - ".github/workflows/ci.yml"
+      - ".github/workflows/sincronizacao.yml"
   workflow_dispatch:
 
 permissions:
