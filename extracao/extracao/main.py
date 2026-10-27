@@ -52,7 +52,7 @@ ALERGENOS_LEGENDA_ATUAL = ALERGENOS_LEGENDA[:-1]
 LIMIAR_DISTANCIA_ICONE = 25
 PADRAO_PERIODO = re.compile(
     r"semana-\d+-(?P<inicio_dia>\d{1,2})-(?P<inicio_mes>\d{1,2})-a-"
-    r"(?P<fim_dia>\d{1,2})-(?P<fim_mes>\d{1,2})-?\.pdf$",
+    r"(?P<fim_dia>\d{1,2})-(?P<fim_mes>\d{1,2})(?:-\d+)?-?\.pdf$",
     re.IGNORECASE,
 )
 PADRAO_ANO = re.compile(r"/uploads/(?P<ano>\d{4})/")
@@ -164,7 +164,13 @@ def baixar_pdf(url: str, sessao: requests.Session | None = None) -> bytes:
 
 def _imagem_do_stream(stream: object) -> Image.Image:
     atributos = stream.attrs
-    return Image.frombytes("RGB", (atributos["Width"], atributos["Height"]), stream.get_data())
+    dados = stream.get_data()
+    # pdfminer preserva o JPEG em streams DCTDecode. Esses bytes ainda precisam
+    # de um decoder; não são os pixels RGB crus de um stream FlateDecode.
+    if dados.startswith(b"\xff\xd8"):
+        with Image.open(BytesIO(dados)) as imagem:
+            return imagem.convert("RGB")
+    return Image.frombytes("RGB", (atributos["Width"], atributos["Height"]), dados)
 
 
 def _assinatura_visual(imagem: Image.Image) -> list[bool]:
@@ -420,6 +426,12 @@ def run(hoje: date | None = None) -> dict[str, ResultadoExtracao | ErroExtracao]
             resultados[campus] = extrair_cardapio(pdf, baixar_pdf(pdf.url))
         except (requests.RequestException, ErroExtracao) as erro:
             resultados[campus] = ErroExtracao(str(erro))
+        except Exception as erro:
+            # Bibliotecas de PDF/imagem também podem lançar ValueError/OSError.
+            # Uma fonte defeituosa não deve cancelar a importação dos demais.
+            resultados[campus] = ErroExtracao(
+                f"Falha ao processar o PDF do campus ({type(erro).__name__})."
+            )
     return resultados
 
 

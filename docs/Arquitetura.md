@@ -8,7 +8,7 @@
 
 ## 1. Propósito e estado
 
-Este documento apresenta a arquitetura do Bandejão nos níveis de **Contexto** e **Containers** do modelo C4, o modelo de dados existente e os fluxos principais. Os diagramas distinguem a arquitetura pretendida do estado implementado: backend, banco e extração já têm código; a interface React/TypeScript/Tailwind consulta campi, cardápios e avaliações pela API. Filtros locais usam os marcadores dos itens. Reclamações possuem persistência no backend, mas a tela ainda é local; planejamento e lotação permanecem demonstrações.
+Este documento apresenta a arquitetura do Bandejão nos níveis de **Contexto** e **Containers** do modelo C4, o modelo de dados existente e os fluxos principais. Os diagramas distinguem a arquitetura pretendida do estado implementado: backend, banco e extração já têm código; a interface React/TypeScript/Tailwind consulta campi, cardápios e avaliações pela API. Filtros locais usam os marcadores dos itens. Reclamações possuem modelo, migração, envio pela tela e leitura interna protegida por token; planejamento e lotação permanecem demonstrações.
 
 O Bandejão centraliza os cardápios publicados em PDF pelos Restaurantes Universitários da UnB. A Release 1 prevê consulta do cardápio por campus, filtros alimentares, avaliações e reclamações. O planejamento semanal e a estimativa de movimento pertencem à Release 2.
 
@@ -54,7 +54,7 @@ flowchart LR
 
 | Container | Responsabilidade | Implementação observada |
 |---|---|---|
-| Frontend Web | Consultar cardápios e registrar/consultar avaliações | React 19, Vite 8, TypeScript e Tailwind v4. Consulta campi, cardápios e o histórico da refeição; envia nota e comentário com identidade anônima. Filtros locais usam os marcadores retornados. Reclamações, planejamento e lotação ainda possuem partes demonstrativas. |
+| Frontend Web | Consultar cardápios e registrar/consultar avaliações | React 19, Vite 8, TypeScript e Tailwind v4. Consulta campi, cardápios e o histórico da refeição; envia nota e comentário com identidade anônima. Filtros locais usam os marcadores retornados. A tela envia reclamações à API, sem listagem pública ou encaminhamento automático ao RU. Planejamento e lotação seguem demonstrativos. |
 | API REST | Validar importações, consultar cardápios e persistir avaliações e reclamações | FastAPI e SQLAlchemy; rotas de campus, cardápio/importação, avaliação e reclamação existentes. CORS permite origens configuradas em `CORS_ORIGINS`. Planejamento ainda não existe. |
 | PostgreSQL | Persistir campi, cardápios, itens, avaliações e check-ins legados | PostgreSQL 16 no Docker Compose; schema gerenciado pelo Alembic. |
 | Processo de extração | Encontrar PDFs, extrair e normalizar dados e enviá-los à API | Pacote Python separado e serviço opcional `sincronizador`; roda uma vez ao iniciar e repete a cada seis horas, sem sobreposição. A publicação consultada em 30/09/2026 foi validada; ver [relatório dos PDFs](validacao-extracao-pdfs.md). Formatos futuros precisam de nova conferência. |
@@ -76,7 +76,7 @@ A rotina isola falhas por campus durante o processamento. A disponibilidade e a 
 
 O frontend consulta `GET /campi/` e `GET /cardapios/`, enviando o campus cadastrado e o intervalo da semana escolhida. A apresentação começa na semana atual (domingo a sábado) e permite outra semana; a refeição é selecionada entre os resultados carregados. A URL é configurável por `VITE_API_BASE_URL`; a API habilita CORS para as origens em `CORS_ORIGINS`. Os filtros aplicam D02: ovolactovegetariano inclui vegetariano estrito, enquanto as demais classes são exatas. As exclusões usam somente os marcadores publicados e a tela esclarece que ausência de marcação não significa ingrediente ausente. A tela apresenta o instante da última importação bem-sucedida do campus no fuso de Brasília junto à URL da respectiva fonte. A integração completa de D01 na apresentação permanece pendente. Lista vazia não indica fechamento do RU.
 
-As rotas para registrar e consultar avaliações existem em `/cardapios/{cardapio_id}/avaliacoes`. A interface envia nota e comentário com `X-Identidade` e consulta o histórico pelo ID da refeição. A listagem permanece disponível após o prazo, retorna somente os registros daquela refeição e vem ordenada do mais recente ao mais antigo. Reclamações separadas das notas possuem modelo, migração e endpoints; a integração da respectiva tela continua pendente.
+As rotas para registrar e consultar avaliações existem em `/cardapios/{cardapio_id}/avaliacoes`. A interface envia nota e comentário com `X-Identidade` e consulta o histórico pelo ID da refeição. A listagem permanece disponível após o prazo, retorna somente os registros daquela refeição e vem ordenada do mais recente ao mais antigo. Reclamações separadas das notas possuem modelo, migração e endpoints; a tela envia os registros à API com identidade anônima e apresenta confirmação ou erro, sem listagem pública.
 
 ### 4.3 Planejamento e previsão — Release 2
 
@@ -153,3 +153,7 @@ A extração também pode ser iniciada fora do Docker com `python -m extracao.si
 ---
 
 *Documento de arquitetura atualizado para refletir o schema e os componentes encontrados no repositório em 01/10/2026. A incorporação local do frontend não comprova publicação nem aceite. Requisitos futuros estão identificados como planejados, não como implementação existente.*
+
+## Situação de publicação em 27/10/2026
+
+A preparação de HTTPS está no PR 71 da equipe; o ambiente proposto ainda não responde como aplicação integrada. URLs verificadas retornaram 404 e não há acesso Render nesta entrega. Consulte [verificação de publicação](verificacao-publicacao.md) para protocolo, evidências e ativação. A sincronização da issue 54 foi corrigida e validada com cinco PDFs reais e reimportação isolada; sua execução contínua na hospedagem ainda precisa ser observada. O aviso de [privacidade](privacidade.md) cobre a identidade do navegador e os envios persistidos.

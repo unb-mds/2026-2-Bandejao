@@ -85,3 +85,9 @@ O instante e a fonte da última importação bem-sucedida passaram a ser persist
 - Registrar participantes e responsáveis reais na ata e vincular as issues/PRs da sprint.
 - Ativar o serviço de sincronização no ambiente escolhido.
 - Manter para as próximas sprints: reclamações, aplicação da janela nas rotas de avaliação, planejamento, estimativa, teste de carga, corpus de PDFs, checagem de disponibilidade e deploy da aplicação.
+
+## Situação consolidada em 27/10/2026
+
+As seções anteriores preservam o recorte original da branch da Sprint 03. Depois dele, foram integradas identidade anônima, utilitário temporal no backend, dieta inclusiva, janela das avaliações, reclamações, última importação e avaliações/reclamações nas telas. A apresentação semanal do frontend ainda precisa ser alinhada integralmente à D01.
+
+Nesta entrega, a issue 54 recebeu correções reproduzidas nos PDFs oficiais e regressão offline com as cinco fontes; a issue 53 recebeu aviso de privacidade acessível e releitura. A issue 55 tem preparação no PR 71 da equipe e verificação complementar, mas depende de acesso Render e publicação real. Planejamento persistido, estimativa baseada em intenções, desempenho e janela de disponibilidade continuam pendentes. Ver [sincronização](../evidencias/sincronizacao-issue-54.md), [privacidade](../privacidade.md) e [publicação](../verificacao-publicacao.md).

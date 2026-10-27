@@ -1,0 +1,121 @@
+{
+  "data": "2026-10-27",
+  "base_git": "299d9f4",
+  "fonte": "https://ru.unb.br/cardapio-refeitorio/",
+  "extracao": [
+    {
+      "campus": "Darcy Ribeiro",
+      "url": "https://ru.unb.br/wp-content/uploads/2026/10/Darcy-Ribeiro-Semana-02-26-10-a-01-11-2.pdf",
+      "sha256": "048080a945826cf7b64281b195d3a3a3b0f48db9d1e1a04229374b8f7211eb83",
+      "bytes": 177476,
+      "refeicoes": 21,
+      "itens": 191,
+      "datas": [
+        "2026-10-26",
+        "2026-10-27",
+        "2026-10-28",
+        "2026-10-29",
+        "2026-10-30",
+        "2026-10-31",
+        "2026-11-01"
+      ],
+      "avisos": []
+    },
+    {
+      "campus": "Ceilândia",
+      "url": "https://ru.unb.br/wp-content/uploads/2026/10/Ceilandia-Semana-02-26-10-a-01-11-1.pdf",
+      "sha256": "2f431622e3dd30904354a1e6527ee2c859a6b24ae6a7b057e50046cc911b87ec",
+      "bytes": 161037,
+      "refeicoes": 17,
+      "itens": 154,
+      "datas": [
+        "2026-10-26",
+        "2026-10-27",
+        "2026-10-28",
+        "2026-10-29",
+        "2026-10-30",
+        "2026-10-31"
+      ],
+      "avisos": []
+    },
+    {
+      "campus": "Gama",
+      "url": "https://ru.unb.br/wp-content/uploads/2026/10/Gama-Semana-02-26-10-a-01-11-1.pdf",
+      "sha256": "e8bef4ac609fe365751685d6f17f7b2ddd3841f4b7e69c240f20641de6b7fa12",
+      "bytes": 156520,
+      "refeicoes": 15,
+      "itens": 138,
+      "datas": [
+        "2026-10-26",
+        "2026-10-27",
+        "2026-10-28",
+        "2026-10-29",
+        "2026-10-30"
+      ],
+      "avisos": []
+    },
+    {
+      "campus": "Planaltina",
+      "url": "https://ru.unb.br/wp-content/uploads/2026/10/Planaltina-Semana-02-26-10-a-01-11-1.pdf",
+      "sha256": "7898ad58129bb1d4774a1e03ea5475c71a45dda5b6a4df4d7908995db9fd9ae9",
+      "bytes": 175980,
+      "refeicoes": 21,
+      "itens": 191,
+      "datas": [
+        "2026-10-26",
+        "2026-10-27",
+        "2026-10-28",
+        "2026-10-29",
+        "2026-10-30",
+        "2026-10-31",
+        "2026-11-01"
+      ],
+      "avisos": []
+    },
+    {
+      "campus": "Fazenda Água Limpa",
+      "url": "https://ru.unb.br/wp-content/uploads/2026/10/Fazenda-Semana-02-26-10-a-01-11.pdf",
+      "sha256": "3371dec70052633c8b908d155883af9347661681ce9289c207a1416c71c4f4b6",
+      "bytes": 119544,
+      "refeicoes": 10,
+      "itens": 83,
+      "datas": [
+        "2026-10-26",
+        "2026-10-27",
+        "2026-10-28",
+        "2026-10-29",
+        "2026-10-30"
+      ],
+      "avisos": []
+    }
+  ],
+  "isolamento": {
+    "Darcy Ribeiro": {
+      "refeicoes": 21,
+      "itens": 191
+    },
+    "Ceilândia": {
+      "refeicoes": 17,
+      "itens": 154
+    },
+    "Gama": "falha isolada",
+    "Planaltina": {
+      "refeicoes": 21,
+      "itens": 191
+    },
+    "Fazenda Água Limpa": {
+      "refeicoes": 10,
+      "itens": 83
+    }
+  },
+  "reimportacao": {
+    "banco": "SQLite isolado em memória",
+    "campi": 5,
+    "refeicoes": 84,
+    "itens": 757,
+    "avaliacoes_preservadas": 5,
+    "reclamacoes_preservadas": 5,
+    "ids_preservados": true,
+    "passagens_de_importacao": 2
+  }
+}

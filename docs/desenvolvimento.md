@@ -101,3 +101,9 @@ As instruções de execução sem Docker, testes com pytest e sincronização es
 Com Node 22.12+ e API/banco em execução, entre em `frontend/`, copie `.env.example` para `.env`, execute `npm ci` e `npm run dev`. Acesse <http://localhost:5173>. Configure `VITE_API_BASE_URL` e autorize a origem em `CORS_ORIGINS` no backend.
 
 O frontend usa React 19, Vite 8, TypeScript e Tailwind v4, incorporando as telas da equipe. `npm test`, `npm run lint` e `npm run build` são os checks da CI; o build inclui checagem de tipos. Campi/cardápios usam a API; os filtros operam sobre os itens carregados. Avaliações enviam nota e comentário com identidade anônima e recuperam o histórico persistido da refeição. Reclamações na interface, planejamento e lotação permanecem demonstrações locais. A integração não atualiza automaticamente a publicação Vercel externa.
+
+## Diagnóstico da sincronização
+
+A publicação do RU pode revisar nomes de PDF e comprimir ícones em JPEG. A rotina aceita essas variações e isola erros inesperados por campus. Cada importação concluída registra um objeto JSON com `campus`, `fonte_pdf_url`, `instante`, `status` e `ultima_importacao_em`. O instante do banco é atualizado apenas após importação bem-sucedida; falhas não substituem o último sucesso.
+
+A correção da issue 54 foi conferida com os cinco PDFs oficiais de 27/10/2026 e reimportação em banco isolado. Consulte a [evidência e limites](evidencias/sincronizacao-issue-54.md). O serviço precisa ser ativado e monitorado no ambiente de hospedagem; os testes não comprovam operação contínua.

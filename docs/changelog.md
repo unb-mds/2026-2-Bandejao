@@ -1,5 +1,24 @@
 # Histórico de mudanças da documentação
 
+## 27/10/2026 — Verificação da publicação HTTPS
+
+- Issue 55: acrescentado verificador somente leitura de HTTPS, HTML, healthcheck, versão, dados públicos e CORS/preflight, com testes na CI.
+- Inspeção do PR 71 preserva os três commits da equipe; registra cuidados com branch do Blueprint, versão Python, seed por data e ausência do sincronizador nessa configuração.
+- URLs propostas responderam 404. Sem acesso Render, a publicação continua pendente; código/configuração aprovados não são evidência de ambiente ativo. Veja [roteiro e registro](verificacao-publicacao.md).
+
+## 27/10/2026 — Aviso de privacidade
+
+- Issue 53: aviso acessível na primeira visita, confirmação versionada por navegador e releitura no rodapé. Armazenamento bloqueado não impede o uso.
+- Texto explica identificador aleatório, limpeza dos dados, persistência de envios, comentários públicos e reclamações privadas; a confirmação registra leitura, sem alegar consentimento legal.
+- Vinte e sete testes, lint, TypeScript e build aprovados. Teclado, foco, Escape, persistência e layout mobile conferidos no Chrome com API simulada. Veja [texto e evidências](privacidade.md).
+
+## 27/10/2026 — Correção da sincronização dos PDFs oficiais
+
+- Issue 54: descoberta de arquivos com revisão numérica, decodificação JPEG e isolamento de falhas inesperadas por campus.
+- Importações concluídas registram fonte e instante sem divulgar tokens. O agendamento do Compose permanece em seis horas.
+- Cinco PDFs reais produziram 84 refeições e 757 itens. Duas importações em SQLite isolado preservaram IDs, cinco avaliações e cinco reclamações. Extração e backend passaram em 54 e 94 testes, respectivamente; cobertura de 100% e Ruff aprovados.
+- A operação contínua na hospedagem permanece dependente de ativação. Veja a [evidência da issue 54](evidencias/sincronizacao-issue-54.md).
+
 ## 24/10/2026 — Avaliações integradas à API
 
 **Escopo:** implementação da issue 51 e dos critérios de RF04/RF05.

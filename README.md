@@ -30,6 +30,10 @@ Aplicação para consulta ao cardápio semanal dos Restaurantes Universitários 
 - O frontend local usa React 19, Vite 8, TypeScript e Tailwind v4, incorporando as telas da equipe de [marilluantunes/frontend-react](https://github.com/marilluantunes/frontend-react). Campi e cardápios vêm da API; os filtros usam as marcações dos itens. Avaliações, reclamações, planejamento e lotação continuam como demonstrações sem persistência integrada.
 - Consulte [estrutura, execução e limites do frontend](frontend/README.md). O protótipo Vercel externo é uma publicação separada.
 
+## Publicação da aplicação
+
+A preparação para HTTPS está no [PR 71](https://github.com/unb-mds/2026-2-Bandejao/pull/71), da equipe. As URLs propostas retornaram 404 em 27/10/2026; a hospedagem integrada ainda depende de ativação e validação externa. Consulte [verificação da publicação](docs/verificacao-publicacao.md) para comandos, evidências e critérios pendentes da issue 55.
+
 ## Como rodar o projeto
 
 ### Pré-requisitos
@@ -137,7 +141,7 @@ python -m extracao.sincronizar --backend-url http://localhost:8000
 python -m extracao.sincronizar --backend-url http://localhost:8000 --intervalo-segundos 21600
 ```
 
-O modo periódico registra horário/status por campus e continua após falhas externas; não grava um novo instante de sucesso no banco. Uma execução isolada com falhas retorna código diferente de zero. Consulte o [roteiro de operação](docs/desenvolvimento.md) e o [contrato de importação](docs/handoff_banco_e_importacao.md).
+O modo periódico registra campus, URL da fonte e instante de cada importação concluída e continua após falhas externas. A API persiste o instante do último sucesso por campus; falhas preservam esse valor. Uma execução isolada com falhas retorna código diferente de zero. Consulte o [roteiro de operação](docs/desenvolvimento.md) e o [contrato de importação](docs/handoff_banco_e_importacao.md).
 
 ### Segurança estática no CI
 
