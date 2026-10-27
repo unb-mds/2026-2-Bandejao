@@ -22,6 +22,7 @@ Em Linux/macOS, use `cp .env.example .env`. Abra <http://localhost:5173>. `VITE_
 - `src/api.ts`: cliente tipado para campi, cardápios e avaliações; erros HTTP, validações da API e cancelamento de consultas.
 - `src/avaliacoes.ts`: ordenação e apresentação do histórico persistido no fuso de Brasília.
 - `src/cardapios.ts`: adaptação do contrato da API, datas e organização semanal, preservando todos os itens.
+- `src/versao.ts`: identificação legível do commit incorporado ao build de avaliação.
 - `src/data.ts`: constantes visuais e exemplos de lotação; não fornece cardápios ou avaliações para a consulta.
 - `src/index.css`: Tailwind v4, tokens do tema e estilos de acessibilidade. O plugin está em `vite.config.ts`.
 
@@ -33,11 +34,13 @@ Em Linux/macOS, use `cp .env.example .env`. Abra <http://localhost:5173>. `VITE_
 | Origem e indisponibilidade | Link para o PDF, data/hora da última importação bem-sucedida do campus, carregamento, erro com nova tentativa e mensagens sem inferir fechamento do RU. |
 | Dieta e alérgenos | Filtros locais sobre os itens retornados, usando `tipo_dieta` e os marcadores `contem_*`. O filtro ovolactovegetariano inclui também itens vegetarianos estritos; as demais classes permanecem exatas, conforme D02. |
 | Avaliações | Nota geral e comentário são enviados à API com a identidade anônima do navegador. O histórico consulta somente a refeição selecionada, mostra data/hora em Brasília e permanece após recarregar a página. |
-| Reclamações | A tela ainda mantém os registros somente no estado do React e não os envia ao RU. |
+| Reclamações | A tela envia categoria e descrição à API com a identidade anônima. Não há lista pública nem encaminhamento automático ao RU. |
 | Planejamento | Demonstração por campus e data, apenas nesta sessão; sem persistência ou previsão. |
 | Lotação | Exemplos visuais e relatos desta sessão; sem consulta a dados reais nem estimativa operacional. |
 
 A convenção de domingo a sábado é uma escolha de apresentação da integração, não uma resolução de D01. O backend informa a última importação bem-sucedida, mas não o horário de funcionamento. A tela Hoje escolhe a refeição por faixas horárias do protótipo, sem afirmar que o restaurante está aberto.
+
+No ambiente publicado, `VITE_APP_VERSION` recebe o commit do deploy e o rodapé mostra seus 12 primeiros caracteres. A variável não é segredo e é incorporada ao JavaScript durante o build.
 
 Os filtros usam apenas as marcações recebidas; não inferem ingredientes pelo nome. “Sem marcação” significa “não marcado na fonte”, não “livre de”. A legenda dos PDFs validada em 30/09/2026 não tem símbolo separado para frutos do mar. Confira a fonte oficial e os critérios de aceitação em [Requisitos](../docs/Requisitos.md).
 

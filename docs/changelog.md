@@ -1,5 +1,17 @@
 # Histórico de mudanças da documentação
 
+## 27/10/2026 — Versão integrada em HTTPS
+
+**Escopo:** implementação da issue 55 e dos critérios CA-RNF04-01 e CA-RNF04-03.
+
+- Blueprint do Render adicionado para publicar frontend, API e PostgreSQL 16 com HTTPS.
+- Conexão do banco, origem CORS e URL da API são injetadas entre os serviços; tokens administrativos são gerados e armazenados pela plataforma.
+- O commit publicado aparece no rodapé e na rota `/version`.
+- A primeira implantação recebe uma massa de exemplo; a documentação distingue funções integradas, dados de exemplo e telas demonstrativas.
+- Migrações são aplicadas ao iniciar a API, com `/health` usado pela plataforma.
+
+**Verificação local:** 101 testes do backend passaram com 100% de cobertura; 24 testes do frontend, Ruff, TypeScript, Oxlint, build Vite e validação estrutural do Blueprint aprovados.
+
 ## 24/10/2026 — Avaliações integradas à API
 
 **Escopo:** implementação da issue 51 e dos critérios de RF04/RF05.

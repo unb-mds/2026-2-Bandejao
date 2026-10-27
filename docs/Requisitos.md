@@ -216,7 +216,7 @@ Os caminhos abaixo são pontos de inspeção na versão-base `717d960`, não com
 | RNF01 | v1.0: desempenho no pico | Critério agora quantificado | Aprovar cenário e executar medição. |
 | RNF02 | v1.0: atualização semanal | Sincronização a cada seis horas; metadados de importação no campus; testes de falha | Evidenciar a execução contínua no ambiente escolhido e o cumprimento do prazo operacional. |
 | RNF03 | v1.0: resiliência | `extracao/tests/test_main.py`; `extracao/tests/test_cobertura_total.py` | Revisar conjunto de referência e verificar cenários propostos. |
-| RNF04 | v1.0: acesso para avaliação | Link de protótipo no README | Validar versão integrada e janela de avaliação. |
+| RNF04 | v1.0: acesso para avaliação | `render.yaml`; `/version`; versão no rodapé; [roteiro de publicação](publicacao.md) | Frontend, API e PostgreSQL declarados para HTTPS, com dados de exemplo e funções integradas distinguidos. Executar e registrar a janela de CA-RNF04-02 separadamente. |
 | RNF05 | v1.0: SAST | `.github/workflows/sast.yml`; `scripts/security/POLICY.md`; [evidência da issue 60](evidencias/sast-issue-60.md) | Bandit e CodeQL confirmados em PR real, com artefatos preservados e ambos os checks obrigatórios no ruleset ativo da `main`. |
 | RNF06 | Revisão de 14/10/2026: importação sem autenticação | `backend/app/core/security.py`; rota de importação; rotina de sincronização; testes automatizados | Validar a execução no CI e configurar/rotacionar o segredo no ambiente real sem expô-lo. |
 

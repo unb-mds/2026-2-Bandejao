@@ -19,16 +19,20 @@ Aplicação para consulta ao cardápio semanal dos Restaurantes Universitários 
 ## Links úteis
 
 - [Documentação no GitHub Pages](https://unb-mds.github.io/2026-2-Bandejao/)
+- [Aplicação integrada em HTTPS](https://bandejao-unb-g12.onrender.com)
+- [API e versão publicada](https://bandejao-unb-g12-api.onrender.com/version)
 - [Figma](https://www.figma.com/board/61OYJuLeyE3m3jwzSzfZ1W/Bandejao-2026-2?t=kVJg4rR4m3kIYsj7-0)
 - [Publicação e manutenção da GH Page](docs/github-pages.md)
+- [Publicação da aplicação no Render](docs/publicacao.md)
 
 ## Status
 
-🚧 Em desenvolvimento — Sprint 03 (infraestrutura em preparação)
+🚧 Em desenvolvimento — versão integrada disponível para avaliação
 
-- **Protótipo Vercel:** [Aceder ao Protótipo](https://frontend-react-tan-gamma.vercel.app)
-- O frontend local usa React 19, Vite 8, TypeScript e Tailwind v4, incorporando as telas da equipe de [marilluantunes/frontend-react](https://github.com/marilluantunes/frontend-react). Campi e cardápios vêm da API; os filtros usam as marcações dos itens. Avaliações, reclamações, planejamento e lotação continuam como demonstrações sem persistência integrada.
-- Consulte [estrutura, execução e limites do frontend](frontend/README.md). O protótipo Vercel externo é uma publicação separada.
+- **Ambiente integrado:** [abrir Bandejão](https://bandejao-unb-g12.onrender.com). Não há login ou credenciais de demonstração.
+- Campi, cardápios, filtros, avaliações e reclamações usam a API e o PostgreSQL. O primeiro deploy contém dados de exemplo do campus Gama, identificados na [documentação de publicação](docs/publicacao.md).
+- Planejamento e lotação continuam como demonstrações identificadas na interface. O [protótipo Vercel](https://frontend-react-tan-gamma.vercel.app) é uma publicação visual separada.
+- A versão aparece no rodapé e na rota `/version` da API.
 
 ## Como rodar o projeto
 
