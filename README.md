@@ -137,7 +137,7 @@ python -m extracao.sincronizar --backend-url http://localhost:8000
 python -m extracao.sincronizar --backend-url http://localhost:8000 --intervalo-segundos 21600
 ```
 
-O modo periódico registra horário/status por campus e continua após falhas externas; não grava um novo instante de sucesso no banco. Uma execução isolada com falhas retorna código diferente de zero. Consulte o [roteiro de operação](docs/desenvolvimento.md) e o [contrato de importação](docs/handoff_banco_e_importacao.md).
+O modo periódico registra campus, URL da fonte e instante de cada importação concluída e continua após falhas externas. A API persiste o instante do último sucesso por campus; falhas preservam esse valor. Uma execução isolada com falhas retorna código diferente de zero. Consulte o [roteiro de operação](docs/desenvolvimento.md) e o [contrato de importação](docs/handoff_banco_e_importacao.md).
 
 ### Segurança estática no CI
 

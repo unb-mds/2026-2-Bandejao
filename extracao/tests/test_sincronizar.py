@@ -1,8 +1,26 @@
 import pytest
 import requests
+import json
 
 from extracao import sincronizar
 from extracao.main import ErroExtracao, ResultadoExtracao, enviar_ao_backend
+
+
+def test_importacao_registra_campus_fonte_e_instante_sem_token(monkeypatch, capsys):
+    resultado = ResultadoExtracao("Gama", "https://ru.unb.br/menu.pdf", [])
+    monkeypatch.setattr(sincronizar, "run", lambda: {"Gama": resultado})
+    monkeypatch.setattr(sincronizar, "enviar_ao_backend", lambda *args, **kwargs: {
+        "itens_processados": 2, "ultima_importacao_em": "2026-10-27T15:00:00Z",
+    })
+    sincronizar.sincronizar("http://api.test")
+    saida = capsys.readouterr().out
+    registro = json.loads(saida)
+    assert registro["campus"] == "Gama"
+    assert registro["fonte_pdf_url"] == resultado.fonte_pdf_url
+    assert registro["status"] == "importado"
+    assert registro["ultima_importacao_em"] == "2026-10-27T15:00:00Z"
+    assert registro["instante"].endswith("+00:00")
+    assert "segredo-teste" not in saida
 
 
 @pytest.fixture(autouse=True)

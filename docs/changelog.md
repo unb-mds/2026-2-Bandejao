@@ -1,5 +1,12 @@
 # Histórico de mudanças da documentação
 
+## 27/10/2026 — Correção da sincronização dos PDFs oficiais
+
+- Issue 54: descoberta de arquivos com revisão numérica, decodificação JPEG e isolamento de falhas inesperadas por campus.
+- Importações concluídas registram fonte e instante sem divulgar tokens. O agendamento do Compose permanece em seis horas.
+- Cinco PDFs reais produziram 84 refeições e 757 itens. Duas importações em SQLite isolado preservaram IDs, cinco avaliações e cinco reclamações. Extração e backend passaram em 54 e 94 testes, respectivamente; cobertura de 100% e Ruff aprovados.
+- A operação contínua na hospedagem permanece dependente de ativação. Veja a [evidência da issue 54](evidencias/sincronizacao-issue-54.md).
+
 ## 24/10/2026 — Avaliações integradas à API
 
 **Escopo:** implementação da issue 51 e dos critérios de RF04/RF05.

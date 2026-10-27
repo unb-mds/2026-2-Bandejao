@@ -1,0 +1,1019 @@
+{
+  "campus": "Gama",
+  "fonte_pdf_url": "https://ru.unb.br/wp-content/uploads/2026/10/Gama-Semana-02-26-10-a-01-11-1.pdf",
+  "refeicoes": [
+    {
+      "data": "2026-10-26",
+      "tipo_refeicao": "cafe_da_manha",
+      "itens": [
+        {
+          "categoria": "bebida",
+          "tipo_dieta": "comum",
+          "nome": "Leite integral ou Bebida de soja",
+          "alergenos": [
+            "leite",
+            "soja"
+          ]
+        },
+        {
+          "categoria": "panificacao",
+          "tipo_dieta": "comum",
+          "nome": "Pão francês ou Pão careca ou Pão integral",
+          "alergenos": [
+            "gluten"
+          ]
+        },
+        {
+          "categoria": "opcao_extra",
+          "tipo_dieta": "comum",
+          "nome": "OPÇÃO EXTRA",
+          "alergenos": []
+        },
+        {
+          "categoria": "gordura",
+          "tipo_dieta": "comum",
+          "nome": "Manteiga ou creme vegetal",
+          "alergenos": [
+            "leite"
+          ]
+        },
+        {
+          "categoria": "acompanhamento",
+          "tipo_dieta": "padrao",
+          "nome": "Salsicha ao molho",
+          "alergenos": [
+            "carne_suina"
+          ]
+        },
+        {
+          "categoria": "acompanhamento",
+          "tipo_dieta": "ovolactovegetariano",
+          "nome": "Queijo muçarela",
+          "alergenos": [
+            "leite"
+          ]
+        },
+        {
+          "categoria": "acompanhamento",
+          "tipo_dieta": "vegetariano_estrito",
+          "nome": "Bolonhesa de soja",
+          "alergenos": [
+            "soja"
+          ]
+        },
+        {
+          "categoria": "fruta",
+          "tipo_dieta": "comum",
+          "nome": "Banana",
+          "alergenos": []
+        }
+      ]
+    },
+    {
+      "data": "2026-10-27",
+      "tipo_refeicao": "cafe_da_manha",
+      "itens": [
+        {
+          "categoria": "bebida",
+          "tipo_dieta": "comum",
+          "nome": "Leite integral ou Bebida de soja",
+          "alergenos": [
+            "leite",
+            "soja"
+          ]
+        },
+        {
+          "categoria": "panificacao",
+          "tipo_dieta": "comum",
+          "nome": "Pão francês ou Pão careca ou",
+          "alergenos": [
+            "gluten"
+          ]
+        },
+        {
+          "categoria": "opcao_extra",
+          "tipo_dieta": "comum",
+          "nome": "Canjica",
+          "alergenos": [
+            "leite"
+          ]
+        },
+        {
+          "categoria": "gordura",
+          "tipo_dieta": "comum",
+          "nome": "Manteiga ou creme vegetal",
+          "alergenos": [
+            "leite"
+          ]
+        },
+        {
+          "categoria": "acompanhamento",
+          "tipo_dieta": "padrao",
+          "nome": "Ovos mexidos",
+          "alergenos": []
+        },
+        {
+          "categoria": "acompanhamento",
+          "tipo_dieta": "ovolactovegetariano",
+          "nome": "Queijo minas",
+          "alergenos": [
+            "leite"
+          ]
+        },
+        {
+          "categoria": "acompanhamento",
+          "tipo_dieta": "vegetariano_estrito",
+          "nome": "Pasta de lentilha com hortelã",
+          "alergenos": []
+        },
+        {
+          "categoria": "fruta",
+          "tipo_dieta": "comum",
+          "nome": "Melancia",
+          "alergenos": []
+        }
+      ]
+    },
+    {
+      "data": "2026-10-28",
+      "tipo_refeicao": "cafe_da_manha",
+      "itens": [
+        {
+          "categoria": "panificacao",
+          "tipo_dieta": "comum",
+          "nome": "Pão francês ou Pão careca ou Pão integral",
+          "alergenos": [
+            "gluten"
+          ]
+        },
+        {
+          "categoria": "opcao_extra",
+          "tipo_dieta": "comum",
+          "nome": "Canjica",
+          "alergenos": [
+            "leite"
+          ]
+        },
+        {
+          "categoria": "acompanhamento",
+          "tipo_dieta": "padrao",
+          "nome": "Frango desfiado",
+          "alergenos": []
+        },
+        {
+          "categoria": "acompanhamento",
+          "tipo_dieta": "ovolactovegetariano",
+          "nome": "Creme de ricota com azeitonas",
+          "alergenos": [
+            "leite"
+          ]
+        },
+        {
+          "categoria": "acompanhamento",
+          "tipo_dieta": "vegetariano_estrito",
+          "nome": "Caponata de berinjela",
+          "alergenos": [
+            "cogumelo"
+          ]
+        },
+        {
+          "categoria": "fruta",
+          "tipo_dieta": "comum",
+          "nome": "Maçã",
+          "alergenos": []
+        }
+      ]
+    },
+    {
+      "data": "2026-10-29",
+      "tipo_refeicao": "cafe_da_manha",
+      "itens": [
+        {
+          "categoria": "panificacao",
+          "tipo_dieta": "comum",
+          "nome": "Pão francês ou Pão careca ou Pão integral",
+          "alergenos": [
+            "gluten"
+          ]
+        },
+        {
+          "categoria": "acompanhamento",
+          "tipo_dieta": "padrao",
+          "nome": "Carne bovina moída",
+          "alergenos": []
+        },
+        {
+          "categoria": "acompanhamento",
+          "tipo_dieta": "ovolactovegetariano",
+          "nome": "Queijo muçarela",
+          "alergenos": [
+            "leite"
+          ]
+        },
+        {
+          "categoria": "acompanhamento",
+          "tipo_dieta": "vegetariano_estrito",
+          "nome": "Requeijão de ervas",
+          "alergenos": []
+        },
+        {
+          "categoria": "fruta",
+          "tipo_dieta": "comum",
+          "nome": "Mamão",
+          "alergenos": []
+        }
+      ]
+    },
+    {
+      "data": "2026-10-30",
+      "tipo_refeicao": "cafe_da_manha",
+      "itens": [
+        {
+          "categoria": "panificacao",
+          "tipo_dieta": "comum",
+          "nome": "Pão francês ou Pão careca ou",
+          "alergenos": [
+            "gluten"
+          ]
+        },
+        {
+          "categoria": "opcao_extra",
+          "tipo_dieta": "comum",
+          "nome": "Broa de milho",
+          "alergenos": []
+        },
+        {
+          "categoria": "acompanhamento",
+          "tipo_dieta": "padrao",
+          "nome": "Queijo minas",
+          "alergenos": [
+            "leite"
+          ]
+        },
+        {
+          "categoria": "acompanhamento",
+          "tipo_dieta": "ovolactovegetariano",
+          "nome": "Ricota temperada",
+          "alergenos": [
+            "leite"
+          ]
+        },
+        {
+          "categoria": "acompanhamento",
+          "tipo_dieta": "vegetariano_estrito",
+          "nome": "Amendotela",
+          "alergenos": [
+            "amendoim"
+          ]
+        },
+        {
+          "categoria": "fruta",
+          "tipo_dieta": "comum",
+          "nome": "Salada de frutas",
+          "alergenos": []
+        }
+      ]
+    },
+    {
+      "data": "2026-10-26",
+      "tipo_refeicao": "almoco",
+      "itens": [
+        {
+          "categoria": "salada_1",
+          "tipo_dieta": "comum",
+          "nome": "Alface crespa",
+          "alergenos": []
+        },
+        {
+          "categoria": "salada_2",
+          "tipo_dieta": "comum",
+          "nome": "Tomate",
+          "alergenos": []
+        },
+        {
+          "categoria": "molho_salada",
+          "tipo_dieta": "comum",
+          "nome": "Salsa",
+          "alergenos": []
+        },
+        {
+          "categoria": "prato_principal",
+          "tipo_dieta": "padrao",
+          "nome": "Silveirinha de carne",
+          "alergenos": []
+        },
+        {
+          "categoria": "prato_principal",
+          "tipo_dieta": "ovolactovegetariano",
+          "nome": "Bolinho de lentilha gratinado",
+          "alergenos": [
+            "gluten",
+            "leite"
+          ]
+        },
+        {
+          "categoria": "prato_principal",
+          "tipo_dieta": "vegetariano_estrito",
+          "nome": "Silveirinha de soja",
+          "alergenos": [
+            "soja"
+          ]
+        },
+        {
+          "categoria": "guarnicao",
+          "tipo_dieta": "comum",
+          "nome": "Macarrão temperado",
+          "alergenos": [
+            "gluten"
+          ]
+        },
+        {
+          "categoria": "acompanhamento",
+          "tipo_dieta": "comum",
+          "nome": "Arroz branco e integral Feijão carioca",
+          "alergenos": []
+        },
+        {
+          "categoria": "sobremesa",
+          "tipo_dieta": "comum",
+          "nome": "Maçã",
+          "alergenos": []
+        },
+        {
+          "categoria": "bebida",
+          "tipo_dieta": "comum",
+          "nome": "Guaraná",
+          "alergenos": []
+        }
+      ]
+    },
+    {
+      "data": "2026-10-27",
+      "tipo_refeicao": "almoco",
+      "itens": [
+        {
+          "categoria": "salada_1",
+          "tipo_dieta": "comum",
+          "nome": "Mix de folhas",
+          "alergenos": []
+        },
+        {
+          "categoria": "salada_2",
+          "tipo_dieta": "comum",
+          "nome": "Picles de beterraba",
+          "alergenos": []
+        },
+        {
+          "categoria": "molho_salada",
+          "tipo_dieta": "comum",
+          "nome": "Manjericão",
+          "alergenos": []
+        },
+        {
+          "categoria": "prato_principal",
+          "tipo_dieta": "padrao",
+          "nome": "Frango assado",
+          "alergenos": []
+        },
+        {
+          "categoria": "prato_principal",
+          "tipo_dieta": "ovolactovegetariano",
+          "nome": "Croquete de soja com queijo",
+          "alergenos": []
+        },
+        {
+          "categoria": "prato_principal",
+          "tipo_dieta": "vegetariano_estrito",
+          "nome": "Grão de bico à indiana",
+          "alergenos": [
+            "pimenta"
+          ]
+        },
+        {
+          "categoria": "guarnicao",
+          "tipo_dieta": "comum",
+          "nome": "Cenoura cozida com salsinha",
+          "alergenos": []
+        },
+        {
+          "categoria": "acompanhamento",
+          "tipo_dieta": "comum",
+          "nome": "Arroz branco e integral Feijão preto",
+          "alergenos": []
+        },
+        {
+          "categoria": "sobremesa",
+          "tipo_dieta": "comum",
+          "nome": "Mix de doces OPÇÃO: Fruta",
+          "alergenos": []
+        },
+        {
+          "categoria": "bebida",
+          "tipo_dieta": "comum",
+          "nome": "Laranja",
+          "alergenos": []
+        }
+      ]
+    },
+    {
+      "data": "2026-10-28",
+      "tipo_refeicao": "almoco",
+      "itens": [
+        {
+          "categoria": "salada_1",
+          "tipo_dieta": "comum",
+          "nome": "Acelga",
+          "alergenos": []
+        },
+        {
+          "categoria": "salada_2",
+          "tipo_dieta": "comum",
+          "nome": "Rabanete",
+          "alergenos": []
+        },
+        {
+          "categoria": "molho_salada",
+          "tipo_dieta": "comum",
+          "nome": "Chimichurri",
+          "alergenos": []
+        },
+        {
+          "categoria": "prato_principal",
+          "tipo_dieta": "padrao",
+          "nome": "Lasanha à bolonhesa",
+          "alergenos": []
+        },
+        {
+          "categoria": "prato_principal",
+          "tipo_dieta": "ovolactovegetariano",
+          "nome": "Isca de soja ao sugo gratinada",
+          "alergenos": []
+        },
+        {
+          "categoria": "prato_principal",
+          "tipo_dieta": "vegetariano_estrito",
+          "nome": "Tomate recheado com homus de ervilha",
+          "alergenos": []
+        },
+        {
+          "categoria": "guarnicao",
+          "tipo_dieta": "comum",
+          "nome": "Chuchu com vagem",
+          "alergenos": []
+        },
+        {
+          "categoria": "acompanhamento",
+          "tipo_dieta": "comum",
+          "nome": "Arroz branco e integral Feijão carioca",
+          "alergenos": []
+        },
+        {
+          "categoria": "sobremesa",
+          "tipo_dieta": "comum",
+          "nome": "Laranja",
+          "alergenos": []
+        },
+        {
+          "categoria": "bebida",
+          "tipo_dieta": "comum",
+          "nome": "Acerola",
+          "alergenos": []
+        }
+      ]
+    },
+    {
+      "data": "2026-10-29",
+      "tipo_refeicao": "almoco",
+      "itens": [
+        {
+          "categoria": "salada_1",
+          "tipo_dieta": "comum",
+          "nome": "Repolho roxo",
+          "alergenos": []
+        },
+        {
+          "categoria": "salada_2",
+          "tipo_dieta": "comum",
+          "nome": "Antepasto de abobrinha",
+          "alergenos": []
+        },
+        {
+          "categoria": "molho_salada",
+          "tipo_dieta": "comum",
+          "nome": "Ácido",
+          "alergenos": []
+        },
+        {
+          "categoria": "prato_principal",
+          "tipo_dieta": "padrao",
+          "nome": "Cubos de frango ao molho sugo",
+          "alergenos": []
+        },
+        {
+          "categoria": "prato_principal",
+          "tipo_dieta": "ovolactovegetariano",
+          "nome": "Risoto de espinafre",
+          "alergenos": [
+            "gluten",
+            "leite"
+          ]
+        },
+        {
+          "categoria": "prato_principal",
+          "tipo_dieta": "vegetariano_estrito",
+          "nome": "Charuto de repolho com PTS",
+          "alergenos": [
+            "soja"
+          ]
+        },
+        {
+          "categoria": "guarnicao",
+          "tipo_dieta": "comum",
+          "nome": "Mix de batatas",
+          "alergenos": []
+        },
+        {
+          "categoria": "acompanhamento",
+          "tipo_dieta": "comum",
+          "nome": "Arroz branco e integral Feijão preto",
+          "alergenos": []
+        },
+        {
+          "categoria": "sobremesa",
+          "tipo_dieta": "comum",
+          "nome": "Melão",
+          "alergenos": []
+        },
+        {
+          "categoria": "bebida",
+          "tipo_dieta": "comum",
+          "nome": "Manga",
+          "alergenos": []
+        }
+      ]
+    },
+    {
+      "data": "2026-10-30",
+      "tipo_refeicao": "almoco",
+      "itens": [
+        {
+          "categoria": "salada_1",
+          "tipo_dieta": "comum",
+          "nome": "Alface com agrião",
+          "alergenos": []
+        },
+        {
+          "categoria": "salada_2",
+          "tipo_dieta": "comum",
+          "nome": "Tomate, cebola e pimentão em cubos",
+          "alergenos": []
+        },
+        {
+          "categoria": "molho_salada",
+          "tipo_dieta": "comum",
+          "nome": "Hortelã / Limão",
+          "alergenos": []
+        },
+        {
+          "categoria": "prato_principal",
+          "tipo_dieta": "padrao",
+          "nome": "Peixe ao molho bechamel gratinado",
+          "alergenos": []
+        },
+        {
+          "categoria": "prato_principal",
+          "tipo_dieta": "ovolactovegetariano",
+          "nome": "Ovos assados ao sugo",
+          "alergenos": [
+            "ovo"
+          ]
+        },
+        {
+          "categoria": "prato_principal",
+          "tipo_dieta": "vegetariano_estrito",
+          "nome": "Guisado de grãos de soja",
+          "alergenos": [
+            "soja"
+          ]
+        },
+        {
+          "categoria": "guarnicao",
+          "tipo_dieta": "comum",
+          "nome": "Abóbora assada",
+          "alergenos": []
+        },
+        {
+          "categoria": "acompanhamento",
+          "tipo_dieta": "comum",
+          "nome": "Arroz branco e integral Feijão carioca",
+          "alergenos": []
+        },
+        {
+          "categoria": "sobremesa",
+          "tipo_dieta": "comum",
+          "nome": "Banana",
+          "alergenos": []
+        },
+        {
+          "categoria": "bebida",
+          "tipo_dieta": "comum",
+          "nome": "Maracujá",
+          "alergenos": []
+        }
+      ]
+    },
+    {
+      "data": "2026-10-26",
+      "tipo_refeicao": "jantar",
+      "itens": [
+        {
+          "categoria": "salada_1",
+          "tipo_dieta": "comum",
+          "nome": "Acelga com alface roxa",
+          "alergenos": []
+        },
+        {
+          "categoria": "salada_2",
+          "tipo_dieta": "comum",
+          "nome": "Chuchu cozido com pimentões coloridos",
+          "alergenos": []
+        },
+        {
+          "categoria": "molho_salada",
+          "tipo_dieta": "comum",
+          "nome": "Mostarda e mel /Limão",
+          "alergenos": [
+            "mel"
+          ]
+        },
+        {
+          "categoria": "prato_principal",
+          "tipo_dieta": "padrao",
+          "nome": "Frango à pizzaiolo",
+          "alergenos": [
+            "leite"
+          ]
+        },
+        {
+          "categoria": "prato_principal",
+          "tipo_dieta": "ovolactovegetariano",
+          "nome": "Fricassê de palmito com legumes",
+          "alergenos": []
+        },
+        {
+          "categoria": "prato_principal",
+          "tipo_dieta": "vegetariano_estrito",
+          "nome": "Berinjela recheada com homus de grão de bico",
+          "alergenos": []
+        },
+        {
+          "categoria": "sopa",
+          "tipo_dieta": "comum",
+          "nome": "Caldo verde",
+          "alergenos": []
+        },
+        {
+          "categoria": "torrada",
+          "tipo_dieta": "comum",
+          "nome": "Torrada",
+          "alergenos": [
+            "gluten"
+          ]
+        },
+        {
+          "categoria": "acompanhamento",
+          "tipo_dieta": "comum",
+          "nome": "Arroz branco e integral Feijão carioca",
+          "alergenos": []
+        },
+        {
+          "categoria": "sobremesa",
+          "tipo_dieta": "comum",
+          "nome": "Laranja",
+          "alergenos": []
+        },
+        {
+          "categoria": "bebida",
+          "tipo_dieta": "comum",
+          "nome": "Guaraná",
+          "alergenos": []
+        }
+      ]
+    },
+    {
+      "data": "2026-10-27",
+      "tipo_refeicao": "jantar",
+      "itens": [
+        {
+          "categoria": "salada_1",
+          "tipo_dieta": "comum",
+          "nome": "Alface com couve",
+          "alergenos": []
+        },
+        {
+          "categoria": "salada_2",
+          "tipo_dieta": "comum",
+          "nome": "Abobrinha com manjericão",
+          "alergenos": []
+        },
+        {
+          "categoria": "molho_salada",
+          "tipo_dieta": "comum",
+          "nome": "Gengibre",
+          "alergenos": [
+            "soja"
+          ]
+        },
+        {
+          "categoria": "prato_principal",
+          "tipo_dieta": "padrao",
+          "nome": "Carne de sol",
+          "alergenos": []
+        },
+        {
+          "categoria": "prato_principal",
+          "tipo_dieta": "ovolactovegetariano",
+          "nome": "Bife de soja à pizzaiolo",
+          "alergenos": []
+        },
+        {
+          "categoria": "prato_principal",
+          "tipo_dieta": "vegetariano_estrito",
+          "nome": "Ervilha ao sugo",
+          "alergenos": []
+        },
+        {
+          "categoria": "sopa",
+          "tipo_dieta": "comum",
+          "nome": "Sopa minestrone",
+          "alergenos": [
+            "gluten"
+          ]
+        },
+        {
+          "categoria": "torrada",
+          "tipo_dieta": "comum",
+          "nome": "Torrada",
+          "alergenos": [
+            "gluten"
+          ]
+        },
+        {
+          "categoria": "acompanhamento",
+          "tipo_dieta": "comum",
+          "nome": "Arroz branco e integral Feijão preto",
+          "alergenos": []
+        },
+        {
+          "categoria": "sobremesa",
+          "tipo_dieta": "comum",
+          "nome": "Melão",
+          "alergenos": []
+        },
+        {
+          "categoria": "bebida",
+          "tipo_dieta": "comum",
+          "nome": "Laranja",
+          "alergenos": []
+        }
+      ]
+    },
+    {
+      "data": "2026-10-28",
+      "tipo_refeicao": "jantar",
+      "itens": [
+        {
+          "categoria": "salada_1",
+          "tipo_dieta": "comum",
+          "nome": "Alface roxa e rúcula",
+          "alergenos": []
+        },
+        {
+          "categoria": "salada_2",
+          "tipo_dieta": "comum",
+          "nome": "Beterraba ralada",
+          "alergenos": []
+        },
+        {
+          "categoria": "molho_salada",
+          "tipo_dieta": "comum",
+          "nome": "Limão /Hortelã",
+          "alergenos": []
+        },
+        {
+          "categoria": "prato_principal",
+          "tipo_dieta": "padrao",
+          "nome": "Suíno ao molho de mostarda",
+          "alergenos": [
+            "carne_suina"
+          ]
+        },
+        {
+          "categoria": "prato_principal",
+          "tipo_dieta": "ovolactovegetariano",
+          "nome": "Ovos mexidos",
+          "alergenos": []
+        },
+        {
+          "categoria": "prato_principal",
+          "tipo_dieta": "vegetariano_estrito",
+          "nome": "Hambúrguer de abóbora com gergelim",
+          "alergenos": []
+        },
+        {
+          "categoria": "sopa",
+          "tipo_dieta": "comum",
+          "nome": "Creme de cebola caramelizada",
+          "alergenos": []
+        },
+        {
+          "categoria": "torrada",
+          "tipo_dieta": "comum",
+          "nome": "Torrada",
+          "alergenos": [
+            "gluten"
+          ]
+        },
+        {
+          "categoria": "acompanhamento",
+          "tipo_dieta": "comum",
+          "nome": "Arroz branco e integral Feijão carioca",
+          "alergenos": []
+        },
+        {
+          "categoria": "sobremesa",
+          "tipo_dieta": "comum",
+          "nome": "Doce de leite OPÇÃO: Fruta",
+          "alergenos": [
+            "leite"
+          ]
+        },
+        {
+          "categoria": "bebida",
+          "tipo_dieta": "comum",
+          "nome": "Acerola",
+          "alergenos": []
+        }
+      ]
+    },
+    {
+      "data": "2026-10-29",
+      "tipo_refeicao": "jantar",
+      "itens": [
+        {
+          "categoria": "salada_1",
+          "tipo_dieta": "comum",
+          "nome": "Repolho branco e passas",
+          "alergenos": []
+        },
+        {
+          "categoria": "salada_2",
+          "tipo_dieta": "comum",
+          "nome": "Pepino em cubos com gergelim",
+          "alergenos": []
+        },
+        {
+          "categoria": "molho_salada",
+          "tipo_dieta": "comum",
+          "nome": "Manjericão",
+          "alergenos": []
+        },
+        {
+          "categoria": "prato_principal",
+          "tipo_dieta": "padrao",
+          "nome": "Strogonoff de carne",
+          "alergenos": [
+            "cogumelo"
+          ]
+        },
+        {
+          "categoria": "prato_principal",
+          "tipo_dieta": "ovolactovegetariano",
+          "nome": "Macarrão ao molho branco com PTS",
+          "alergenos": []
+        },
+        {
+          "categoria": "prato_principal",
+          "tipo_dieta": "vegetariano_estrito",
+          "nome": "Moqueca de vegetais com palmito e castanhas",
+          "alergenos": [
+            "oleaginosas"
+          ]
+        },
+        {
+          "categoria": "sopa",
+          "tipo_dieta": "comum",
+          "nome": "Creme de cenoura com gengibre",
+          "alergenos": []
+        },
+        {
+          "categoria": "torrada",
+          "tipo_dieta": "comum",
+          "nome": "Torrada",
+          "alergenos": [
+            "gluten"
+          ]
+        },
+        {
+          "categoria": "acompanhamento",
+          "tipo_dieta": "comum",
+          "nome": "Arroz branco e integral Feijão preto",
+          "alergenos": []
+        },
+        {
+          "categoria": "sobremesa",
+          "tipo_dieta": "comum",
+          "nome": "Maçã",
+          "alergenos": []
+        },
+        {
+          "categoria": "bebida",
+          "tipo_dieta": "comum",
+          "nome": "Manga",
+          "alergenos": []
+        }
+      ]
+    },
+    {
+      "data": "2026-10-30",
+      "tipo_refeicao": "jantar",
+      "itens": [
+        {
+          "categoria": "salada_1",
+          "tipo_dieta": "comum",
+          "nome": "Acelga temperada",
+          "alergenos": [
+            "soja"
+          ]
+        },
+        {
+          "categoria": "salada_2",
+          "tipo_dieta": "comum",
+          "nome": "Picles de rabanete",
+          "alergenos": []
+        },
+        {
+          "categoria": "molho_salada",
+          "tipo_dieta": "comum",
+          "nome": "Chipotle",
+          "alergenos": [
+            "pimenta"
+          ]
+        },
+        {
+          "categoria": "prato_principal",
+          "tipo_dieta": "padrao",
+          "nome": "Frango assado ao molho barbecue",
+          "alergenos": [
+            "carne_suina",
+            "soja"
+          ]
+        },
+        {
+          "categoria": "prato_principal",
+          "tipo_dieta": "ovolactovegetariano",
+          "nome": "Lasanha de brócolis",
+          "alergenos": []
+        },
+        {
+          "categoria": "prato_principal",
+          "tipo_dieta": "vegetariano_estrito",
+          "nome": "Ervilha refogada com brócolis e couve-flor",
+          "alergenos": []
+        },
+        {
+          "categoria": "sopa",
+          "tipo_dieta": "comum",
+          "nome": "Sopa canjiquinha",
+          "alergenos": []
+        },
+        {
+          "categoria": "torrada",
+          "tipo_dieta": "comum",
+          "nome": "Torrada",
+          "alergenos": [
+            "gluten"
+          ]
+        },
+        {
+          "categoria": "acompanhamento",
+          "tipo_dieta": "comum",
+          "nome": "Arroz branco e integral Feijão carioca",
+          "alergenos": []
+        },
+        {
+          "categoria": "sobremesa",
+          "tipo_dieta": "comum",
+          "nome": "Melancia",
+          "alergenos": []
+        },
+        {
+          "categoria": "bebida",
+          "tipo_dieta": "comum",
+          "nome": "Maracujá",
+          "alergenos": []
+        }
+      ]
+    }
+  ]
+}

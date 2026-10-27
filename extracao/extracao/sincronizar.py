@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 from datetime import datetime, timezone
+import json
 import os
 from time import monotonic, sleep
 
@@ -24,6 +25,13 @@ def sincronizar(url_base: str, token: str | None = None) -> dict[str, str]:
         try:
             resposta = enviar_ao_backend(resultado, url_base, token=token)
             resumo[campus] = f"importado ({resposta['itens_processados']} itens)"
+            print(json.dumps({
+                "instante": datetime.now(timezone.utc).isoformat(),
+                "campus": campus,
+                "fonte_pdf_url": resultado.fonte_pdf_url,
+                "status": "importado",
+                "ultima_importacao_em": resposta.get("ultima_importacao_em"),
+            }, ensure_ascii=False), flush=True)
         except Exception as erro:
             # Não imprimir exceções externas: podem conter headers ou segredos.
             resumo[campus] = f"falha na importação ({type(erro).__name__})"
