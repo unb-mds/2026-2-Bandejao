@@ -2,6 +2,7 @@ import { useState, useMemo, useEffect } from 'react'
 import HomeScreen from '@/screens/HomeScreen'
 import A11yFloat from '@/components/A11yFloat'
 import AppFooter from '@/components/AppFooter'
+import AvisoPrivacidade from '@/components/AvisoPrivacidade'
 import AppHeader from '@/components/AppHeader'
 import AppNav from '@/components/AppNav'
 import AvaliarTab from '@/screens/AvaliarTab'
@@ -14,11 +15,13 @@ import type { CardapioApi } from './api'
 import { adaptarHistoricoAvaliacoes } from './avaliacoes'
 import { inicioSemana, dataDaSemana, montarSemana } from './cardapios'
 import { obterIdentidadeAnonima } from './identidade'
+import { registroAvisoPrivacidade } from './privacidade'
 import type { Campus } from './types'
 import type { Avaliacao, NivelLotacao, Refeicao, ReportLotacao } from './types'
 import { getCurrentMealInfo } from './utils'
 
 export default function App() {
+  const [avisoPrivacidadeAberto, setAvisoPrivacidadeAberto] = useState(() => !registroAvisoPrivacidade.foiLido())
   const [campi, setCampi] = useState<Campus[]>([])
   const [campus, setCampus] = useState<Campus>({ id: '', name: 'Selecione um campus' })
   const [semanaInicio, setSemanaInicio] = useState(() => inicioSemana(new Date()))
@@ -299,7 +302,7 @@ export default function App() {
 
     <AppNav tab={tab} setTab={novaTab => { if (novaTab === 'hoje') setSemanaInicio(inicioSemana(new Date())); setTab(novaTab) }} />
 
-      <main id="main-content" style={{ scrollMarginTop: '60px', background: 'var(--background)' }}>
+      <main id="main-content" tabIndex={-1} style={{ scrollMarginTop: '60px', background: 'var(--background)' }}>
 
         <section className="max-w-5xl mx-auto px-4 py-4 space-y-3" aria-label="Consulta de cardápios">
           {(tab === 'hoje' || tab === 'cardapio') && <label className="flex flex-wrap items-center gap-3 text-sm font-semibold">
@@ -366,7 +369,11 @@ export default function App() {
     )}
       </main>
 
-    <AppFooter campus={campus} />
+    <AppFooter campus={campus} onAbrirPrivacidade={() => setAvisoPrivacidadeAberto(true)} />
+    <AvisoPrivacidade aberto={avisoPrivacidadeAberto} onFechar={() => setAvisoPrivacidadeAberto(false)} onConfirmar={() => {
+      registroAvisoPrivacidade.registrarLeitura()
+      setAvisoPrivacidadeAberto(false)
+    }} />
   </div>
   )
 }

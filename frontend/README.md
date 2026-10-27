@@ -41,6 +41,12 @@ A convenção de domingo a sábado é uma escolha de apresentação da integraç
 
 Os filtros usam apenas as marcações recebidas; não inferem ingredientes pelo nome. “Sem marcação” significa “não marcado na fonte”, não “livre de”. A legenda dos PDFs validada em 30/09/2026 não tem símbolo separado para frutos do mar. Confira a fonte oficial e os critérios de aceitação em [Requisitos](../docs/Requisitos.md).
 
+## Aviso de privacidade
+
+Na primeira visita, um diálogo explica o código anônimo salvo no navegador, a persistência de avaliações e reclamações na API e o cuidado com dados pessoais em textos livres. **Entendi** registra a leitura na chave versionada `bandejao.privacidade.v1`; não representa consentimento para coleta. Sem armazenamento local, a confirmação vale nesta página e o aviso pode reaparecer ao recarregar. **Escape** fecha sem registrar a leitura. O botão **Privacidade**, no rodapé, permite reler o conteúdo.
+
+Limpar os dados do site e reabrir a página faz o próximo envio gerar outro código, sem apagar registros já enviados ao backend. O texto integral e os limites estão em [Aviso de privacidade](../docs/privacidade.md). A lógica de armazenamento está em `src/privacidade.ts` e o diálogo acessível em `src/components/AvisoPrivacidade.tsx`.
+
 ## Verificação local
 
 ```bash

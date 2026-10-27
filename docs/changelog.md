@@ -1,5 +1,11 @@
 # Histórico de mudanças da documentação
 
+## 27/10/2026 — Aviso de privacidade
+
+- Issue 53: aviso acessível na primeira visita, confirmação versionada por navegador e releitura no rodapé. Armazenamento bloqueado não impede o uso.
+- Texto explica identificador aleatório, limpeza dos dados, persistência de envios, comentários públicos e reclamações privadas; a confirmação registra leitura, sem alegar consentimento legal.
+- Vinte e sete testes, lint, TypeScript e build aprovados. Teclado, foco, Escape, persistência e layout mobile conferidos no Chrome com API simulada. Veja [texto e evidências](privacidade.md).
+
 ## 27/10/2026 — Correção da sincronização dos PDFs oficiais
 
 - Issue 54: descoberta de arquivos com revisão numérica, decodificação JPEG e isolamento de falhas inesperadas por campus.
