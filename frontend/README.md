@@ -33,7 +33,7 @@ Em Linux/macOS, use `cp .env.example .env`. Abra <http://localhost:5173>. `VITE_
 | Origem e indisponibilidade | Link para o PDF, data/hora da última importação bem-sucedida do campus, carregamento, erro com nova tentativa e mensagens sem inferir fechamento do RU. |
 | Dieta e alérgenos | Filtros locais sobre os itens retornados, usando `tipo_dieta` e os marcadores `contem_*`. O filtro ovolactovegetariano inclui também itens vegetarianos estritos; as demais classes permanecem exatas, conforme D02. |
 | Avaliações | Nota geral e comentário são enviados à API com a identidade anônima do navegador. O histórico consulta somente a refeição selecionada, mostra data/hora em Brasília e permanece após recarregar a página. |
-| Reclamações | A tela ainda mantém os registros somente no estado do React e não os envia ao RU. |
+| Reclamações | A tela envia categoria e descrição à API com identidade anônima. Há confirmação de sucesso/erro; não existe lista pública nem encaminhamento automático ao RU. |
 | Planejamento | Demonstração por campus e data, apenas nesta sessão; sem persistência ou previsão. |
 | Lotação | Exemplos visuais e relatos desta sessão; sem consulta a dados reais nem estimativa operacional. |
 

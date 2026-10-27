@@ -30,6 +30,10 @@ Aplicação para consulta ao cardápio semanal dos Restaurantes Universitários 
 - O frontend local usa React 19, Vite 8, TypeScript e Tailwind v4, incorporando as telas da equipe de [marilluantunes/frontend-react](https://github.com/marilluantunes/frontend-react). Campi e cardápios vêm da API; os filtros usam as marcações dos itens. Avaliações, reclamações, planejamento e lotação continuam como demonstrações sem persistência integrada.
 - Consulte [estrutura, execução e limites do frontend](frontend/README.md). O protótipo Vercel externo é uma publicação separada.
 
+## Publicação da aplicação
+
+A preparação para HTTPS está no [PR 71](https://github.com/unb-mds/2026-2-Bandejao/pull/71), da equipe. As URLs propostas retornaram 404 em 27/10/2026; a hospedagem integrada ainda depende de ativação e validação externa. Consulte [verificação da publicação](docs/verificacao-publicacao.md) para comandos, evidências e critérios pendentes da issue 55.
+
 ## Como rodar o projeto
 
 ### Pré-requisitos

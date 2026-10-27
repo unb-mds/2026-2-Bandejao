@@ -1,5 +1,11 @@
 # Histórico de mudanças da documentação
 
+## 27/10/2026 — Verificação da publicação HTTPS
+
+- Issue 55: acrescentado verificador somente leitura de HTTPS, HTML, healthcheck, versão, dados públicos e CORS/preflight, com testes na CI.
+- Inspeção do PR 71 preserva os três commits da equipe; registra cuidados com branch do Blueprint, versão Python, seed por data e ausência do sincronizador nessa configuração.
+- URLs propostas responderam 404. Sem acesso Render, a publicação continua pendente; código/configuração aprovados não são evidência de ambiente ativo. Veja [roteiro e registro](verificacao-publicacao.md).
+
 ## 27/10/2026 — Aviso de privacidade
 
 - Issue 53: aviso acessível na primeira visita, confirmação versionada por navegador e releitura no rodapé. Armazenamento bloqueado não impede o uso.

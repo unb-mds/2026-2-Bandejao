@@ -212,7 +212,7 @@ Os caminhos abaixo são pontos de inspeção na versão-base `717d960`, não com
 | RF05 | Visão: consultar avaliações | `listar_avaliacoes`; `frontend/src/screens/AvaliacaoHistorico.tsx`; testes de API e adaptação | Histórico integrado à API, isolado pela refeição, ordenado do mais recente ao mais antigo e persistente após recarga. |
 | RF06 | Sprint 02: substituir check-in | `scrum/sprint02.md` | Planejamento pendente; implementar identidade anônima por navegador (D04) e rota de intenções. |
 | RF07 | Visão: estimar movimento | Dependência de RF06 documentada | Implementar demanda por refeição com amostra mínima (D05); sem horário de pico. |
-| RF08 | Sprint 02: reclamações independentes | Modelo, migração e rotas em `backend/app/api/routes/reclamacao.py` | Integrar a tela ao contrato persistido; manter quatro categorias, sem nome, foto ou lista pública. |
+| RF08 | Sprint 02: reclamações independentes | Modelo, migração e rotas em `backend/app/api/routes/reclamacao.py` | Tela integrada na entrega do PR 70; manter quatro categorias, sem nome, foto ou lista pública. Aceite externo e política operacional ainda requerem evidência. |
 | RNF01 | v1.0: desempenho no pico | Critério agora quantificado | Aprovar cenário e executar medição. |
 | RNF02 | v1.0: atualização semanal | Sincronização a cada seis horas; metadados de importação no campus; testes de falha | Evidenciar a execução contínua no ambiente escolhido e o cumprimento do prazo operacional. |
 | RNF03 | v1.0: resiliência | `extracao/tests/test_main.py`; `extracao/tests/test_cobertura_total.py` | Revisar conjunto de referência e verificar cenários propostos. |
