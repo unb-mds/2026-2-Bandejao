@@ -214,11 +214,11 @@ A tabela foi iniciada na versão-base `717d960` e atualizada até a entrega do P
 | RF07 | Visão: estimar movimento | Dependência de RF06 documentada | Implementar demanda por refeição com amostra mínima (D05); sem horário de pico. |
 | RF08 | Sprint 02: reclamações independentes | Modelo, migração e rotas em `backend/app/api/routes/reclamacao.py` | Tela integrada na entrega do PR 70; quatro categorias, sem nome, foto ou lista pública. Consulta posterior pelo autor ainda não implementada; aceite externo e política operacional requerem evidência. |
 | RNF01 | v1.0: desempenho no pico | Critério agora quantificado | Aprovar cenário e executar medição. |
-| RNF02 | v1.0: atualização semanal | Sincronização a cada seis horas; metadados de importação no campus; testes de falha | Evidenciar a execução contínua no ambiente escolhido e o cumprimento do prazo operacional. |
+| RNF02 | v1.0: atualização semanal | `.github/workflows/sincronizacao.yml`; metadados de importação; [regressão real e reimportação](evidencias/sincronizacao-issue-54.md) | Agendamento, isolamento e idempotência possuem código e testes. Configurar URL/secret e guardar execuções bem-sucedidas para comprovar o prazo operacional. |
 | RNF03 | v1.0: resiliência | Testes da extração e [regressão dos cinco PDFs](evidencias/sincronizacao-issue-54.md) | Corpus real, variações de nome/JPEG e isolamento de falhas verificados; revisão independente das marcações alimentares ainda pendente. |
 | RNF04 | v1.0: acesso para avaliação | Link de protótipo no README | Validar versão integrada e janela de avaliação. |
 | RNF05 | v1.0: SAST | `.github/workflows/sast.yml`; `scripts/security/POLICY.md`; [evidência da issue 60](evidencias/sast-issue-60.md) | Bandit e CodeQL confirmados em PR real, com artefatos preservados e ambos os checks obrigatórios no ruleset ativo da `main`. |
-| RNF06 | Revisão de 14/10/2026: importação sem autenticação | `backend/app/core/security.py`; rota de importação; rotina de sincronização; testes automatizados | Validar a execução no CI e configurar/rotacionar o segredo no ambiente real sem expô-lo. |
+| RNF06 | Revisão de 14/10/2026: importação sem autenticação | `backend/app/core/security.py`; rota de importação; rotina e workflow de sincronização; testes automatizados | O workflow lê `IMPORTACAO_TOKEN` de GitHub Actions Secrets e falha fechado quando ausente. Configurar e rotacionar o mesmo valor no backend real. |
 
 ### Integração do frontend — situação em 27/10/2026
 

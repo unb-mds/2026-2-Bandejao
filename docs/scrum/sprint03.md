@@ -79,13 +79,13 @@ A validação desta branch deve distinguir:
 - Configuração/documentação: `docker compose config --quiet`, validação do YAML, `git diff --check` e `mkdocs build --strict` aprovados.
 - Actions: SHAs de checkout, setup-python, upload-artifact e CodeQL conferidos nas fontes oficiais; execução real aprovada e artefatos inspecionados.
 
-O instante e a fonte da última importação bem-sucedida passaram a ser persistidos por campus e exibidos no cardápio na entrega da issue 50. A execução contínua no ambiente escolhido ainda precisa ser evidenciada para o aceite operacional completo de RNF02.
+O instante e a fonte da última importação bem-sucedida passaram a ser persistidos por campus e exibidos no cardápio na entrega da issue 50. A issue 54 acrescenta o agendamento do GitHub Actions a cada seis horas; URL e secret ainda precisam ser configurados no ambiente publicado e as execuções guardadas para o aceite operacional completo de RNF02.
 
 ## Pendências e próximos passos
 
 - Implementar S03-02 a S03-05 em mudanças próprias e vinculadas às decisões da ata.
 - Registrar participantes e responsáveis reais na ata e vincular as issues/PRs da sprint.
-- Ativar o serviço de sincronização no ambiente escolhido.
+- Configurar `BACKEND_URL` e `IMPORTACAO_TOKEN`, executar manualmente o workflow e acompanhar o cron.
 - Manter para as próximas sprints: reclamações, aplicação da janela nas rotas de avaliação, planejamento, estimativa, teste de carga, corpus de PDFs, checagem de disponibilidade e deploy da aplicação.
 
 ## Situação consolidada em 27/10/2026

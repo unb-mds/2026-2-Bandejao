@@ -1,5 +1,13 @@
 # Histórico de mudanças da documentação
 
+## 27/10/2026 — Agendamento da sincronização a cada seis horas
+
+- Workflow do GitHub Actions executa a extração/importação às 00:23, 06:23, 12:23 e 18:23 UTC, ou manualmente.
+- URL da API vem de variável e token vem de secret; configuração ausente ou URL sem HTTPS falha antes do acesso à fonte.
+- Concorrência impede ciclos sobrepostos, e cada execução preserva logs e metadados por 30 dias.
+- Pull requests executam somente os testes do sincronizador e a regressão offline dos cinco PDFs oficiais.
+- A ativação operacional depende da publicação da API e da configuração dos valores protegidos; atrasos do agendador continuam documentados.
+
 ## 27/10/2026 — Revisão de consistência após o PR 72
 
 - README, contexto, arquitetura, requisitos, desenvolvimento e protótipos passam a registrar avaliações e reclamações como fluxos integrados à API, com persistência; planejamento e lotação continuam demonstrativos.
