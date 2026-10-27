@@ -1,5 +1,12 @@
 # Histórico de mudanças da documentação
 
+## 27/10/2026 — Revisão de consistência após o PR 72
+
+- README, contexto, arquitetura, requisitos, desenvolvimento e protótipos passam a registrar avaliações e reclamações como fluxos integrados à API, com persistência; planejamento e lotação continuam demonstrativos.
+- Diagrama e tabela do banco incluem `Reclamacao`; interfaces documentam envio e leitura interna por token. A confirmação ao autor não equivale a uma consulta posterior implementada.
+- Corrigidas referências antigas à última importação, ao lint do frontend e à proteção da `main`. Visão e página inicial passam a seguir D05: intenções por refeição, com mínimo de 10, sem previsão de horário.
+- Sprints preservam os registros históricos e apontam para a situação consolidada. Plano de execução registra a entrega remota concluída e as pendências operacionais de sincronização e hospedagem.
+
 ## 27/10/2026 — Verificação da publicação HTTPS
 
 - Issue 55: acrescentado verificador somente leitura de HTTPS, HTML, healthcheck, versão, dados públicos e CORS/preflight, com testes na CI.

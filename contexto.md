@@ -4,25 +4,25 @@ Este arquivo dá contexto para ferramentas de IA (Claude Code e similares) traba
 
 ## Visão geral
 
-**Bandejão** é uma aplicação que centraliza o cardápio semanal dos Restaurantes Universitários (RU) da UnB, abrangendo todos os campi (Darcy Ribeiro, Ceilândia, Gama, Planaltina e Fazenda Água Limpa), permite filtrar refeições por restrição alimentar, avaliar refeições e registrar reclamações. Em uma segunda etapa, permite que os usuários planejem antecipadamente os dias e refeições em que pretendem comer no RU e estima os horários de pico com base nesses planejamentos.
+**Bandejão** é uma aplicação que centraliza o cardápio semanal dos Restaurantes Universitários (RU) da UnB, abrangendo todos os campi (Darcy Ribeiro, Ceilândia, Gama, Planaltina e Fazenda Água Limpa), permite filtrar refeições por restrição alimentar, avaliar refeições e registrar reclamações. Em uma segunda etapa, prevê planejamento antecipado dos dias e refeições no RU e estimativa de intenções por refeição, conforme D05.
 
 Projeto acadêmico, desenvolvido por uma equipe de 7 integrantes.
 
 ## Escopo por release
 
 - **Release 1:** cardápio da semana, filtros alimentares (vegetariano, alergias), avaliação de refeições e registro independente de reclamações.
-- **Release 2:** planejamento semanal de dias e refeições no RU e estimativa de horário de pico a partir do volume de planejamentos por dia, refeição e campus.
+- **Release 2:** planejamento semanal de dias e refeições no RU e estimativa de intenções por dia, refeição e campus, sem previsão de horário de chegada ou tempo de fila.
 
 ## Decisões D01–D08 (Requisitos v1.2, 14/10/2026)
 
-Decisões tomadas pela equipe em `docs/Requisitos.md` (seção 7), ainda sendo incorporadas ao código na Sprint 03 (`docs/scrum/sprint03.md`):
+Decisões tomadas pela equipe em `docs/Requisitos.md` (seção 7). O estado da implementação foi revisado em 27/10/2026; o histórico e a situação consolidada estão em `docs/scrum/sprint03.md`.
 
 - **D01:** semana de segunda a domingo, fuso `America/Sao_Paulo`.
-- **D02:** filtro de dieta inclusivo — selecionar "ovolactovegetariano" também retorna itens "vegetariano estrito". As demais dietas continuam exatas. A API hoje ainda filtra por classe exata; o ajuste está na Sprint 03.
+- **D02:** filtro de dieta inclusivo — selecionar "ovolactovegetariano" também retorna itens "vegetariano estrito". As demais dietas continuam exatas. Implementado na API e na interface, com aviso sobre as limitações das marcações da fonte.
 - **D03:** horários de início de cada refeição vêm de uma tabela de configuração versionada (sem horário cadastrado, a avaliação fica fechada). Sem recurso de "serviço suspenso" — limitação conhecida.
 - **D04:** **sem cadastro nem login.** Identidade anônima por navegador (código aleatório gerado no cliente). Uma avaliação por identidade por refeição; novo envio atualiza a anterior em vez de duplicar. Não identifica pessoa: outro navegador, ou limpar os dados, gera outra identidade.
 - **D05:** RF07 estima **demanda por refeição** (sem horário de chegada), com amostra mínima de 10 intenções ativas (constante de configuração). Dados de demonstração devem ser identificados como simulados.
-- **D06:** reclamações com 4 categorias (qualidade, higiene, atendimento, outros), até 1.000 caracteres, sem foto, sem nome, sem lista pública. Acesso restrito a quem registrou e à equipe.
+- **D06:** reclamações com 4 categorias (qualidade, higiene, atendimento, outros), até 1.000 caracteres, sem foto, sem nome, sem lista pública. A decisão prevê acesso do autor e da equipe; o código atual oferece confirmação do envio ao autor e leitura interna por token, sem consulta posterior pelo autor.
 - **D07:** metas de verificação — carga com k6 (50 usuários, local), sincronização a cada 6h, 4–6 PDFs de referência, SAST com bandit + CodeQL (bloqueia alto/crítico), checagem de 10s a cada 5min em janela curta.
 - **D08 (novo, RNF06):** a rota de importação do cardápio exige um token secreto (`IMPORTACAO_TOKEN`), usado também pela rotina de sincronização. Sem segredo válido, a API recusa a escrita.
 
@@ -35,23 +35,32 @@ O sistema é dividido em camadas:
    - `GET /campi/`, `GET /campi/{campus_id}`
    - `GET /cardapios/` (filtros: `campus_id`, `data_inicio`/`data_fim`, `tipo_refeicao`, `tipo_dieta`, `excluir_alergenos` — implementa o filtro por restrição alimentar do RF03), `GET /cardapios/{cardapio_id}`
    - `GET /cardapios/{cardapio_id}/avaliacoes`, `POST /cardapios/{cardapio_id}/avaliacoes` (RF04/RF05)
+   - `POST /cardapios/{cardapio_id}/reclamacoes/` (RF08) e `GET /equipe/reclamacoes/` (leitura interna por token da equipe).
    - As rotas HTTP de check-in legado foram retiradas na Sprint 03; o modelo/tabela permanece até a migração para planejamento.
-   - O RF08 e a nova abordagem dos RF06/RF07 ainda não estão implementados no backend.
-3. **Banco de dados** — armazena cardápio e avaliações. O modelo `CheckIn`, já implementado em `backend/app/models/`, pertence à abordagem anterior da Release 2 e deverá ser substituído por uma entidade de planejamento semanal. Os demais modelos SQLAlchemy são `Campus`, `Cardapio`, `ItemCardapio` e `Avaliacao`, além dos enums `TipoRefeicao`, `Categoria` e `TipoDieta`. Migrações são gerenciadas por Alembic (`backend/alembic/`).
-4. **Frontend** (`/frontend`) — deve consumir a API e oferecer cardápio, filtros, avaliação, seção de reclamações e planejamento semanal; usa React 19, Vite 8, TypeScript e Tailwind v4, incorporando as telas de `marilluantunes/frontend-react`. Campi e cardápios são consultados na API; filtros locais usam os marcadores publicados. Avaliações, reclamações, planejamento e lotação seguem como demonstrações sem persistência integrada. Veja `frontend/README.md` para estrutura e limites.
+   - A nova abordagem dos RF06/RF07 ainda não está implementada no backend.
+3. **Banco de dados** — armazena cardápios, avaliações e reclamações. O modelo `CheckIn`, já implementado em `backend/app/models/`, pertence à abordagem anterior da Release 2 e deverá ser substituído por uma entidade de planejamento semanal. Os demais modelos SQLAlchemy são `Campus`, `Cardapio`, `ItemCardapio`, `Avaliacao` e `Reclamacao`, além dos enums `TipoRefeicao`, `Categoria`, `TipoDieta` e `CategoriaReclamacao`. Migrações são gerenciadas por Alembic (`backend/alembic/`).
+4. **Frontend** (`/frontend`) — usa React 19, Vite 8, TypeScript e Tailwind v4, incorporando as telas de `marilluantunes/frontend-react`. Campi, cardápios e histórico de avaliações são consultados na API; filtros locais usam os marcadores publicados. Avaliações e reclamações são enviadas à API e persistidas. Planejamento e lotação seguem como demonstrações sem persistência integrada. O aviso de privacidade pode ser relido no rodapé. Veja `frontend/README.md` para estrutura e limites.
 
 ## Stack técnica
 
 - Documentação/GitHub Pages: MkDocs Material, configuração em `mkdocs.yml`, dependências em `requirements-docs.txt`. O workflow `.github/workflows/docs.yml` valida PRs com build estrito e publica artefatos na `main`; requer origem **GitHub Actions** em Settings → Pages. Manutenção e histórico em `docs/github-pages.md` e `docs/changelog.md`.
 
-- Extração de dados: Python (requests + BeautifulSoup para navegar a página do RU, pdfplumber para extrair texto do PDF do cardápio).
+- Extração de dados: Python (requests + BeautifulSoup para navegar a página do RU, pdfplumber para tabelas e Pillow para os ícones dos PDFs).
 - Backend: Python + FastAPI, SQLAlchemy como ORM.
 - Banco de dados: PostgreSQL.
 - Frontend: React 19 + Vite 8, TypeScript e Tailwind v4.
 - Orquestração local: Docker Compose (`docker-compose.yml` sobe banco, backend e frontend; o perfil opcional `sincronizacao` adiciona a rotina a cada seis horas).
 - Testes: pytest (backend e extração) com cobertura via pytest-cov.
-- Segurança estática: Bandit para Python e CodeQL para JavaScript/TypeScript, conforme RNF05; o bloqueio de merge depende dos checks obrigatórios no GitHub.
-- Lint: ruff (Python), ESLint via `npm run lint` (frontend).
+- Segurança estática: Bandit para Python e CodeQL para JavaScript/TypeScript, conforme RNF05; ambos são obrigatórios no ruleset ativo da `main`, sem bypass.
+- Lint: Ruff (Python), Oxlint via `npm run lint` (frontend).
+
+## Pendências em 27/10/2026
+
+- Alinhar integralmente a apresentação semanal do frontend à D01; o backend já tem utilitários temporais.
+- Implementar planejamento persistido e estimativa por intenções (RF06/RF07).
+- Comprovar sincronização contínua no host (issue 54). Os cinco PDFs reais e a reimportação foram validados em ambiente isolado.
+- Ativar e validar a hospedagem HTTPS (issue 55). A preparação da equipe está no PR 71; as URLs propostas retornaram 404 e o acesso Render não está disponível nesta entrega.
+- O aviso de privacidade da issue 53 está integrado pelo PR 72. Evidências e limites estão em `docs/privacidade.md` e `docs/verificacao-publicacao.md`.
 
 ## Convenções do projeto
 
@@ -120,5 +129,5 @@ cd extracao && pytest
 ## Pontos de atenção
 
 - O cardápio do RU não possui API oficial e é publicado apenas em PDF — o processo de extração é sensível a mudanças no formato de publicação. O site do RU avisa que o cardápio está sujeito a alterações sem aviso prévio.
-- A previsão de fila (Release 2) depende de volume suficiente de planejamentos registrados por dia, refeição e campus; nas fases iniciais os dados podem ser insuficientes para gerar estimativas confiáveis.
+- A estimativa de intenções (Release 2) depende de volume suficiente de planejamentos registrados por dia, refeição e campus; nas fases iniciais os dados podem ser insuficientes. Não representa medição da fila real.
 - A abordagem de check-in no momento da refeição foi substituída pelo planejamento antecipado para reduzir a fricção de uso: o usuário registra suas intenções uma vez por semana, em vez de precisar lembrar de fazer check-in diariamente.

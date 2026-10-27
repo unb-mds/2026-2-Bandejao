@@ -91,6 +91,8 @@ Esta atualização cobre a GH Page. Não altera requisitos, regras de negócio o
 
 ## Alinhamento do frontend da equipe — 01/10/2026
 
+Registro da entrega de 01/10/2026. Avaliações e reclamações receberam persistência nas entregas posteriores; o estado atual está na [situação consolidada da Sprint 03](sprint03.md#situacao-consolidada-em-27102026).
+
 - Incorporada localmente a estrutura React/TypeScript/Tailwind v4 de `marilluantunes/frontend-react`, revisão `c1833a3`, preservando navegação, tema e acessibilidade.
 - O cliente da API foi convertido para TypeScript e conectado às telas Hoje e Cardápio, com seleção de semana, campus da API, link de origem e tratamento de falhas.
 - Cardápios e avaliações fictícios foram retirados da consulta. Os itens preservam categorias, dietas e marcadores publicados; filtros não certificam ausência de ingredientes.
