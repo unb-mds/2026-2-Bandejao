@@ -50,11 +50,6 @@ export interface AvaliacaoLive {
   foto?: string | null
 }
 
-export interface Reclamacao {
-  id: number; autor: string; categoria: string; descricao: string;
-  data: string; horario: string; status: 'Aberta' | 'Resolvida';
-}
-
 export interface LotacaoStats {
   total: number
   counts: { vazio: number; moderado: number; cheio: number }

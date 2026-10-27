@@ -35,13 +35,12 @@ export const LOTACAO_TIMELINE: Record<Refeicao, { hora: string; pct: number }[]>
   ],
 }
 
+// Os ids correspondem aos valores aceitos pela API (CategoriaReclamacao).
 export const CATEGORIAS_RECLAMACAO: CategoriaReclamacao[] = [
-  { id: 'Qualidade da comida', emoji: '🍽️', label: 'Qualidade' },
-  { id: 'Higiene', emoji: '🧼', label: 'Higiene' },
-  { id: 'Atendimento', emoji: '👥', label: 'Atendimento' },
-  { id: 'Quantidade', emoji: '🍛', label: 'Quantidade' },
-  { id: 'Infraestrutura', emoji: '🏠', label: 'Estrutura' },
-  { id: 'Outro', emoji: '💬', label: 'Outro' },
+  { id: 'qualidade', emoji: '🍽️', label: 'Qualidade' },
+  { id: 'higiene', emoji: '🧼', label: 'Higiene' },
+  { id: 'atendimento', emoji: '👥', label: 'Atendimento' },
+  { id: 'outros', emoji: '💬', label: 'Outros' },
 ]
 
 export const SAUDACOES = {
