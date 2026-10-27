@@ -23,6 +23,14 @@ export function getFruitEmoji(nome: string): string {
   return '🍓'
 }
 
+export function temRefeicao(refeicao: RefeicaoData | undefined | null): boolean {
+  if (!refeicao?.id) return false
+  if (refeicao.itensApi) return refeicao.itensApi.length > 0
+  const prato = refeicao.prato_principal
+  if (prato === '—') return false
+  return !(typeof prato === 'object' && prato?.nome === '—')
+}
+
 export function getCurrentMealInfo(): { tipo: Refeicao; status: 'agora' | 'proxima' | 'encerrado' } {
   const now = new Date()
   const mins = now.getHours() * 60 + now.getMinutes()

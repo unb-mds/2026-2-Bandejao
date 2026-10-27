@@ -40,6 +40,14 @@ export interface AvaliacaoPayload {
   nota: number
   comentario: string | null
 }
+export interface ReclamacaoPayload {
+  categoria: string
+  descricao: string
+}
+export interface ReclamacaoConfirmacaoApi {
+  id: number
+  mensagem: string
+}
 interface Opcoes {
   signal?: AbortSignal
   baseUrl?: string
@@ -132,6 +140,27 @@ export function salvarAvaliacao(
 ) {
   return requisitarJson<AvaliacaoApi>(
     `cardapios/${cardapioId}/avaliacoes/`,
+    {},
+    {
+      ...opcoes,
+      method: 'POST',
+      body: JSON.stringify(payload),
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Identidade': identidade,
+        ...opcoes.headers,
+      },
+    },
+  )
+}
+export function salvarReclamacao(
+  cardapioId: number,
+  payload: ReclamacaoPayload,
+  identidade: string,
+  opcoes: Opcoes = {},
+) {
+  return requisitarJson<ReclamacaoConfirmacaoApi>(
+    `cardapios/${cardapioId}/reclamacoes/`,
     {},
     {
       ...opcoes,

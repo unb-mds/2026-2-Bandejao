@@ -1,5 +1,6 @@
 import { StarRating } from '@/components/ui'
-import type { CardapioRefeicoes, Refeicao, RefeicaoData } from '@/types'
+import { temRefeicao } from '@/utils'
+import type { CardapioRefeicoes, Refeicao } from '@/types'
 
 export interface AvaliacaoFormProps {
   cardapioDia: CardapioRefeicoes
@@ -13,14 +14,6 @@ export interface AvaliacaoFormProps {
   avErro: string
   avEnviando: boolean
   submitAvaliacao: (evento: React.FormEvent) => void | Promise<void>
-}
-
-function temRefeicao(refeicao: RefeicaoData | undefined | null): boolean {
-  if (!refeicao?.id) return false
-  if (refeicao.itensApi) return refeicao.itensApi.length > 0
-  const prato = refeicao.prato_principal
-  if (prato === '—') return false
-  return !(typeof prato === 'object' && prato?.nome === '—')
 }
 
 export default function AvaliacaoForm({

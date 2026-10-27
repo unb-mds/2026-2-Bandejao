@@ -1,4 +1,4 @@
-import { useState, useRef, useMemo, useEffect } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import HomeScreen from '@/screens/HomeScreen'
 import A11yFloat from '@/components/A11yFloat'
 import AppFooter from '@/components/AppFooter'
@@ -9,13 +9,13 @@ import CardapioTab from '@/screens/CardapioTab'
 import LotacaoTab from '@/screens/LotacaoTab'
 
 import { DIAS_SEMANA } from './data'
-import { listarAvaliacoes, listarCampi, listarCardapios, salvarAvaliacao } from './api'
+import { listarAvaliacoes, listarCampi, listarCardapios, salvarAvaliacao, salvarReclamacao } from './api'
 import type { CardapioApi } from './api'
 import { adaptarHistoricoAvaliacoes } from './avaliacoes'
 import { inicioSemana, dataDaSemana, montarSemana } from './cardapios'
 import { obterIdentidadeAnonima } from './identidade'
 import type { Campus } from './types'
-import type { Avaliacao, NivelLotacao, Reclamacao, Refeicao, ReportLotacao } from './types'
+import type { Avaliacao, NivelLotacao, Refeicao, ReportLotacao } from './types'
 import { getCurrentMealInfo } from './utils'
 
 export default function App() {
@@ -133,7 +133,6 @@ export default function App() {
   const [estadoAvaliacoes, setEstadoAvaliacoes] = useState<'inativo' | 'carregando' | 'pronto' | 'erro'>('inativo')
   const [erroAvaliacoes, setErroAvaliacoes] = useState('')
   const [tentativaAvaliacoes, setTentativaAvaliacoes] = useState(0)
-  const [reclamacoes, setReclamacoes] = useState<Reclamacao[]>([])
 
   const [avGeral, setAvGeral] = useState(0)
   const [avComentario, setAvComentario] = useState('')
@@ -141,12 +140,11 @@ export default function App() {
   const [avErro, setAvErro] = useState('')
   const [avEnviando, setAvEnviando] = useState(false)
 
-  const [recNome, setRecNome] = useState('')
-  const [recCategoria, setRecCategoria] = useState('Qualidade da comida')
+  const [recCategoria, setRecCategoria] = useState('qualidade')
   const [recDescricao, setRecDescricao] = useState('')
-  const [recFoto, setRecFoto] = useState<string | null>(null)
   const [recSuccess, setRecSuccess] = useState(false)
-  const recFotoRef = useRef<HTMLInputElement>(null)
+  const [recErro, setRecErro] = useState('')
+  const [recEnviando, setRecEnviando] = useState(false)
 
   const handleCampusChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const c = campi.find(x => x.id === e.target.value)
@@ -192,18 +190,32 @@ export default function App() {
     setTimeout(() => { setAvSuccess(false); setTab('avaliar'); setTabAvaliar('historico') }, 1800)
   }
 
-  const submitReclamacao = (e: React.FormEvent) => {
+  const submitReclamacao = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!recDescricao.trim()) return
-    const nova: Reclamacao = {
-      id: Date.now(), autor: recNome || 'Anônimo', categoria: recCategoria,
-      descricao: recDescricao,
-      data: new Date().toLocaleDateString('pt-BR'),
-      horario: new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }),
-      status: 'Aberta',
+    const cardapioAtual = cardapioDia[refeicao]
+    if (!cardapioAtual.id) {
+      setRecErro('Não foi possível identificar a refeição selecionada.')
+      return
     }
-    setReclamacoes(prev => [nova, ...prev])
-    setRecNome(''); setRecDescricao(''); setRecCategoria('Qualidade da comida'); setRecFoto(null)
+
+    setRecErro('')
+    setRecEnviando(true)
+    try {
+      await salvarReclamacao(
+        cardapioAtual.id,
+        { categoria: recCategoria, descricao: recDescricao.trim() },
+        obterIdentidadeAnonima(),
+      )
+    } catch (erro) {
+      setRecErro(erro instanceof Error ? erro.message : 'Não foi possível registrar a reclamação.')
+      setRecEnviando(false)
+      return
+    }
+
+    setRecDescricao('')
+    setRecCategoria('qualidade')
+    setRecEnviando(false)
     setRecSuccess(true)
     setTimeout(() => setRecSuccess(false), 3000)
   }
@@ -304,7 +316,7 @@ export default function App() {
           </div>}
           {estadoCampi === 'pronto' && estadoCardapios === 'carregando' && <p role="status">Carregando cardápios…</p>}
           {estadoCampi === 'pronto' && estadoCardapios === 'pronto' && cardapiosApi.length === 0 && <p role="status">Nenhum cardápio publicado para esta semana. Isso não confirma que o RU esteja fechado.</p>}
-          <p className="text-xs text-muted-foreground">Reclamações e planejamento são demonstrações nesta versão: os registros ficam apenas nesta sessão e não são enviados ao RU. A tela de lotação usa exemplos, sem estimativa real.</p>
+          <p className="text-xs text-muted-foreground">Reclamações são enviadas à API, sem lista pública nem encaminhamento automático ao RU. Planejamento é uma demonstração nesta versão, só nesta sessão. A tela de lotação usa exemplos, sem estimativa real.</p>
         </section>
         {tab === 'hoje' && estadoCampi === 'pronto' && estadoCardapios === 'pronto' && campus.id && (
           <div id="panel-hoje" role="tabpanel" aria-labelledby="tab-hoje">
@@ -349,7 +361,7 @@ export default function App() {
         setTabAvaliar={setTabAvaliar}
         formProps={{ cardapioDia, refeicao, setRefeicao, avGeral, setAvGeral, avComentario, setAvComentario, avSuccess, avErro, avEnviando, submitAvaliacao: handleSubmitAvaliacao }}
         historicoProps={{ cardapioDia, refeicao, setRefeicao, avaliacoes: historicoAtual, mediaGeral, estado: estadoHistorico, erro: erroAvaliacoes, onTentarNovamente: () => { setEstadoAvaliacoes('carregando'); setErroAvaliacoes(''); setTentativaAvaliacoes(valor => valor + 1) }, onAvaliar: () => setTabAvaliar('form') }}
-        reclamacoesProps={{ recSuccess, recCategoria, setRecCategoria, recNome, setRecNome, recDescricao, setRecDescricao, recFoto, setRecFoto, recFotoRef, submitReclamacao, reclamacoes }}
+        reclamacoesProps={{ cardapioDia, refeicao, setRefeicao, recCategoria, setRecCategoria, recDescricao, setRecDescricao, recSuccess, recErro, recEnviando, submitReclamacao }}
       />
     )}
       </main>

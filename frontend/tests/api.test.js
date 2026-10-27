@@ -7,6 +7,7 @@ import {
   listarCardapios,
   requisitarJson,
   salvarAvaliacao,
+  salvarReclamacao,
 } from '../src/api.ts'
 
 test('carrega campi pela rota da API', async () => {
@@ -171,5 +172,57 @@ test('traduz erro de campo inválido retornado pela API', async () => {
       },
     ),
     { message: 'Campo “nota”: deve ser menor ou igual a 5.' },
+  )
+})
+
+test('envia reclamação com a identidade anônima no cabeçalho, sem nome nem foto', async () => {
+  let urlRecebida
+  let opcoesRecebidas
+  const identidade = '123e4567-e89b-42d3-a456-426614174000'
+
+  const resultado = await salvarReclamacao(
+    42,
+    { categoria: 'higiene', descricao: 'Mesa suja no balcão da salada.' },
+    identidade,
+    {
+      baseUrl: 'https://api.exemplo.test',
+      fetchImpl: async (url, opcoes) => {
+        urlRecebida = new URL(url)
+        opcoesRecebidas = opcoes
+        return {
+          ok: true,
+          status: 201,
+          json: async () => ({ id: 9, mensagem: 'Reclamação registrada.' }),
+        }
+      },
+    },
+  )
+
+  assert.equal(urlRecebida.pathname, '/cardapios/42/reclamacoes/')
+  assert.equal(opcoesRecebidas.method, 'POST')
+  assert.equal(opcoesRecebidas.headers['X-Identidade'], identidade)
+  assert.deepEqual(JSON.parse(opcoesRecebidas.body), {
+    categoria: 'higiene',
+    descricao: 'Mesa suja no balcão da salada.',
+  })
+  assert.equal(resultado.id, 9)
+})
+
+test('traduz o erro de janela fechada ao registrar reclamação', async () => {
+  await assert.rejects(
+    salvarReclamacao(
+      42,
+      { categoria: 'outros', descricao: 'Fora do horário.' },
+      '123e4567-e89b-42d3-a456-426614174000',
+      {
+        baseUrl: 'https://api.exemplo.test',
+        fetchImpl: async () => ({
+          ok: false,
+          status: 422,
+          json: async () => ({ detail: 'O envio só é aceito a partir do início do serviço da refeição' }),
+        }),
+      },
+    ),
+    { message: 'O envio só é aceito a partir do início do serviço da refeição' },
   )
 })
