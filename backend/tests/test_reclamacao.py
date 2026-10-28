@@ -299,12 +299,19 @@ def test_equipe_le_reclamacoes_sem_identidade_e_com_filtros(
 # --- RN07: reimportar não apaga ----------------------------------------------------------
 
 
-def test_reimportar_o_cardapio_nao_apaga_as_reclamacoes(
+def test_reimportar_duas_vezes_nao_duplica_refeicao_nem_apaga_feedback(
     client: TestClient, db_session: Session, cardapio: Cardapio, monkeypatch, equipe_headers
 ):
     monkeypatch.setattr(settings, "importacao_token", SecretStr(TOKEN_IMPORTACAO))
     cardapio_id = cardapio.id
     _reclamar(client, cardapio_id, descricao="Texto preservado.")
+    avaliacao = client.post(
+        f"/cardapios/{cardapio_id}/avaliacoes/",
+        headers={"X-Identidade": IDENTIDADE_1},
+        json={"nota": 4, "comentario": "Avaliação preservada."},
+    )
+    assert avaliacao.status_code == 201
+    avaliacao_id = avaliacao.json()["id"]
     payload = {
         "campus": "Gama",
         "refeicoes": [
@@ -323,15 +330,21 @@ def test_reimportar_o_cardapio_nao_apaga_as_reclamacoes(
         ],
     }
 
-    resposta = client.post(
-        "/cardapios/importacao",
-        json=payload,
-        headers={"Authorization": f"Bearer {TOKEN_IMPORTACAO}"},
-    )
-
-    assert resposta.status_code == 200
+    for _ in range(2):
+        resposta = client.post(
+            "/cardapios/importacao",
+            json=payload,
+            headers={"Authorization": f"Bearer {TOKEN_IMPORTACAO}"},
+        )
+        assert resposta.status_code == 200
     db_session.expire_all()
     assert db_session.query(Cardapio).filter_by(data=date(2026, 9, 15)).one().id == cardapio_id
+    assert db_session.query(Cardapio).count() == 1
     assert [i.nome for i in db_session.query(ItemCardapio).all()] == ["Lentilha"]
     preservadas = client.get("/equipe/reclamacoes/", headers=equipe_headers).json()
     assert [r["descricao"] for r in preservadas] == ["Texto preservado."]
+    notas = client.get(f"/cardapios/{cardapio_id}/avaliacoes/").json()
+    assert len(notas) == 1
+    assert notas[0]["id"] == avaliacao_id
+    assert notas[0]["nota"] == 4
+    assert notas[0]["comentario"] == "Avaliação preservada."

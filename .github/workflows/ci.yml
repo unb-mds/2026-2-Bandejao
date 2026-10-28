@@ -6,16 +6,22 @@ on:
       - "backend/**"
       - "extracao/**"
       - "frontend/**"
+      - "scripts/verificar_publicacao.py"
+      - "scripts/test_verificar_publicacao.py"
       - "docker-compose.yml"
       - ".github/workflows/ci.yml"
+      - ".github/workflows/sincronizacao.yml"
   push:
     branches: [main]
     paths:
       - "backend/**"
       - "extracao/**"
       - "frontend/**"
+      - "scripts/verificar_publicacao.py"
+      - "scripts/test_verificar_publicacao.py"
       - "docker-compose.yml"
       - ".github/workflows/ci.yml"
+      - ".github/workflows/sincronizacao.yml"
   workflow_dispatch:
 
 permissions:
@@ -44,6 +50,8 @@ jobs:
       - name: Testar extração
         working-directory: extracao
         run: python -m pytest
+      - name: Testar verificador de publicação
+        run: python -m pytest scripts/test_verificar_publicacao.py -q
 
   frontend:
     runs-on: ubuntu-latest

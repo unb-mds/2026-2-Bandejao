@@ -1,16 +1,39 @@
 # Histórico de mudanças da documentação
 
-## 27/10/2026 — Versão integrada em HTTPS
+## 27/10/2026 — Agendamento da sincronização a cada seis horas
 
-**Escopo:** implementação da issue 55 e dos critérios CA-RNF04-01 e CA-RNF04-03.
+- Workflow do GitHub Actions executa a extração/importação às 00:23, 06:23, 12:23 e 18:23 UTC, ou manualmente.
+- URL da API vem de variável e token vem de secret; configuração ausente ou URL sem HTTPS falha antes do acesso à fonte.
+- Concorrência impede ciclos sobrepostos, e cada execução preserva logs e metadados por 30 dias.
+- Pull requests executam somente os testes do sincronizador e a regressão offline dos cinco PDFs oficiais.
+- A ativação operacional depende da publicação da API e da configuração dos valores protegidos; atrasos do agendador continuam documentados.
 
-- Blueprint do Render adicionado para publicar frontend, API e PostgreSQL 16 com HTTPS.
-- Conexão do banco, origem CORS e URL da API são injetadas entre os serviços; tokens administrativos são gerados e armazenados pela plataforma.
-- O commit publicado aparece no rodapé e na rota `/version`.
-- A primeira implantação recebe uma massa de exemplo; a documentação distingue funções integradas, dados de exemplo e telas demonstrativas.
-- Migrações são aplicadas ao iniciar a API, com `/health` usado pela plataforma.
+## 27/10/2026 — Revisão de consistência após o PR 72
 
-**Verificação local:** 101 testes do backend passaram com 100% de cobertura; 24 testes do frontend, Ruff, TypeScript, Oxlint, build Vite e validação estrutural do Blueprint aprovados.
+- README, contexto, arquitetura, requisitos, desenvolvimento e protótipos passam a registrar avaliações e reclamações como fluxos integrados à API, com persistência; planejamento e lotação continuam demonstrativos.
+- Diagrama e tabela do banco incluem `Reclamacao`; interfaces documentam envio e leitura interna por token. A confirmação ao autor não equivale a uma consulta posterior implementada.
+- Corrigidas referências antigas à última importação, ao lint do frontend e à proteção da `main`. Visão e página inicial passam a seguir D05: intenções por refeição, com mínimo de 10, sem previsão de horário.
+- Sprints preservam os registros históricos e apontam para a situação consolidada. Plano de execução registra a entrega remota concluída e as pendências operacionais de sincronização e hospedagem.
+
+## 27/10/2026 — Verificação da publicação HTTPS
+
+- Issue 55: acrescentado verificador somente leitura de HTTPS, HTML, healthcheck, versão, dados públicos e CORS/preflight, com testes na CI.
+- Inspeção do PR 71 preserva os três commits da equipe; registra cuidados com branch do Blueprint, versão Python, seed por data e ausência do sincronizador nessa configuração.
+- URLs propostas responderam 404. Sem acesso Render, a publicação continua pendente; código/configuração aprovados não são evidência de ambiente ativo. Veja [roteiro e registro](verificacao-publicacao.md).
+
+## 27/10/2026 — Aviso de privacidade
+
+- Issue 53: aviso acessível na primeira visita, confirmação versionada por navegador e releitura no rodapé. Armazenamento bloqueado não impede o uso.
+- Texto explica identificador aleatório, limpeza dos dados, persistência de envios, comentários públicos e reclamações privadas; a confirmação registra leitura, sem alegar consentimento legal.
+- Vinte e sete testes, lint, TypeScript e build aprovados. Teclado, foco, Escape, persistência e layout mobile conferidos no Chrome com API simulada. Veja [texto e evidências](privacidade.md).
+
+## 27/10/2026 — Correção da sincronização dos PDFs oficiais
+
+- Issue 54: descoberta de arquivos com revisão numérica, decodificação JPEG e isolamento de falhas inesperadas por campus.
+- Importações concluídas registram fonte e instante sem divulgar tokens. O agendamento do Compose permanece em seis horas.
+- Cinco PDFs reais produziram 84 refeições e 757 itens. Duas importações em SQLite isolado preservaram IDs, cinco avaliações e cinco reclamações. Extração e backend passaram em 54 e 94 testes, respectivamente; cobertura de 100% e Ruff aprovados.
+- A operação contínua na hospedagem permanece dependente de ativação. Veja a [evidência da issue 54](evidencias/sincronizacao-issue-54.md).
+
 
 ## 24/10/2026 — Avaliações integradas à API
 

@@ -27,12 +27,16 @@ Aplicação para consulta ao cardápio semanal dos Restaurantes Universitários 
 
 ## Status
 
-🚧 Em desenvolvimento — versão integrada disponível para avaliação
+🚧 Em desenvolvimento — situação revisada em 27/10/2026
 
-- **Ambiente integrado:** [abrir Bandejão](https://bandejao-unb-g12.onrender.com). Não há login ou credenciais de demonstração.
-- Campi, cardápios, filtros, avaliações e reclamações usam a API e o PostgreSQL. O primeiro deploy contém dados de exemplo do campus Gama, identificados na [documentação de publicação](docs/publicacao.md).
-- Planejamento e lotação continuam como demonstrações identificadas na interface. O [protótipo Vercel](https://frontend-react-tan-gamma.vercel.app) é uma publicação visual separada.
-- A versão aparece no rodapé e na rota `/version` da API.
+- **Protótipo Vercel:** [Aceder ao Protótipo](https://frontend-react-tan-gamma.vercel.app)
+- O frontend local usa React 19, Vite 8, TypeScript e Tailwind v4, incorporando as telas da equipe de [marilluantunes/frontend-react](https://github.com/marilluantunes/frontend-react). Campi, cardápios e histórico de avaliações vêm da API; os filtros usam as marcações dos itens. Avaliações e reclamações são enviadas à API e persistidas no banco. Planejamento e lotação continuam como demonstrações sem persistência integrada.
+- Consulte [estrutura, execução e limites do frontend](frontend/README.md). O protótipo Vercel externo é uma publicação separada.
+
+
+## Publicação da aplicação
+
+A preparação para HTTPS está no [PR 71](https://github.com/unb-mds/2026-2-Bandejao/pull/71), da equipe. As URLs propostas retornaram 404 em 27/10/2026; a hospedagem integrada ainda depende de ativação e validação externa. Consulte [verificação da publicação](docs/verificacao-publicacao.md) para comandos, evidências e critérios pendentes da issue 55.
 
 ## Como rodar o projeto
 
@@ -119,6 +123,17 @@ npm run build
 
 ### Sincronizando o cardápio real
 
+#### GitHub Actions (ambiente publicado)
+
+O workflow `Sincronizar cardápios` executa às 00:23, 06:23, 12:23 e 18:23 UTC, além de permitir execução manual. Antes de ativá-lo na `main`, configure em **Settings → Secrets and variables → Actions**:
+
+- variável `BACKEND_URL`: URL HTTPS pública da API, sem token na URL;
+- secret `IMPORTACAO_TOKEN`: o mesmo valor configurado no backend publicado.
+
+Cada execução roda uma única sincronização, guarda por 30 dias os logs e metadados como artefato e impede sobreposição com `concurrency`. Agendamentos do GitHub Actions podem começar depois do horário previsto. Confira o [roteiro operacional](docs/desenvolvimento.md) e a [evidência da issue 54](docs/evidencias/sincronizacao-issue-54.md).
+
+#### Docker Compose (host próprio)
+
 Depois de configurar `IMPORTACAO_TOKEN`, iniciar a API e aplicar `alembic upgrade head`, ative o serviço opcional:
 
 ```bash
@@ -141,11 +156,11 @@ python -m extracao.sincronizar --backend-url http://localhost:8000
 python -m extracao.sincronizar --backend-url http://localhost:8000 --intervalo-segundos 21600
 ```
 
-O modo periódico registra horário/status por campus e continua após falhas externas; não grava um novo instante de sucesso no banco. Uma execução isolada com falhas retorna código diferente de zero. Consulte o [roteiro de operação](docs/desenvolvimento.md) e o [contrato de importação](docs/handoff_banco_e_importacao.md).
+O modo periódico registra campus, URL da fonte e instante de cada importação concluída e continua após falhas externas. A API persiste o instante do último sucesso por campus; falhas preservam esse valor. Uma execução isolada com falhas retorna código diferente de zero. Consulte o [roteiro de operação](docs/desenvolvimento.md) e o [contrato de importação](docs/handoff_banco_e_importacao.md).
 
 ### Segurança estática no CI
 
-O workflow `.github/workflows/sast.yml` analisa Python com Bandit e JavaScript/TypeScript com CodeQL em cada PR. Achados altos/críticos e falhas de análise reprovam os checks; relatórios são guardados como artefatos. O bloqueio efetivo de merge exige que os checks sejam obrigatórios na proteção da `main`. Veja nomes, comandos e política de severidade em [SAST](scripts/security/POLICY.md).
+O workflow `.github/workflows/sast.yml` analisa Python com Bandit e JavaScript/TypeScript com CodeQL em cada PR. Achados altos/críticos e falhas de análise reprovam os checks; relatórios são guardados como artefatos. O ruleset ativo da `main` exige os dois checks, sem bypass, conforme a [evidência de ativação](docs/evidencias/sast-issue-60.md). Veja nomes, comandos e política de severidade em [SAST](scripts/security/POLICY.md).
 
 ## Documentação e GitHub Pages
 

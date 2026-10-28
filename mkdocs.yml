@@ -48,7 +48,10 @@ nav:
       - Ata - Sprint 03: scrum/atas-reunioes/ata-sprint03.md
   - Desenvolvimento: desenvolvimento.md
   - Publicação da aplicação: publicacao.md
+  - Privacidade: privacidade.md
+  - Verificação da publicação: verificacao-publicacao.md
   - Evidência SAST: evidencias/sast-issue-60.md
+  - Evidência da sincronização: evidencias/sincronizacao-issue-54.md
   - Protótipos: prototipos.md
   - Estudos:
       - Visão geral: estudos/README.md

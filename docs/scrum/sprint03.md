@@ -4,6 +4,8 @@
 
 **Objetivo:** preparar as decisões e a infraestrutura necessárias às próximas sprints: SAST no CI, sincronização a cada seis horas e proteção da importação, além das bases de tempo, dieta e identidade previstas no planejamento.
 
+> **Registro histórico:** as seções abaixo acompanham o recorte da Sprint 03 e suas atualizações. Para o estado após as integrações posteriores, consulte a [situação consolidada em 27/10/2026](#situacao-consolidada-em-27102026). As pendências do planejamento original não são uma lista atual do que falta implementar.
+
 ## Fonte das decisões e escopo desta entrega
 
 A [ata de 12/10](atas-reunioes/ata-sprint03.md) e o [Documento de Requisitos v1.2](../Requisitos.md) registram as decisões D01–D08. O texto de votação é a proposta anterior à ata. Não houve nova votação nesta entrega.
@@ -77,11 +79,17 @@ A validação desta branch deve distinguir:
 - Configuração/documentação: `docker compose config --quiet`, validação do YAML, `git diff --check` e `mkdocs build --strict` aprovados.
 - Actions: SHAs de checkout, setup-python, upload-artifact e CodeQL conferidos nas fontes oficiais; execução real aprovada e artefatos inspecionados.
 
-O instante e a fonte da última importação bem-sucedida passaram a ser persistidos por campus e exibidos no cardápio na entrega da issue 50. A execução contínua no ambiente escolhido ainda precisa ser evidenciada para o aceite operacional completo de RNF02.
+O instante e a fonte da última importação bem-sucedida passaram a ser persistidos por campus e exibidos no cardápio na entrega da issue 50. A issue 54 acrescenta o agendamento do GitHub Actions a cada seis horas; URL e secret ainda precisam ser configurados no ambiente publicado e as execuções guardadas para o aceite operacional completo de RNF02.
 
 ## Pendências e próximos passos
 
 - Implementar S03-02 a S03-05 em mudanças próprias e vinculadas às decisões da ata.
 - Registrar participantes e responsáveis reais na ata e vincular as issues/PRs da sprint.
-- Ativar o serviço de sincronização no ambiente escolhido.
+- Configurar `BACKEND_URL` e `IMPORTACAO_TOKEN`, executar manualmente o workflow e acompanhar o cron.
 - Manter para as próximas sprints: reclamações, aplicação da janela nas rotas de avaliação, planejamento, estimativa, teste de carga, corpus de PDFs, checagem de disponibilidade e deploy da aplicação.
+
+## Situação consolidada em 27/10/2026
+
+As seções anteriores preservam o recorte original da branch da Sprint 03. Depois dele, foram integradas identidade anônima, utilitário temporal no backend, dieta inclusiva, janela das avaliações, reclamações, última importação e avaliações/reclamações nas telas. A apresentação semanal do frontend ainda precisa ser alinhada integralmente à D01.
+
+Nesta entrega, a issue 54 recebeu correções reproduzidas nos PDFs oficiais e regressão offline com as cinco fontes; a issue 53 recebeu aviso de privacidade acessível e releitura. A issue 55 tem preparação no PR 71 da equipe e verificação complementar, mas depende de acesso Render e publicação real. Planejamento persistido, estimativa baseada em intenções, desempenho e janela de disponibilidade continuam pendentes. Ver [sincronização](../evidencias/sincronizacao-issue-54.md), [privacidade](../privacidade.md) e [publicação](../verificacao-publicacao.md).

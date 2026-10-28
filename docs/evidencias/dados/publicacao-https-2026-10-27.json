@@ -1,0 +1,35 @@
+{
+  "instante_utc": "2026-10-27T22:21:04.837532+00:00",
+  "frontend": "https://bandejao-unb-g12.onrender.com",
+  "api": "https://bandejao-unb-g12-api.onrender.com",
+  "commit_esperado": "0142b725fb9152310693cb2106e90e713e4c5ee9",
+  "checagens": [
+    {
+      "checagem": "frontend_https",
+      "resultado": "falhou",
+      "detalhe": "HTTP 404"
+    },
+    {
+      "checagem": "api_health",
+      "resultado": "falhou",
+      "detalhe": "HTTP 404"
+    },
+    {
+      "checagem": "versao",
+      "resultado": "falhou",
+      "detalhe": "HTTP 404"
+    },
+    {
+      "checagem": "dados_publicados",
+      "resultado": "falhou",
+      "detalhe": "HTTP 404"
+    },
+    {
+      "checagem": "cors",
+      "resultado": "falhou",
+      "detalhe": "HTTP 404"
+    }
+  ],
+  "aprovado": false,
+  "limite": "Não substitui navegação externa, conferência visual da versão e persistência real."
+}

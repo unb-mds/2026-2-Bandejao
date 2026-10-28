@@ -34,7 +34,7 @@ Em Linux/macOS, use `cp .env.example .env`. Abra <http://localhost:5173>. `VITE_
 | Origem e indisponibilidade | Link para o PDF, data/hora da última importação bem-sucedida do campus, carregamento, erro com nova tentativa e mensagens sem inferir fechamento do RU. |
 | Dieta e alérgenos | Filtros locais sobre os itens retornados, usando `tipo_dieta` e os marcadores `contem_*`. O filtro ovolactovegetariano inclui também itens vegetarianos estritos; as demais classes permanecem exatas, conforme D02. |
 | Avaliações | Nota geral e comentário são enviados à API com a identidade anônima do navegador. O histórico consulta somente a refeição selecionada, mostra data/hora em Brasília e permanece após recarregar a página. |
-| Reclamações | A tela envia categoria e descrição à API com a identidade anônima. Não há lista pública nem encaminhamento automático ao RU. |
+| Reclamações | A tela envia categoria e descrição à API com identidade anônima. Há confirmação de sucesso/erro; não existe lista pública nem encaminhamento automático ao RU. |
 | Planejamento | Demonstração por campus e data, apenas nesta sessão; sem persistência ou previsão. |
 | Lotação | Exemplos visuais e relatos desta sessão; sem consulta a dados reais nem estimativa operacional. |
 
@@ -43,6 +43,12 @@ A convenção de domingo a sábado é uma escolha de apresentação da integraç
 No ambiente publicado, `VITE_APP_VERSION` recebe o commit do deploy e o rodapé mostra seus 12 primeiros caracteres. A variável não é segredo e é incorporada ao JavaScript durante o build.
 
 Os filtros usam apenas as marcações recebidas; não inferem ingredientes pelo nome. “Sem marcação” significa “não marcado na fonte”, não “livre de”. A legenda dos PDFs validada em 30/09/2026 não tem símbolo separado para frutos do mar. Confira a fonte oficial e os critérios de aceitação em [Requisitos](../docs/Requisitos.md).
+
+## Aviso de privacidade
+
+Na primeira visita, um diálogo explica o código anônimo salvo no navegador, a persistência de avaliações e reclamações na API e o cuidado com dados pessoais em textos livres. **Entendi** registra a leitura na chave versionada `bandejao.privacidade.v1`; não representa consentimento para coleta. Sem armazenamento local, a confirmação vale nesta página e o aviso pode reaparecer ao recarregar. **Escape** fecha sem registrar a leitura. O botão **Privacidade**, no rodapé, permite reler o conteúdo.
+
+Limpar os dados do site e reabrir a página faz o próximo envio gerar outro código, sem apagar registros já enviados ao backend. O texto integral e os limites estão em [Aviso de privacidade](../docs/privacidade.md). A lógica de armazenamento está em `src/privacidade.ts` e o diálogo acessível em `src/components/AvisoPrivacidade.tsx`.
 
 ## Verificação local
 

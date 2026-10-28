@@ -1,0 +1,16 @@
+{
+  "resultado": "aprovado",
+  "cenarios": [
+    "primeira visita",
+    "foco inicial e teclado no diálogo",
+    "confirmação persistida",
+    "recarregar sem repetir",
+    "releitura no rodapé",
+    "Escape e restauração de foco",
+    "mobile 390px sem overflow",
+    "limpeza do armazenamento",
+    "armazenamento bloqueado"
+  ],
+  "errosJavascript": [],
+  "api": "respostas simuladas vazias; sem envio de dados"
+}
