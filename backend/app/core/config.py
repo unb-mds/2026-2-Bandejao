@@ -26,6 +26,22 @@ class Settings(BaseSettings):
     cors_origins: list[str] = Field(
         default_factory=lambda: ["http://localhost:5173", "http://127.0.0.1:5173"]
     )
+    frontend_url: str = ""
+
+    @property
+    def origens_cors(self) -> list[str]:
+        """Combina as origens locais com a URL pública informada pelo ambiente."""
+        origem_publica = self.frontend_url.rstrip("/")
+        return [*self.cors_origins, origem_publica] if origem_publica else self.cors_origins
+
+    @property
+    def database_url_sqlalchemy(self) -> str:
+        """Seleciona explicitamente o driver psycopg para URLs fornecidas pela hospedagem."""
+        if self.database_url.startswith("postgresql://"):
+            return self.database_url.replace("postgresql://", "postgresql+psycopg://", 1)
+        if self.database_url.startswith("postgres://"):
+            return self.database_url.replace("postgres://", "postgresql+psycopg://", 1)
+        return self.database_url
 
 
 settings = Settings()

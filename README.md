@@ -19,8 +19,11 @@ Aplicação para consulta ao cardápio semanal dos Restaurantes Universitários 
 ## Links úteis
 
 - [Documentação no GitHub Pages](https://unb-mds.github.io/2026-2-Bandejao/)
+- [Aplicação integrada em HTTPS](https://bandejao-unb-g12.onrender.com)
+- [API e versão publicada](https://bandejao-unb-g12-api.onrender.com/version)
 - [Figma](https://www.figma.com/board/61OYJuLeyE3m3jwzSzfZ1W/Bandejao-2026-2?t=kVJg4rR4m3kIYsj7-0)
 - [Publicação e manutenção da GH Page](docs/github-pages.md)
+- [Publicação da aplicação no Render](docs/publicacao.md)
 
 ## Status
 
@@ -29,6 +32,7 @@ Aplicação para consulta ao cardápio semanal dos Restaurantes Universitários 
 - **Protótipo Vercel:** [Aceder ao Protótipo](https://frontend-react-tan-gamma.vercel.app)
 - O frontend local usa React 19, Vite 8, TypeScript e Tailwind v4, incorporando as telas da equipe de [marilluantunes/frontend-react](https://github.com/marilluantunes/frontend-react). Campi, cardápios e histórico de avaliações vêm da API; os filtros usam as marcações dos itens. Avaliações e reclamações são enviadas à API e persistidas no banco. Planejamento e lotação continuam como demonstrações sem persistência integrada.
 - Consulte [estrutura, execução e limites do frontend](frontend/README.md). O protótipo Vercel externo é uma publicação separada.
+
 
 ## Publicação da aplicação
 

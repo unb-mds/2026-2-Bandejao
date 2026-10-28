@@ -127,9 +127,11 @@ Não há uma entidade separada `Refeicao`: no schema atual, `Cardapio` represent
 | Ambiente local | Docker Compose com banco, API e frontend; extração periódica no perfil opcional `sincronizacao` |
 | CI e publicação | `.github/workflows/ci.yml` executa testes, lint e build quando há alterações da aplicação. `.github/workflows/sast.yml` executa Bandit e CodeQL, obrigatórios no ruleset ativo da `main`. `.github/workflows/docs.yml` valida e publica o MkDocs. A preparação de hospedagem da aplicação está no PR 71, ainda pendente de integração e ativação. |
 
+
 ## 8. Interfaces relevantes
 
 - `GET /health` — verificação básica da API.
+- `GET /version` — commit ou tag da versão publicada.
 - `GET /campi/` e `GET /campi/{id}` — consulta de campi.
 - `GET /cardapios/` e `GET /cardapios/{id}` — consulta de cardápios; a listagem aceita filtros.
 - `POST /cardapios/importacao` — contrato autenticado por Bearer token entre a extração e a API.
@@ -144,13 +146,15 @@ A documentação OpenAPI fica em `/docs` quando a API está em execução. O con
 
 O `docker-compose.yml` define PostgreSQL, backend e frontend, além do serviço opcional `sincronizador`. O README orienta criar `backend/.env`, definir `IMPORTACAO_TOKEN`, subir os serviços e aplicar as migrações. Só depois se ativa o perfil de sincronização. Os endereços locais documentados são API `http://localhost:8000`, OpenAPI `http://localhost:8000/docs` e frontend `http://localhost:5173`.
 
+Para avaliação externa, o Blueprint do Render cria um site estático global, uma API FastAPI e um PostgreSQL 16. A plataforma fornece HTTPS, injeta as URLs entre os serviços e mantém credenciais no ambiente. A API aplica as migrações ao iniciar; o primeiro deploy recebe uma massa de exemplo por gancho inicial. Consulte [Publicação da aplicação](publicacao.md).
+
 A extração também pode ser iniciada fora do Docker com `python -m extracao.sincronizar --backend-url http://localhost:8000`, desde que o mesmo `IMPORTACAO_TOKEN` esteja no ambiente do processo. O seed é apenas para desenvolvimento: ele remove o campus chamado “Gama” e dependências antes de recriar os dados de exemplo, portanto não deve ser usado em uma base com dados reais a preservar.
 
 ## 10. Restrições e decisões arquiteturais
 
 - O extrator está separado da API porque o formato de origem é externo e frágil; ele conversa com o backend pelo contrato de importação, sem compartilhar tabelas ou sessão de banco.
 - O backend atual é uma API única com persistência relacional; o projeto não tem necessidade observada de dividir serviços em microserviços.
-- O Docker Compose descreve apenas o ambiente local. O perfil periódico depende de um host continuamente ligado; execução confiável em produção ainda exige ambiente de deploy e monitoramento.
+- O Docker Compose descreve o ambiente local; o Render descreve a versão de avaliação. O perfil periódico não foi incluído no Blueprint e ainda depende de operação própria.
 - A importação exige token. Uma implantação pública também deve usar HTTPS, limitar a exposição da rota e definir rotação do segredo.
 - Para Release 2, o dado coletado deve ter granularidade compatível com o que a previsão promete. Intenções por refeição não determinam um horário.
 
