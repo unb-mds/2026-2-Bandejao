@@ -143,3 +143,51 @@ contrato prepara a integração do frontend da issue 79, sem alterar suas telas.
 
 Os testes incluem 0, 9, 10 e 11 intenções, separação de origens, cancelamento,
 marcação repetida via API, recortes de campus/data/refeição e configuração única.
+
+## Dados simulados para demonstração — RF07 / issue 78
+
+A geração exige um comando explícito, executado na pasta `backend`, com
+`DATABASE_URL` apontando para o banco escolhido e as migrações já aplicadas.
+Não é executada no startup, em seed ou automaticamente durante o deploy. O
+campus, a data e a refeição precisam corresponder a um cardápio já cadastrado;
+o comando não cria campus nem cardápios ausentes.
+
+```powershell
+.\.venv\Scripts\python.exe -m app.db.simular_intencoes criar --campus-id 1 --data 2026-11-04 --refeicao almoco --quantidade 10
+.\.venv\Scripts\python.exe -m app.db.simular_intencoes remover --campus-id 1 --data 2026-11-04 --refeicao almoco
+```
+
+Todos os seletores são obrigatórios: `--campus-id` é um inteiro positivo,
+`--data` usa o formato estrito `YYYY-MM-DD`, e `--refeicao` aceita apenas
+`cafe_da_manha`, `almoco` ou `jantar`. A operação `criar` exige `--quantidade`
+inteira de 1 a 10000. `remover` não aceita quantidade. Consulte `--help` para a
+ajuda geral e `criar --help` ou `remover --help` para os argumentos.
+
+Cada execução de `criar` acrescenta a quantidade solicitada com novas
+identidades UUID v4, `ativa=true` e `simulada=true`. A criação não é idempotente:
+duas execuções com quantidade 10 produzem 20 intenções simuladas. O lote é
+gravado em uma transação; uma falha de banco reverte o lote inteiro.
+
+`remover` exclui somente as intenções com `simulada=true` do campus, data e
+refeição selecionados, inclusive simuladas inativas. Intenções reais ativas e
+canceladas, outros recortes, campus, cardápios e feedback permanecem preservados.
+Repetir a remoção retorna quantidade zero. Uma refeição inexistente produz erro
+explicativo, sem criar dados. Falhas de banco retornam uma mensagem sanitizada,
+sem URL de conexão, credenciais ou traceback.
+
+O resumo de sucesso em JSON contém apenas a operação, os seletores, a quantidade
+criada ou removida e a identificação da simulação, sem IDs de intenções ou UUIDs:
+
+```json
+{"operacao": "criar", "campus_id": 1, "data": "2026-11-04", "refeicao": "almoco", "quantidade": 10, "dados_simulados": true}
+```
+
+O código de saída é `0` para sucesso, `1` para erro de seleção ou banco e `2`
+para argumentos inválidos. Para ver os registros na estimativa, consulte
+`/estimativas/?campus_id=1&data_inicio=2026-11-04&data_fim=2026-11-04&tipo_refeicao=almoco&dados_simulados=true`.
+A resposta mantém `dados_simulados=true`; a consulta padrão continua contando
+somente dados reais. O comando não gera check-ins, horários de chegada ou fila.
+
+A verificação local também executa a CLI em subprocessos com `DATABASE_URL`
+isolada em SQLite temporário, cobrindo criação, remoção e preservação de intenções
+reais. Isso não valida a execução em PostgreSQL real nem uma publicação.
