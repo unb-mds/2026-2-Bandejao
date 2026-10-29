@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import RedirectResponse
 
-from app.api.routes import avaliacao, campus, cardapio, health, intencao, reclamacao
+from app.api.routes import avaliacao, campus, cardapio, estimativa, health, intencao, reclamacao
 from app.core.config import settings
 
 app = FastAPI(title=settings.app_name)
@@ -27,3 +27,4 @@ app.include_router(avaliacao.router)
 app.include_router(reclamacao.router)
 app.include_router(reclamacao.router_equipe)
 app.include_router(intencao.router)
+app.include_router(estimativa.router)
