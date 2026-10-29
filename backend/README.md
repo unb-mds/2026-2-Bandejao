@@ -1,4 +1,6 @@
-# Contrato de intenções de refeição — RF06
+# Backend — planejamento de refeições e estimativa de intenções
+
+## Intenções de refeição — RF06
 
 Cada intenção pertence a um cardápio existente e a uma identidade anônima. Todas
 as rotas abaixo exigem `X-Identidade: <UUID v4>`. A identidade é persistida, mas
@@ -84,3 +86,60 @@ COLUMN` específico de PostgreSQL; os testes seguem o contorno SQLite já adotad
 no projeto antes de avançar pelas migrações seguintes. O DDL do novo modelo
 também é compilado para PostgreSQL. Essas verificações não executam migrações em
 um PostgreSQL real nem validam uma publicação em produção.
+
+## Estimativas de intenções — RF07
+
+`GET /estimativas/` é uma consulta pública, sem `X-Identidade`. Parâmetros:
+
+| Parâmetro | Regra |
+| --- | --- |
+| `campus_id` | Inteiro positivo, obrigatório; campus inexistente recebe `404` |
+| `data_inicio`, `data_fim` | Datas obrigatórias, com extremos inclusivos e início menor ou igual ao fim |
+| `tipo_refeicao` | Opcional: `cafe_da_manha`, `almoco` ou `jantar` |
+| `dados_simulados` | `false` por padrão; `true` consulta somente intenções simuladas |
+
+Exemplo: `/estimativas/?campus_id=1&data_inicio=2026-11-02&data_fim=2026-11-08`.
+Um intervalo invertido ou filtro inválido recebe `422`. A lista contém cada
+refeição cadastrada no recorte, inclusive as que não receberam intenções; não
+inventa refeições para dias sem publicação. A ordem é data, tipo de refeição e ID.
+As respostas de sucesso usam `Cache-Control: no-store`. Nenhuma resposta contém
+identidades.
+
+```json
+[
+  {
+    "cardapio_id": 1,
+    "campus_id": 1,
+    "data": "2026-11-04",
+    "tipo_refeicao": "almoco",
+    "data_inicio": "2026-11-02",
+    "data_fim": "2026-11-08",
+    "calculado_em": "2026-11-04T09:00:00-03:00",
+    "dados_simulados": false,
+    "amostra_minima": 10,
+    "status": "disponivel",
+    "mensagem": "Estimativa de intenções; não representa a fila real.",
+    "contagem": 11
+  }
+]
+```
+
+A contagem considera somente intenções ativas do campus, data e refeição. A
+unicidade da tabela evita repetir a mesma identidade/refeição. Cancelamentos
+deixam de contribuir. Reais e simuladas são sempre contadas separadamente: nove
+reais mais nove simuladas continuam insuficientes em ambas as consultas.
+
+O limiar vem de `AMOSTRA_MINIMA_ESTIMATIVA`, em `app/core/config.py`. Abaixo dele,
+inclusive sem nenhuma intenção, `status` é `dados_insuficientes`, a mensagem
+informa a insuficiência e o campo `contagem` é **omitido**, sem outro campo com o
+total oculto. Com dez ou mais, `status` é `disponivel` e a contagem é incluída.
+O intervalo consultado e o instante do cálculo acompanham cada resultado; todas
+as refeições empatadas continuam na lista. Isso representa intenções, sem
+horário de chegada, medição da fila ou tempo de espera.
+
+Para a demonstração, solicite explicitamente `dados_simulados=true` e preserve
+essa identificação na interface. Não é uma estimativa dos usuários reais. O
+contrato prepara a integração do frontend da issue 79, sem alterar suas telas.
+
+Os testes incluem 0, 9, 10 e 11 intenções, separação de origens, cancelamento,
+marcação repetida via API, recortes de campus/data/refeição e configuração única.
