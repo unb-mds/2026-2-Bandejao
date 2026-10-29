@@ -1,4 +1,6 @@
-# Contrato de intenções de refeição — RF06
+# Backend — planejamento de refeições e estimativa de intenções
+
+## Intenções de refeição — RF06
 
 Cada intenção pertence a um cardápio existente e a uma identidade anônima. Todas
 as rotas abaixo exigem `X-Identidade: <UUID v4>`. A identidade é persistida, mas
@@ -84,3 +86,108 @@ COLUMN` específico de PostgreSQL; os testes seguem o contorno SQLite já adotad
 no projeto antes de avançar pelas migrações seguintes. O DDL do novo modelo
 também é compilado para PostgreSQL. Essas verificações não executam migrações em
 um PostgreSQL real nem validam uma publicação em produção.
+
+## Estimativas de intenções — RF07
+
+`GET /estimativas/` é uma consulta pública, sem `X-Identidade`. Parâmetros:
+
+| Parâmetro | Regra |
+| --- | --- |
+| `campus_id` | Inteiro positivo, obrigatório; campus inexistente recebe `404` |
+| `data_inicio`, `data_fim` | Datas obrigatórias, com extremos inclusivos e início menor ou igual ao fim |
+| `tipo_refeicao` | Opcional: `cafe_da_manha`, `almoco` ou `jantar` |
+| `dados_simulados` | `false` por padrão; `true` consulta somente intenções simuladas |
+
+Exemplo: `/estimativas/?campus_id=1&data_inicio=2026-11-02&data_fim=2026-11-08`.
+Um intervalo invertido ou filtro inválido recebe `422`. A lista contém cada
+refeição cadastrada no recorte, inclusive as que não receberam intenções; não
+inventa refeições para dias sem publicação. A ordem é data, tipo de refeição e ID.
+As respostas de sucesso usam `Cache-Control: no-store`. Nenhuma resposta contém
+identidades.
+
+```json
+[
+  {
+    "cardapio_id": 1,
+    "campus_id": 1,
+    "data": "2026-11-04",
+    "tipo_refeicao": "almoco",
+    "data_inicio": "2026-11-02",
+    "data_fim": "2026-11-08",
+    "calculado_em": "2026-11-04T09:00:00-03:00",
+    "dados_simulados": false,
+    "amostra_minima": 10,
+    "status": "disponivel",
+    "mensagem": "Estimativa de intenções; não representa a fila real.",
+    "contagem": 11
+  }
+]
+```
+
+A contagem considera somente intenções ativas do campus, data e refeição. A
+unicidade da tabela evita repetir a mesma identidade/refeição. Cancelamentos
+deixam de contribuir. Reais e simuladas são sempre contadas separadamente: nove
+reais mais nove simuladas continuam insuficientes em ambas as consultas.
+
+O limiar vem de `AMOSTRA_MINIMA_ESTIMATIVA`, em `app/core/config.py`. Abaixo dele,
+inclusive sem nenhuma intenção, `status` é `dados_insuficientes`, a mensagem
+informa a insuficiência e o campo `contagem` é **omitido**, sem outro campo com o
+total oculto. Com dez ou mais, `status` é `disponivel` e a contagem é incluída.
+O intervalo consultado e o instante do cálculo acompanham cada resultado; todas
+as refeições empatadas continuam na lista. Isso representa intenções, sem
+horário de chegada, medição da fila ou tempo de espera.
+
+Para a demonstração, solicite explicitamente `dados_simulados=true` e preserve
+essa identificação na interface. Não é uma estimativa dos usuários reais. O
+contrato prepara a integração do frontend da issue 79, sem alterar suas telas.
+
+Os testes incluem 0, 9, 10 e 11 intenções, separação de origens, cancelamento,
+marcação repetida via API, recortes de campus/data/refeição e configuração única.
+
+## Dados simulados para demonstração — RF07 / issue 78
+
+A geração exige um comando explícito, executado na pasta `backend`, com
+`DATABASE_URL` apontando para o banco escolhido e as migrações já aplicadas.
+Não é executada no startup, em seed ou automaticamente durante o deploy. O
+campus, a data e a refeição precisam corresponder a um cardápio já cadastrado;
+o comando não cria campus nem cardápios ausentes.
+
+```powershell
+.\.venv\Scripts\python.exe -m app.db.simular_intencoes criar --campus-id 1 --data 2026-11-04 --refeicao almoco --quantidade 10
+.\.venv\Scripts\python.exe -m app.db.simular_intencoes remover --campus-id 1 --data 2026-11-04 --refeicao almoco
+```
+
+Todos os seletores são obrigatórios: `--campus-id` é um inteiro positivo,
+`--data` usa o formato estrito `YYYY-MM-DD`, e `--refeicao` aceita apenas
+`cafe_da_manha`, `almoco` ou `jantar`. A operação `criar` exige `--quantidade`
+inteira de 1 a 10000. `remover` não aceita quantidade. Consulte `--help` para a
+ajuda geral e `criar --help` ou `remover --help` para os argumentos.
+
+Cada execução de `criar` acrescenta a quantidade solicitada com novas
+identidades UUID v4, `ativa=true` e `simulada=true`. A criação não é idempotente:
+duas execuções com quantidade 10 produzem 20 intenções simuladas. O lote é
+gravado em uma transação; uma falha de banco reverte o lote inteiro.
+
+`remover` exclui somente as intenções com `simulada=true` do campus, data e
+refeição selecionados, inclusive simuladas inativas. Intenções reais ativas e
+canceladas, outros recortes, campus, cardápios e feedback permanecem preservados.
+Repetir a remoção retorna quantidade zero. Uma refeição inexistente produz erro
+explicativo, sem criar dados. Falhas de banco retornam uma mensagem sanitizada,
+sem URL de conexão, credenciais ou traceback.
+
+O resumo de sucesso em JSON contém apenas a operação, os seletores, a quantidade
+criada ou removida e a identificação da simulação, sem IDs de intenções ou UUIDs:
+
+```json
+{"operacao": "criar", "campus_id": 1, "data": "2026-11-04", "refeicao": "almoco", "quantidade": 10, "dados_simulados": true}
+```
+
+O código de saída é `0` para sucesso, `1` para erro de seleção ou banco e `2`
+para argumentos inválidos. Para ver os registros na estimativa, consulte
+`/estimativas/?campus_id=1&data_inicio=2026-11-04&data_fim=2026-11-04&tipo_refeicao=almoco&dados_simulados=true`.
+A resposta mantém `dados_simulados=true`; a consulta padrão continua contando
+somente dados reais. O comando não gera check-ins, horários de chegada ou fila.
+
+A verificação local também executa a CLI em subprocessos com `DATABASE_URL`
+isolada em SQLite temporário, cobrindo criação, remoção e preservação de intenções
+reais. Isso não valida a execução em PostgreSQL real nem uma publicação.
