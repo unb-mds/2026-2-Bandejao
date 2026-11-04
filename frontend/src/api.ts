@@ -4,6 +4,7 @@ export interface CampusApi {
   ultima_importacao_em: string | null
   ultima_fonte_pdf_url: string | null
 }
+
 export interface ItemApi {
   id: number
   categoria: string
@@ -21,6 +22,7 @@ export interface ItemApi {
   contem_carne_suina: boolean
   contem_frutos_do_mar: boolean
 }
+
 export interface CardapioApi {
   id: number
   campus_id: number
@@ -29,6 +31,7 @@ export interface CardapioApi {
   fonte_pdf_url: string | null
   itens: ItemApi[]
 }
+
 export interface AvaliacaoApi {
   id: number
   cardapio_id: number
@@ -36,18 +39,42 @@ export interface AvaliacaoApi {
   comentario: string | null
   criado_em: string
 }
+
 export interface AvaliacaoPayload {
   nota: number
   comentario: string | null
 }
+
 export interface ReclamacaoPayload {
   categoria: string
   descricao: string
 }
+
 export interface ReclamacaoConfirmacaoApi {
   id: number
   mensagem: string
 }
+
+export interface IntencaoPayload {
+  cardapio_id: number
+  refeicao: string
+  data: string
+}
+
+export interface IntencaoApi {
+  id: number
+  cardapio_id: number
+  identidade: string
+  criado_em: string
+}
+
+export interface EstimativaApi {
+  cardapio_id: number
+  total_intencoes: number
+  estimativa_fila: string
+  dados_simulados?: boolean
+}
+
 interface Opcoes {
   signal?: AbortSignal
   baseUrl?: string
@@ -56,6 +83,7 @@ interface Opcoes {
   headers?: Record<string, string>
   body?: string
 }
+
 type Parametros = Record<string, string | number | null | undefined>
 const API_BASE_URL = import.meta.env?.VITE_API_BASE_URL || 'http://localhost:8000'
 
@@ -123,15 +151,19 @@ export async function requisitarJson<T>(caminho: string, parametros: Parametros 
   }
   return resposta.json()
 }
+
 export function listarCampi(opcoes?: Opcoes) {
   return requisitarJson<CampusApi[]>('campi/', {}, opcoes)
 }
+
 export function listarCardapios(filtros: Parametros, opcoes?: Opcoes) {
   return requisitarJson<CardapioApi[]>('cardapios/', filtros, opcoes)
 }
+
 export function listarAvaliacoes(cardapioId: number, opcoes?: Opcoes) {
   return requisitarJson<AvaliacaoApi[]>(`cardapios/${cardapioId}/avaliacoes/`, {}, opcoes)
 }
+
 export function salvarAvaliacao(
   cardapioId: number,
   payload: AvaliacaoPayload,
@@ -153,6 +185,7 @@ export function salvarAvaliacao(
     },
   )
 }
+
 export function salvarReclamacao(
   cardapioId: number,
   payload: ReclamacaoPayload,
@@ -173,4 +206,30 @@ export function salvarReclamacao(
       },
     },
   )
+}
+
+export function salvarIntencao(
+  cardapioId: number,
+  payload: IntencaoPayload,
+  identidade: string,
+  opcoes: Opcoes = {},
+) {
+  return requisitarJson<IntencaoApi>(
+    `cardapios/${cardapioId}/intencoes/`,
+    {},
+    {
+      ...opcoes,
+      method: 'POST',
+      body: JSON.stringify(payload),
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Identidade': identidade,
+        ...opcoes.headers,
+      },
+    },
+  )
+}
+
+export function listarEstimativas(filtros: Parametros, opcoes?: Opcoes) {
+  return requisitarJson<EstimativaApi[]>('estimativas/', filtros, opcoes)
 }
