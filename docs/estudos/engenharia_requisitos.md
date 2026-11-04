@@ -23,7 +23,7 @@ Descrevem **como** o sistema deve se comportar — qualidades e restrições que
 - **Requisitos de sistema**: versão técnica e precisa desse mesmo requisito, escrita pela equipe de desenvolvimento, já pensando em como implementar.
 
 ### Regras de negócio
-Restrições ou políticas que não são requisitos funcionais em si, mas condicionam o comportamento do sistema (ex: "uma avaliação de refeição só pode ser feita por quem registrou check-in naquele restaurante no dia").
+Restrições ou políticas que não são requisitos funcionais em si, mas condicionam o comportamento do sistema (ex: "a nota de uma avaliação deve ser um número inteiro de 1 a 5").
 
 ## Fases do processo
 
@@ -65,7 +65,7 @@ Descrição textual mais detalhada de como um **ator** (usuário ou outro sistem
 - **Fluxo normal**: passo a passo do cenário de sucesso ("cenário feliz").
 - **Extensões**: fluxos alternativos, erros e exceções.
 
-> Exemplo: caso de uso "Avaliar refeição" — fluxo normal (usuário seleciona o prato do dia, dá uma nota, opcionalmente comenta, sistema salva a avaliação) e extensões (usuário tenta avaliar sem ter feito check-in → sistema bloqueia e informa o motivo).
+> Exemplo: caso de uso "Avaliar refeição" — fluxo normal (usuário seleciona uma refeição, dá uma nota, opcionalmente comenta, sistema salva a avaliação) e extensões (usuário envia nota fora de 1 a 5 → sistema bloqueia e informa o motivo).
 
 Boas práticas: manter o fluxo normal enxuto (poucos passos), evitar linguagem técnica e usar vocabulário consistente com o resto da documentação.
 
@@ -83,7 +83,7 @@ Um requisito bem escrito deve ser:
 
 Nem todo requisito entra na primeira versão do sistema. É preciso priorizar considerando valor para o usuário, prazo e esforço de implementação — é isso que define o que entra em cada release.
 
-No caso do Bandejão, essa lógica já aparece no próprio escopo do projeto: a Release 1 concentra o essencial (cardápio, filtros, avaliação), deixando a previsão de horário de pico (que depende de volume de dados histórico) para a Release 2.
+No Bandejão, o núcleo reúne cardápio, filtros, avaliações e reclamações; a evolução contempla planejamento e estimativa de movimento. Essa prioridade do produto não deve ser confundida com as releases acadêmicas: a primeira avalia definição e organização, e a segunda, implementação. Consulte os critérios e decisões pendentes no [Documento de Requisitos](../Requisitos.md).
 
 ## Validação de requisitos
 
@@ -97,7 +97,7 @@ Manter a correlação entre requisitos e as partes do código/funcionalidades qu
 
 - A camada de **extração de dados** existe justamente por causa de um requisito não funcional implícito: o sistema depende de uma fonte externa (PDF do RU) que muda de formato e de URL sem aviso, então essa parte precisa ser isolada e resiliente a mudanças.
 - Os filtros alimentares (vegetariano, alergias a leite/ovo/glúten/etc.) são requisitos funcionais que só são viáveis porque a fonte de dados já identifica essas informações no cardápio — é um bom exemplo de como um requisito depende diretamente da qualidade dos dados disponíveis.
-- A divisão do escopo em Release 1 e Release 2 é, na prática, uma decisão de priorização de requisitos.
+- A divisão entre núcleo e evolução orienta a priorização; as releases acadêmicas definem o foco da avaliação da disciplina.
 
 ## Dúvidas em aberto
 

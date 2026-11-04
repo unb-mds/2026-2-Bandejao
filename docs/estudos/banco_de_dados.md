@@ -82,7 +82,7 @@ Scripts versionados que alteram a estrutura do banco de dados (criar tabela, adi
 ## Relação com o projeto Bandejão
 
 - O modelo de dados do Bandejão tem relações claras entre as entidades (Campus, Cardápio, Prato, RestriçãoAlimentar, Usuário, Avaliação, CheckIn), o que favorece um banco relacional, como já indicado no estudo de [arquitetura de software](arquitetura_software.md).
-- Os filtros alimentares (vegetariano, sem glúten, sem lactose etc., citados no [CLAUDE.md](../../CLAUDE.md)) dependem diretamente de uma boa modelagem: tratar cada restrição como uma entidade própria (em vez de texto solto no prato) é o que viabiliza a consulta "me mostre só os pratos sem glúten" com uma query simples.
+- Os filtros alimentares (vegetariano, sem glúten, sem lactose etc., citados no [contexto.md](https://github.com/unb-mds/2026-2-Bandejao/blob/main/contexto.md)) dependem diretamente de uma boa modelagem: tratar cada restrição como uma entidade própria (em vez de texto solto no prato) é o que viabiliza a consulta "me mostre só os pratos sem glúten" com uma query simples.
 - A Release 2 (previsão de horário de pico) depende de uma tabela de `CheckIn` acumulando histórico — é um bom exemplo de decisão de modelagem que vale antecipar desde a Release 1 (criar a tabela e já registrar os check-ins), mesmo que a funcionalidade de previsão em si só seja construída depois.
 - Como o cardápio é reextraído periodicamente do PDF do RU, faz sentido pensar desde já em como evitar duplicar cardápios/pratos já existentes no banco (ex: chave única por campus + data + prato) ao rodar a extração toda semana.
 

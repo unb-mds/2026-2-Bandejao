@@ -32,6 +32,15 @@ def test_descobrir_pdfs_seleciona_semana_atual_por_campus():
     assert encontrados["Ceilândia"].fim == date(2026, 9, 27)
 
 
+def test_descobrir_pdfs_aceita_hifen_final_no_arquivo_de_planaltina():
+    url = "/wp-content/uploads/2026/09/Planaltina-Semana-02-28-09-a-04-10-.pdf"
+
+    encontrados = descobrir_pdfs(f'<a href="{url}">Planaltina</a>', hoje=date(2026, 9, 30))
+
+    assert encontrados["Planaltina"].inicio == date(2026, 9, 28)
+    assert encontrados["Planaltina"].fim == date(2026, 10, 4)
+
+
 def test_baixar_pdf_valida_conteudo_recebido():
     class Resposta:
         content = b"%PDF-arquivo-de-teste"
@@ -186,14 +195,15 @@ def test_envia_resultado_no_contrato_de_importacao():
             return {"campus_id": 1, "itens_processados": 1}
 
     class Sessao:
-        def post(self, url, json, timeout):
+        def post(self, url, json, timeout, headers):
             assert url == "http://api.test/cardapios/importacao"
             assert timeout == 30
+            assert headers == {"Authorization": "Bearer segredo-teste"}
             assert json["refeicoes"][0]["data"] == "2026-09-21"
             assert json["refeicoes"][0]["itens"][0]["alergenos"] == ["leite", "ovo"]
             return Resposta()
 
-    assert enviar_ao_backend(resultado, "http://api.test/", Sessao()) == {
+    assert enviar_ao_backend(resultado, "http://api.test/", Sessao(), token="segredo-teste") == {
         "campus_id": 1,
         "itens_processados": 1,
     }

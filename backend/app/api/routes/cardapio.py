@@ -1,9 +1,11 @@
-from datetime import date
+from datetime import UTC, date, datetime
 
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session, selectinload
 
 from app.db.session import get_db
+from app.core.security import exigir_token_importacao
+from app.core.tempo import agora
 from app.models import Campus, Cardapio, ItemCardapio
 from app.models.enums import TipoDieta, TipoRefeicao
 from app.schemas.cardapio import (
@@ -22,7 +24,11 @@ def listar_cardapios(
     data_fim: date | None = Query(default=None),
     tipo_refeicao: TipoRefeicao | None = Query(default=None),
     tipo_dieta: TipoDieta | None = Query(
-        default=None, description="Restringe os itens retornados a esta dieta"
+        default=None,
+        description=(
+            "Restringe os itens à dieta. Ovolactovegetariano inclui vegetariano estrito; "
+            "as demais opções são exatas."
+        ),
     ),
     excluir_alergenos: list[str] | None = Query(
         default=None,
@@ -54,7 +60,10 @@ def listar_cardapios(
         for cardapio in resultado:
             itens = cardapio.itens
             if tipo_dieta is not None:
-                itens = [i for i in itens if i.tipo_dieta == tipo_dieta]
+                dietas_compativeis = {tipo_dieta}
+                if tipo_dieta == TipoDieta.OVOLACTOVEGETARIANO:
+                    dietas_compativeis.add(TipoDieta.VEGETARIANO_ESTRITO)
+                itens = [i for i in itens if i.tipo_dieta in dietas_compativeis]
             for alergeno in excluir_alergenos or []:
                 itens = [i for i in itens if not getattr(i, f"contem_{alergeno}")]
             cardapio.itens = itens
@@ -62,9 +71,16 @@ def listar_cardapios(
     return resultado
 
 
-@router.post("/importacao", response_model=ImportacaoResultado, tags=["importacao"])
+@router.post(
+    "/importacao",
+    response_model=ImportacaoResultado,
+    tags=["importacao"],
+    dependencies=[Depends(exigir_token_importacao)],
+)
 def importar_cardapio(
-    importacao: CardapioImportacao, db: Session = Depends(get_db)
+    importacao: CardapioImportacao,
+    db: Session = Depends(get_db),
+    instante: datetime = Depends(agora),
 ) -> ImportacaoResultado:
     """Insere a saída da extração e permite reprocessar a mesma semana sem duplicar dados."""
     campus = db.query(Campus).filter(Campus.nome == importacao.campus).first()
@@ -118,11 +134,18 @@ def importar_cardapio(
             )
             itens_processados += 1
 
+    # O horário e a fonte formam um único registro de sucesso e só são confirmados
+    # junto com os cardápios na mesma transação.
+    campus.ultima_importacao_em = instante.astimezone(UTC)
+    campus.ultima_fonte_pdf_url = importacao.fonte_pdf_url
     db.commit()
+    db.refresh(campus)
     return ImportacaoResultado(
         campus_id=campus.id,
         cardapios_processados=len(importacao.refeicoes),
         itens_processados=itens_processados,
+        ultima_importacao_em=campus.ultima_importacao_em,
+        fonte_pdf_url=campus.ultima_fonte_pdf_url,
     )
 
 

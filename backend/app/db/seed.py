@@ -14,6 +14,7 @@ sem duplicar dados.
 """
 
 from datetime import date
+from uuid import UUID
 
 from sqlalchemy.orm import Session
 
@@ -29,6 +30,7 @@ from app.models import (
 )
 
 SEED_CAMPUS_NOME = "Gama"
+SEED_IDENTIDADE = UUID("00000000-0000-4000-8000-000000000001")
 
 
 def _limpar_seed_anterior(db: Session) -> None:
@@ -105,6 +107,7 @@ def _criar_itens(db: Session, cardapio: Cardapio) -> None:
 def _criar_avaliacao(db: Session, cardapio: Cardapio) -> None:
     avaliacao = Avaliacao(
         cardapio_id=cardapio.id,
+        identidade=SEED_IDENTIDADE,
         nota=4,
         comentario="Comida boa, salada podia ter mais opções.",
     )

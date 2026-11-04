@@ -1,0 +1,118 @@
+name: Sincronizar cardápios
+
+on:
+  schedule:
+    # GitHub Actions usa UTC. O minuto 23 evita o pico comum no início da hora.
+    - cron: "23 */6 * * *"
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - ".github/workflows/sincronizacao.yml"
+      - "extracao/**"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: sincronizacao-cardapios
+  cancel-in-progress: false
+
+jobs:
+  validar:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: extracao/requirements.txt
+      - name: Instalar dependências
+        run: python -m pip install -r extracao/requirements.txt
+      - name: Validar sincronização e regressão dos PDFs reais
+        working-directory: extracao
+        run: python -m pytest tests/test_sincronizar.py tests/test_regressoes_publicacao.py
+
+  sincronizar:
+    if: github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      BACKEND_URL: ${{ vars.BACKEND_URL }}
+      IMPORTACAO_TOKEN: ${{ secrets.IMPORTACAO_TOKEN }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: extracao/requirements.txt
+      - name: Instalar dependências
+        run: python -m pip install -r extracao/requirements.txt
+      - name: Iniciar registro da execução
+        shell: bash
+        run: |
+          mkdir -p sync-artifacts
+          {
+            echo "inicio_utc=$(date -u +'%Y-%m-%dT%H:%M:%SZ')"
+            echo "workflow_run_id=$GITHUB_RUN_ID"
+            echo "commit=$GITHUB_SHA"
+          } > sync-artifacts/metadados.txt
+      - name: Validar configuração protegida
+        shell: bash
+        run: |
+          if [[ -z "$BACKEND_URL" || "$BACKEND_URL" != https://* ]]; then
+            echo "::error::Configure a variável BACKEND_URL com a URL HTTPS da API."
+            exit 1
+          fi
+          if [[ -z "$IMPORTACAO_TOKEN" ]]; then
+            echo "::error::Configure o secret IMPORTACAO_TOKEN."
+            exit 1
+          fi
+          echo "::add-mask::$IMPORTACAO_TOKEN"
+      - name: Extrair e importar os cinco campi
+        working-directory: extracao
+        shell: bash
+        run: |
+          set +e
+          python -m extracao.sincronizar \
+            --backend-url "$BACKEND_URL" \
+            --intervalo-segundos 0 2>&1 | tee ../sync-artifacts/sincronizacao.log
+          status=${PIPESTATUS[0]}
+          set -e
+
+          {
+            echo "fim_utc=$(date -u +'%Y-%m-%dT%H:%M:%SZ')"
+            echo "exit_code=$status"
+          } >> ../sync-artifacts/metadados.txt
+          exit "$status"
+      - name: Finalizar registro da execução
+        if: always()
+        shell: bash
+        run: |
+          echo "job_status=${{ job.status }}" >> sync-artifacts/metadados.txt
+      - name: Guardar registro da execução
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: sincronizacao-${{ github.run_id }}-${{ github.run_attempt }}
+          path: sync-artifacts/
+          if-no-files-found: error
+          retention-days: 30
+      - name: Resumir operação
+        if: always()
+        shell: bash
+        run: |
+          {
+            echo "### Sincronização dos cardápios"
+            echo "- execução: $GITHUB_RUN_ID (tentativa $GITHUB_RUN_ATTEMPT)"
+            echo "- commit: \`$GITHUB_SHA\`"
+            echo "- agendamento: a cada 6 horas; atrasos do GitHub Actions são possíveis"
+            echo "- detalhes por campus: artefato da execução"
+          } >> "$GITHUB_STEP_SUMMARY"

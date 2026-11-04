@@ -1,7 +1,8 @@
 from datetime import datetime
 from typing import TYPE_CHECKING
+from uuid import UUID
 
-from sqlalchemy import CheckConstraint, DateTime, ForeignKey, Integer, String, func
+from sqlalchemy import CheckConstraint, DateTime, ForeignKey, Integer, String, UniqueConstraint, Uuid, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.db.session import Base
@@ -15,12 +16,18 @@ class Avaliacao(Base):
     __tablename__ = "avaliacao"
     __table_args__ = (
         CheckConstraint("nota >= 1 AND nota <= 5", name="ck_avaliacao_nota_range"),
+        UniqueConstraint(
+            "cardapio_id",
+            "identidade",
+            name="uq_avaliacao_cardapio_identidade",
+        ),
     )
 
     id: Mapped[int] = mapped_column(primary_key=True)
     cardapio_id: Mapped[int] = mapped_column(
         ForeignKey("cardapio.id", ondelete="CASCADE"), nullable=False
     )
+    identidade: Mapped[UUID] = mapped_column(Uuid(as_uuid=True), nullable=False)
     nota: Mapped[int] = mapped_column(Integer, nullable=False)
     comentario: Mapped[str | None] = mapped_column(String(500), nullable=True)
     criado_em: Mapped[datetime] = mapped_column(

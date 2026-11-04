@@ -13,8 +13,8 @@
 | Engenharia de Requisitos | `docs/estudos/engenharia_requisitos.md` | concluído |
 | Backend / API | `docs/estudos/backend.md` | concluído |
 | Banco de dados | `docs/estudos/banco_de_dados.md` |  concluído |
-| Frontend | `docs/estudos/frontend.md` | 🔲 pendente |
-| IA aplicada ao desenvolvimento | `docs/estudos/ia_desenvolvimento.md` | 🔲 pendente |
+| Frontend | `docs/estudos/frontend.md` | concluído |
+| IA aplicada ao desenvolvimento | `docs/estudos/ia-desenvolvimento.md` | ✅ concluído |
 
 ## O que foi feito
 
@@ -25,5 +25,4 @@
 
 ## Pendências / próximos passos
 
-- Concluir os temas ainda pendentes (Backend, Frontend, IA aplicada ao desenvolvimento)
 - Temas concluídos servem de base para as decisões formalizadas na Sprint 01 (requisitos, arquitetura, stack técnica)

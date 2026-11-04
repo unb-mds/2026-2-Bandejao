@@ -66,6 +66,42 @@ def test_alergenos_por_celula_reconhece_icone_e_ignora_imagens_fora_da_tabela(mo
     assert main._alergenos_por_celula(Pagina(), Tabela()) == {(0, 0): frozenset({"cogumelo"})}
 
 
+def test_alergenos_por_celula_reconhece_legenda_atual_de_dez_icones(monkeypatch):
+    class Linha:
+        cells = [(0, 0, 10, 10)]
+
+    class Tabela:
+        rows = [Linha()]
+
+    class Pagina:
+        height = 100
+
+    referencias = [
+        {"top": 90, "width": 30, "x0": indice, "stream": indice}
+        for indice in range(len(main.ALERGENOS_LEGENDA_ATUAL))
+    ]
+    icone_leite = {
+        "top": 1,
+        "width": 10,
+        "x0": 1,
+        "x1": 9,
+        "bottom": 9,
+        "stream": 1,
+    }
+    Pagina.images = referencias + [icone_leite]
+    monkeypatch.setattr(main, "_imagem_do_stream", lambda stream: [stream])
+    monkeypatch.setattr(main, "_assinatura_visual", lambda imagem: imagem)
+    monkeypatch.setattr(
+        main,
+        "_distancia_assinaturas",
+        lambda esquerda, direita: 0 if esquerda == direita else 30,
+    )
+
+    assert main._alergenos_por_celula(Pagina(), Tabela()) == {
+        (0, 0): frozenset({"leite"})
+    }
+
+
 def test_alergenos_por_celula_retorna_vazio_sem_uma_legenda_completa():
     pagina = type("Pagina", (), {"height": 100, "images": []})()
 
@@ -183,7 +219,7 @@ def test_baixar_e_enviar_usam_sessao_padrao_e_run_isola_falha(monkeypatch):
     resultado = ResultadoExtracao("Gama", "https://exemplo.test/gama.pdf", [])
     monkeypatch.setattr(main.requests, "Session", Sessao)
     assert main.baixar_pdf("https://exemplo.test/gama.pdf") == b"%PDF-teste"
-    assert main.enviar_ao_backend(resultado) == {"itens_processados": 0}
+    assert main.enviar_ao_backend(resultado, token="segredo-teste") == {"itens_processados": 0}
 
     pdf = PdfCardapio("Gama", "https://exemplo.test/gama.pdf", date.today(), date.today())
     monkeypatch.setattr(main.requests, "get", lambda *_args, **_kwargs: RespostaPdf())
@@ -224,10 +260,11 @@ def test_main_exibe_resumo_de_resultado(monkeypatch, capsys):
 
 
 def test_comando_sincronizar_cobre_execucao_unica_negativa_e_continua(monkeypatch, capsys):
-    monkeypatch.setattr(sincronizar, "sincronizar", lambda _: {"Gama": "importado (1 itens)"})
+    monkeypatch.setenv("IMPORTACAO_TOKEN", "segredo-teste")
+    monkeypatch.setattr(sincronizar, "sincronizar", lambda *_: {"Gama": "importado (1 itens)"})
     monkeypatch.setattr(sys, "argv", ["sincronizar"])
     sincronizar.main()
-    assert "Gama: importado" in capsys.readouterr().out
+    assert "campus=Gama importado" in capsys.readouterr().out
 
     monkeypatch.setattr(sys, "argv", ["sincronizar", "--intervalo-segundos", "-1"])
     with pytest.raises(SystemExit):
@@ -238,13 +275,30 @@ def test_comando_sincronizar_cobre_execucao_unica_negativa_e_continua(monkeypatc
     with pytest.raises(KeyboardInterrupt):
         sincronizar.main()
 
+    monkeypatch.delenv("IMPORTACAO_TOKEN")
+    monkeypatch.setattr(sys, "argv", ["sincronizar"])
+    with pytest.raises(SystemExit) as sem_token:
+        sincronizar.main()
+    assert sem_token.value.code == 2
+
+    monkeypatch.setenv("IMPORTACAO_TOKEN", "segredo-teste")
+    monkeypatch.setattr(
+        sincronizar,
+        "sincronizar",
+        lambda *_: {"Gama": "falha na importação (ConnectionError)"},
+    )
+    with pytest.raises(SystemExit) as falha_importacao:
+        sincronizar.main()
+    assert falha_importacao.value.code == 1
+
 
 def test_modulo_sincronizar_executa_comando(monkeypatch, capsys):
+    monkeypatch.setenv("IMPORTACAO_TOKEN", "segredo-teste")
     resultado = ResultadoExtracao("Gama", "https://exemplo.test/gama.pdf", [])
     monkeypatch.setattr(main, "run", lambda: {"Gama": resultado})
-    monkeypatch.setattr(main, "enviar_ao_backend", lambda *_: {"itens_processados": 0})
+    monkeypatch.setattr(main, "enviar_ao_backend", lambda *_, **__: {"itens_processados": 0})
     monkeypatch.setattr(sys, "argv", ["sincronizar"])
 
     runpy.run_module("extracao.sincronizar", run_name="__main__")
 
-    assert "Gama: importado (0 itens)" in capsys.readouterr().out
+    assert "campus=Gama importado (0 itens)" in capsys.readouterr().out

@@ -1,0 +1,95 @@
+# Sprint 03 — Decisões e Base de Entrega
+
+**Período:** 14/10/2026 a 21/10/2026
+
+**Objetivo:** preparar as decisões e a infraestrutura necessárias às próximas sprints: SAST no CI, sincronização a cada seis horas e proteção da importação, além das bases de tempo, dieta e identidade previstas no planejamento.
+
+> **Registro histórico:** as seções abaixo acompanham o recorte da Sprint 03 e suas atualizações. Para o estado após as integrações posteriores, consulte a [situação consolidada em 27/10/2026](#situacao-consolidada-em-27102026). As pendências do planejamento original não são uma lista atual do que falta implementar.
+
+## Fonte das decisões e escopo desta entrega
+
+A [ata de 12/10](atas-reunioes/ata-sprint03.md) e o [Documento de Requisitos v1.2](../Requisitos.md) registram as decisões D01–D08. O texto de votação é a proposta anterior à ata. Não houve nova votação nesta entrega.
+
+| Ponto | Proposta para votação | Decisão registrada na ata |
+|---|---|---|
+| D02 — Dieta | Correspondência exata | Ovolactovegetariano também inclui vegetariano estrito. |
+| D03 — Horários | Cadastro por campus/refeição e campo de serviço suspenso | Tabela por refeição com início às 07:00, 11:00 e 17:00, conforme a fonte oficial; suspensão fora do escopo. |
+| D04 — Identidade | Login com e-mail e senha | Sem login; código anônimo por navegador. |
+| D05 — Movimento | Mínimo de 20 intenções | Mínimo de 10; estimativa por refeição, sem horário de chegada. |
+
+Esta branch, `feature/sprint03-base-entrega`, concentra **SAST, sincronização e documentação**, conforme o escopo solicitado. Inclui D08 porque a rotina de sincronização precisa autenticar a importação. O agendamento de seis horas, anteriormente listado para uma sprint posterior, entra nesta entrega. Tempo, dieta, identidade e funcionalidades das próximas sprints continuam pendentes.
+
+A infraestrutura pode ser desenvolvida sem concluir os RFs futuros. Sua operação depende de API e banco disponíveis, migrações aplicadas, token configurado e uma máquina mantendo o Docker em execução. Os checks SAST obrigatórios foram ativados no GitHub em 15/10/2026.
+
+## Decisões e entregas
+
+| Decisão | Entrega planejada | Estado nesta branch |
+|---|---|---|
+| D01 | Utilitário de semana segunda–domingo e fuso de Brasília | Fora do recorte desta branch; permanece no planejamento da sprint. |
+| D02 | Filtro inclusivo na API e aviso sobre marcações da fonte | Implementada na entrega S03-03, com testes das quatro dietas e aviso na interface. |
+| D03 | Configuração de horários e função de elegibilidade | Implementada na entrega S03-04, com horários da fonte oficial e limites no fuso de Brasília. |
+| D04 | Identidade anônima no backend/frontend e CORS para envio | Fora do recorte desta branch. |
+| D05 | Constante de amostra mínima de 10 | Implementada na entrega S03-04; estimativa e planejamento ficam para depois. |
+| D06 | Reclamações privadas, quatro categorias, sem foto/nome | Implementação nas próximas sprints. |
+| D07b | Sincronização a cada seis horas | Serviço opcional no Docker Compose; iniciar após configuração e migrações. |
+| D07d | Bandit para Python e CodeQL para JS/TS | Workflow confirmado em PR real, artefatos inspecionados e checks obrigatórios ativados na `main`. |
+| D08 | Token na importação e na sincronização | Importação autenticada e rotas HTTP de check-in legado retiradas; modelos e dados legados preservados. |
+
+## Itens de trabalho
+
+Os números abaixo são identificadores desta lista, não números de issues do GitHub. Vincular os links reais quando as issues forem criadas; nenhum responsável ou número externo foi presumido.
+
+| Item | Trabalho | Decisão | Área |
+|---|---|---|---|
+| S03-01 | Incorporar os requisitos v1.2 e registrar decisões | D01–D08 | Documentação |
+| S03-02 | Utilitário de tempo e testes de mudança de mês/ano | D01 | Backend |
+| S03-03 | Filtro inclusivo e aviso sobre informação alimentar | D02 | Backend + frontend |
+| S03-04 | Horários, elegibilidade e constante de amostra mínima | D03, D05 | Backend |
+| S03-05 | Identidade anônima, migração e CORS | D04 | Backend + frontend |
+| S03-06 | Token na importação e retirada de rotas legadas de check-in | D08 | Backend + dados |
+| S03-07 | SAST, relatórios e bloqueio de achados altos/críticos | D07d | CI |
+| S03-08 | Serviço de sincronização a cada seis horas | D07b | Dados + infraestrutura |
+| S03-09 | Roteiro de operação, evidências e atualização da sprint | — | Documentação |
+
+## Critérios de aceitação deste recorte
+
+1. **Importação:** ausência de token ou token inválido recebe 401/403, sem gravação; configuração sem segredo recusa a operação. Token correto permite importar/reimportar, preservando as garantias do contrato. O segredo vem do ambiente, não do código, argumentos da linha de comando ou logs.
+2. **Rotas legadas:** `/campi/{id}/checkins/` deixa de aceitar chamadas HTTP; as tabelas existentes não são apagadas. As consultas públicas de campus/cardápio continuam funcionando.
+3. **Agendamento:** ao iniciar o serviço configurado, ocorre uma execução imediata; os próximos ciclos usam intervalo de 21.600 segundos. Falha da fonte ou de um campus é registrada sem divulgar credenciais e não encerra o agendamento. Não iniciar uma segunda execução enquanto a anterior está ativa.
+4. **SAST:** cada PR executa Bandit em Python e CodeQL em JavaScript/TypeScript. Achados altos/críticos, falha do scanner ou relatório inválido fazem o check falhar; resultados baixos/médios permanecem no relatório sem bloquear por severidade. Bandit possui LOW/MEDIUM/HIGH, sem categoria CRITICAL; HIGH é bloqueante. CodeQL usa a severidade de segurança do relatório.
+5. **Evidências:** guardar relatórios dos scanners com versão/commit e resultados dos testes. Testes com relógio e rede simulados validam o agendamento sem aguardar seis horas nem alterar dados reais do RU.
+6. **GitHub:** tornar os checks SAST obrigatórios na proteção/ruleset da `main`. Um workflow com falha, sozinho, não garante bloqueio de merge. A configuração remota é uma etapa de ativação a verificar pelo administrador.
+7. **Documentação:** roteiro de início/parada e configuração de segredo disponível; links locais e build estrito do MkDocs válidos. Disponibilizar código nesta branch não comprova serviço ativo ou publicação no site.
+
+## Ativação e evidências
+
+O [roteiro de desenvolvimento](../desenvolvimento.md) descreve como configurar o token, aplicar migrações e iniciar/parar a sincronização. O [contrato de importação](../handoff_banco_e_importacao.md) documenta a autenticação. A política e os comandos de SAST ficam em `scripts/security/POLICY.md` no repositório.
+
+A validação desta branch deve distinguir:
+
+- **Código/testes locais:** autenticação, isolamento por campus, repetição do agendamento, tratamento dos relatórios de segurança e configuração do Compose.
+- **Execução no GitHub:** CodeQL e Bandit aprovados, relatórios publicados e ruleset ativo, conforme a [evidência da issue 60](../evidencias/sast-issue-60.md).
+- **Operação:** execução real com banco migrado e fonte disponível, em máquina continuamente ligada. Se o host estiver suspenso ou desligado, a rotina não executa; ao voltar, começa um novo ciclo.
+
+### Evidências locais desta branch
+
+- Backend: 22 testes aprovados, 100% de cobertura e Ruff aprovado.
+- Extração/sincronização: 41 testes aprovados, 100% de cobertura e Ruff aprovado.
+- Gate SAST: 12 testes aprovados; Bandit analisou os arquivos Python rastreados sem achados altos.
+- Configuração/documentação: `docker compose config --quiet`, validação do YAML, `git diff --check` e `mkdocs build --strict` aprovados.
+- Actions: SHAs de checkout, setup-python, upload-artifact e CodeQL conferidos nas fontes oficiais; execução real aprovada e artefatos inspecionados.
+
+O instante e a fonte da última importação bem-sucedida passaram a ser persistidos por campus e exibidos no cardápio na entrega da issue 50. A issue 54 acrescenta o agendamento do GitHub Actions a cada seis horas; URL e secret ainda precisam ser configurados no ambiente publicado e as execuções guardadas para o aceite operacional completo de RNF02.
+
+## Pendências e próximos passos
+
+- Implementar S03-02 a S03-05 em mudanças próprias e vinculadas às decisões da ata.
+- Registrar participantes e responsáveis reais na ata e vincular as issues/PRs da sprint.
+- Configurar `BACKEND_URL` e `IMPORTACAO_TOKEN`, executar manualmente o workflow e acompanhar o cron.
+- Manter para as próximas sprints: reclamações, aplicação da janela nas rotas de avaliação, planejamento, estimativa, teste de carga, corpus de PDFs, checagem de disponibilidade e deploy da aplicação.
+
+## Situação consolidada em 27/10/2026
+
+As seções anteriores preservam o recorte original da branch da Sprint 03. Depois dele, foram integradas identidade anônima, utilitário temporal no backend, dieta inclusiva, janela das avaliações, reclamações, última importação e avaliações/reclamações nas telas. A apresentação semanal do frontend ainda precisa ser alinhada integralmente à D01.
+
+Nesta entrega, a issue 54 recebeu correções reproduzidas nos PDFs oficiais e regressão offline com as cinco fontes; a issue 53 recebeu aviso de privacidade acessível e releitura. A issue 55 tem preparação no PR 71 da equipe e verificação complementar, mas depende de acesso Render e publicação real. Planejamento persistido, estimativa baseada em intenções, desempenho e janela de disponibilidade continuam pendentes. Ver [sincronização](../evidencias/sincronizacao-issue-54.md), [privacidade](../privacidade.md) e [publicação](../verificacao-publicacao.md).

@@ -1,0 +1,69 @@
+site_name: Bandejão — RU UnB
+site_description: Cardápio semanal, filtros alimentares e avaliação das refeições dos Restaurantes Universitários da UnB.
+site_url: https://unb-mds.github.io/2026-2-Bandejao/
+repo_url: https://github.com/unb-mds/2026-2-Bandejao
+repo_name: unb-mds/2026-2-Bandejao
+
+theme:
+  name: material
+  language: pt-BR
+  palette:
+    primary: blue
+    accent: green
+  features:
+    - navigation.tabs
+    - navigation.top
+    - navigation.sections
+    - navigation.indexes
+    - search.suggest
+    - content.code.copy
+
+markdown_extensions:
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - admonition
+  - tables
+  - attr_list
+  - md_in_html
+
+nav:
+  - Início: index.md
+  - Visão do produto: documento_de_visao.md
+  - Requisitos: Requisitos.md
+  - Arquitetura:
+      - Arquitetura: Arquitetura.md
+      - Banco e importação: handoff_banco_e_importacao.md
+      - Validação dos PDFs: validacao-extracao-pdfs.md
+  - Sprints:
+      - Sprint 00: scrum/sprint00.md
+      - Sprint 01: scrum/sprint01.md
+      - Sprint 02: scrum/sprint02.md
+      - Sprint 03: scrum/sprint03.md
+      - Ata - Sprint 03: scrum/atas-reunioes/ata-sprint03.md
+  - Desenvolvimento: desenvolvimento.md
+  - Publicação da aplicação: publicacao.md
+  - Privacidade: privacidade.md
+  - Verificação da publicação: verificacao-publicacao.md
+  - Evidência SAST: evidencias/sast-issue-60.md
+  - Evidência da sincronização: evidencias/sincronizacao-issue-54.md
+  - Protótipos: prototipos.md
+  - Estudos:
+      - Visão geral: estudos/README.md
+      - Git e GitHub: estudos/git_github.md
+      - Engenharia de requisitos: estudos/engenharia_requisitos.md
+      - Arquitetura de software: estudos/arquitetura_software.md
+      - Backend: estudos/backend.md
+      - Frontend: estudos/frontend.md
+      - Banco de dados: estudos/banco_de_dados.md
+      - Extração de PDF: estudos/extracao_dados_pdf.md
+      - OCR de imagem: estudos/ocr_imagem.md
+      - IA no desenvolvimento: estudos/ia-desenvolvimento.md
+  - GitHub Pages:
+      - Publicação e manutenção: github-pages.md
+      - Histórico de mudanças: changelog.md

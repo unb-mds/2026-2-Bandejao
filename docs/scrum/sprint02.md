@@ -1,0 +1,100 @@
+# Sprint 02 — Núcleo Funcional
+
+**Objetivo da sprint:** sair da estruturação (Sprint 01) para um sistema com dados reais fluindo: extração do cardápio, API consumindo o banco e definição do produto para as telas.
+
+Além do que estava planejado, a sprint incluiu a reformulação dos requisitos e a etapa de produto (story map, personas e protótipo).
+
+## O que foi feito
+
+### Dados e extração
+- Extração do cardápio implementada em Python (`requests`, `BeautifulSoup`, `pdfplumber`), substituindo o esqueleto da Sprint 01
+- Localização dinâmica do PDF de cada campus na página do RU (o link muda toda semana)
+- Extração de categoria, tipo de dieta e alérgenos, com tratamento independente por campus: a falha em um campus não interrompe os demais
+- Rotina de sincronização (`extracao/sincronizar.py`) que envia os cardápios extraídos ao backend, com opção de execução periódica
+- Testes automatizados da extração e da sincronização
+
+### Banco de dados
+- Nova migração adicionando o alérgeno amendoim (`contem_amendoim`) em `item_cardapio`, pois o ícone aparece nos PDFs do RU
+- Script de seed com dados de exemplo, permitindo testar backend e frontend sem depender da extração real
+- Documento `docs/handoff_banco_e_importacao.md` registrando a migração pendente e o contrato de importação
+
+### Backend
+- Schemas Pydantic criados para as entidades
+- Rotas de campus, cardápio e avaliação implementadas
+- Testes automatizados da API, do seed e da sessão de banco
+
+### Requisitos (reformulação)
+- Motivo: incerteza sobre a adesão dos usuários ao check-in no momento da refeição
+- **RF06 e RF07 reescritos:** o check-in deu lugar ao planejamento semanal, em que o usuário marca, ao ver o cardápio da semana, os dias e refeições em que pretende ir ao RU; a estimativa de horário de pico passa a usar o volume de planejamentos
+- **RF08 adicionado:** registro de reclamações sobre a refeição, separado da avaliação por nota
+- Requisitos não funcionais revisados
+
+### Produto (Figma)
+- **Story map** com épicos, funcionalidades e histórias de usuário no formato "Eu quero… para…"
+- **Personas** (aluna e servidor) conectadas às necessidades dos requisitos
+- **DoR e DoD** (Definition of Ready e Definition of Done) definidos
+- **Protótipo das telas do frontend** (seleção de campus, cardápio com filtros e avaliação)
+
+### Documentação e gestão
+- Documento de visão (`docs/documento_de_visao.md`)
+- README atualizado: seed, sincronização do cardápio real, link do Figma e escopo com reclamações e planejamento semanal
+- Roteiro de apresentação da Release 1
+- Reorganização da divisão de papéis do grupo
+
+## Planejado × entregue
+
+| Item planejado | Situação |
+|---|---|
+| Script de seed | ✅ Concluído |
+| Extração real do cardápio | ✅ Implementada e validada contra a publicação oficial dos 5 campi em 30/09/2026; formatos futuros ainda precisam de conferência |
+| Schemas Pydantic | ✅ Concluído |
+| Endpoints de campus, cardápio e avaliação | ✅ Concluído, com testes |
+| Consulta no frontend | ✅ Consulta à API incorporada às telas TypeScript/Tailwind da equipe; semana e refeição selecionáveis, filtros locais sobre marcações publicadas. Aceite de D01/D02 e persistência dos demais fluxos pendentes |
+
+## Pendências e próximos passos
+
+- Rodar a sincronização com o backend e conferir os dados importados
+- Validar D01/D02 e os filtros sobre os dados publicados; integrar a persistência das avaliações e reclamações às telas incorporadas do protótipo
+- Adequar o backend e o modelo de dados à mudança dos requisitos: entidade de planejamento semanal (no lugar de check-in) e reclamações
+- Definir estratégia de deploy da aplicação; a CI de backend, extração e frontend foi adicionada em 30/09/2026 no `.github/workflows/ci.yml`
+- Criar as Release Notes da Release 1
+- Conferir o status do README a cada mudança de sprint (atualmente indica Sprint 02)
+
+## Atualização da GitHub Page — 30/09/2026
+
+- Navegação ampliada para todos os estudos, protótipos, execução local e manutenção da documentação.
+- Página inicial com roteiro de consulta dos documentos para avaliação da Release 1, distinguindo escopo planejado de implementação.
+- Endereço do clone corrigido no README e URL canônica do site configurada.
+- Build estrito em pull requests e deploy por artefato na `main`, sem commits automáticos de publicação.
+- Dependências principais do site fixadas e mudanças registradas em [Histórico](../changelog.md).
+- Configuração necessária no repositório: **Settings → Pages → Source → GitHub Actions**; acompanhar o workflow e conferir a URL após a publicação.
+
+Esta atualização cobre a GH Page. Não altera requisitos, regras de negócio ou código da aplicação e não constitui ata de reunião.
+
+## CI da aplicação — 30/09/2026
+
+- Workflow separado em `.github/workflows/ci.yml`: testes do backend e da extração, lint e build do frontend em pull requests e mudanças relacionadas na `main`.
+- A execução de validação desta entrega passou no GitHub Actions: [workflow da CI](https://github.com/unb-mds/2026-2-Bandejao/actions/runs/36768269405).
+- A CI não configura deploy da aplicação; a estratégia de hospedagem e operação continua pendente.
+
+## Validação dos PDFs oficiais — 30/09/2026
+
+- A publicação atual dos cinco campi foi processada; o relatório registra links, datas, contagens e hashes dos PDFs em [Validação da extração](../validacao-extracao-pdfs.md).
+- Foram corrigidos dois casos reproduzíveis: hífen adicional no nome do PDF de Planaltina e legenda atual com dez ícones, em vez dos onze esperados pelo código anterior.
+- A legenda consultada não tem marcador separado para frutos do mar; essa informação não deve ser interpretada como ausência confirmada.
+
+## Integração inicial do frontend — 30/09/2026
+
+- A tela React consome `GET /campi/` e `GET /cardapios/`, com filtro opcional por datas e tipo de refeição.
+- A URL da API é definida por `VITE_API_BASE_URL`; o backend permite CORS para as origens em `CORS_ORIGINS`.
+- Lista vazia é apresentada como falta de registros na API, sem inferir que o RU esteja fechado. Filtros de dieta e alérgenos seguem pendentes de D02.
+
+## Alinhamento do frontend da equipe — 01/10/2026
+
+Registro da entrega de 01/10/2026. Avaliações e reclamações receberam persistência nas entregas posteriores; o estado atual está na [situação consolidada da Sprint 03](sprint03.md#situacao-consolidada-em-27102026).
+
+- Incorporada localmente a estrutura React/TypeScript/Tailwind v4 de `marilluantunes/frontend-react`, revisão `c1833a3`, preservando navegação, tema e acessibilidade.
+- O cliente da API foi convertido para TypeScript e conectado às telas Hoje e Cardápio, com seleção de semana, campus da API, link de origem e tratamento de falhas.
+- Cardápios e avaliações fictícios foram retirados da consulta. Os itens preservam categorias, dietas e marcadores publicados; filtros não certificam ausência de ingredientes.
+- Avaliações, reclamações, planejamento e lotação continuam demonstrações identificadas na interface. Não há nova persistência, previsão operacional ou publicação do Vercel nesta integração.
+- O build passa a incluir checagem de tipos; foram corrigidos erros de sintaxe/tipagem encontrados nos componentes importados. O registro de 30/09 acima descreve a entrega anterior.

@@ -1,0 +1,52 @@
+services:
+  - type: web
+    name: bandejao-unb-g12-api
+    runtime: python
+    plan: free
+    region: oregon
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    initialDeployHook: python -m app.db.seed
+    healthCheckPath: /health
+    autoDeployTrigger: checksPass
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: bandejao-unb-g12-db
+          property: connectionString
+      - key: FRONTEND_URL
+        fromService:
+          type: web
+          name: bandejao-unb-g12
+          envVarKey: RENDER_EXTERNAL_URL
+      - key: IMPORTACAO_TOKEN
+        generateValue: true
+      - key: EQUIPE_TOKEN
+        generateValue: true
+
+  - type: web
+    name: bandejao-unb-g12
+    runtime: static
+    buildCommand: cd frontend && npm ci && VITE_APP_VERSION=$RENDER_GIT_COMMIT npm run build
+    staticPublishPath: frontend/dist
+    autoDeployTrigger: checksPass
+    envVars:
+      - key: VITE_API_BASE_URL
+        fromService:
+          type: web
+          name: bandejao-unb-g12-api
+          envVarKey: RENDER_EXTERNAL_URL
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+
+databases:
+  - name: bandejao-unb-g12-db
+    plan: free
+    region: oregon
+    postgresMajorVersion: "16"
+    databaseName: bandejao
+    user: bandejao
+    ipAllowList: []

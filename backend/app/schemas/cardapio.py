@@ -1,8 +1,9 @@
-from datetime import date
+from datetime import date, datetime
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 from app.models.enums import Categoria, TipoDieta, TipoRefeicao
+from app.schemas.campus import normalizar_instante_utc
 from app.schemas.item_cardapio import ItemCardapioRead
 
 ALERGENOS_VALIDOS = frozenset(
@@ -71,3 +72,9 @@ class ImportacaoResultado(BaseModel):
     campus_id: int
     cardapios_processados: int
     itens_processados: int
+    ultima_importacao_em: datetime
+    fonte_pdf_url: str | None
+
+    _normalizar_instante = field_validator("ultima_importacao_em", mode="before")(
+        normalizar_instante_utc
+    )

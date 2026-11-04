@@ -10,6 +10,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from datetime import date, datetime
 from io import BytesIO
+import os
 import re
 import unicodedata
 from urllib.parse import urljoin
@@ -44,10 +45,14 @@ ALERGENOS_LEGENDA = (
     "carne_suina",
     "frutos_do_mar",
 )
+# Os PDFs publicados atualmente têm dez ícones: a legenda termina em "Suíno" e
+# não apresenta um símbolo separado para frutos do mar. Mantemos também a lista
+# de onze posições para PDFs antigos que tragam os dois símbolos.
+ALERGENOS_LEGENDA_ATUAL = ALERGENOS_LEGENDA[:-1]
 LIMIAR_DISTANCIA_ICONE = 25
 PADRAO_PERIODO = re.compile(
     r"semana-\d+-(?P<inicio_dia>\d{1,2})-(?P<inicio_mes>\d{1,2})-a-"
-    r"(?P<fim_dia>\d{1,2})-(?P<fim_mes>\d{1,2})\.pdf$",
+    r"(?P<fim_dia>\d{1,2})-(?P<fim_mes>\d{1,2})(?:-\d+)?-?\.pdf$",
     re.IGNORECASE,
 )
 PADRAO_ANO = re.compile(r"/uploads/(?P<ano>\d{4})/")
@@ -159,7 +164,13 @@ def baixar_pdf(url: str, sessao: requests.Session | None = None) -> bytes:
 
 def _imagem_do_stream(stream: object) -> Image.Image:
     atributos = stream.attrs
-    return Image.frombytes("RGB", (atributos["Width"], atributos["Height"]), stream.get_data())
+    dados = stream.get_data()
+    # pdfminer preserva o JPEG em streams DCTDecode. Esses bytes ainda precisam
+    # de um decoder; não são os pixels RGB crus de um stream FlateDecode.
+    if dados.startswith(b"\xff\xd8"):
+        with Image.open(BytesIO(dados)) as imagem:
+            return imagem.convert("RGB")
+    return Image.frombytes("RGB", (atributos["Width"], atributos["Height"]), dados)
 
 
 def _assinatura_visual(imagem: Image.Image) -> list[bool]:
@@ -184,12 +195,17 @@ def _alergenos_por_celula(pagina: object, tabela: object) -> dict[tuple[int, int
         ),
         key=lambda imagem: imagem["x0"],
     )
-    if len(referencias) != len(ALERGENOS_LEGENDA):
+    legendas_por_quantidade = {
+        len(ALERGENOS_LEGENDA): ALERGENOS_LEGENDA,
+        len(ALERGENOS_LEGENDA_ATUAL): ALERGENOS_LEGENDA_ATUAL,
+    }
+    legenda = legendas_por_quantidade.get(len(referencias))
+    if legenda is None:
         return {}
 
     assinaturas = [
         (alergeno, _assinatura_visual(_imagem_do_stream(imagem["stream"])))
-        for alergeno, imagem in zip(ALERGENOS_LEGENDA, referencias)
+        for alergeno, imagem in zip(legenda, referencias)
     ]
     encontrados: dict[tuple[int, int], set[str]] = {}
     for imagem in imagens:
@@ -371,16 +387,28 @@ def enviar_ao_backend(
     resultado: ResultadoExtracao,
     url_base: str = "http://localhost:8000",
     sessao: requests.Session | None = None,
+    *,
+    token: str | None = None,
 ) -> dict[str, object]:
     """Envia explicitamente um campus extraído; a execução padrão continua sem gravar dados."""
+    token = obter_token_importacao(token)
     cliente = sessao or requests.Session()
     resposta = cliente.post(
         f"{url_base.rstrip('/')}/cardapios/importacao",
         json=para_payload_importacao(resultado),
+        headers={"Authorization": f"Bearer {token}"},
         timeout=TIMEOUT_SEGUNDOS,
     )
     resposta.raise_for_status()
     return resposta.json()
+
+
+def obter_token_importacao(token: str | None = None) -> str:
+    """Valida a configuração antes de qualquer acesso de rede da sincronização."""
+    valor = token if token is not None else os.getenv("IMPORTACAO_TOKEN", "")
+    if not valor.strip() or any(c.isspace() for c in valor):
+        raise ValueError("Configure IMPORTACAO_TOKEN com um segredo sem espaços.")
+    return valor
 
 
 def run(hoje: date | None = None) -> dict[str, ResultadoExtracao | ErroExtracao]:
@@ -398,6 +426,12 @@ def run(hoje: date | None = None) -> dict[str, ResultadoExtracao | ErroExtracao]
             resultados[campus] = extrair_cardapio(pdf, baixar_pdf(pdf.url))
         except (requests.RequestException, ErroExtracao) as erro:
             resultados[campus] = ErroExtracao(str(erro))
+        except Exception as erro:
+            # Bibliotecas de PDF/imagem também podem lançar ValueError/OSError.
+            # Uma fonte defeituosa não deve cancelar a importação dos demais.
+            resultados[campus] = ErroExtracao(
+                f"Falha ao processar o PDF do campus ({type(erro).__name__})."
+            )
     return resultados
 
 
