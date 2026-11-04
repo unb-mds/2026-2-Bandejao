@@ -28,12 +28,24 @@ export default function CardapioTab({ campus, cardapioDia, diaSemana, setDiaSema
   return (
     <div id="panel-cardapio" role="tabpanel" aria-labelledby="tab-cardapio">
 
-      {/* Cabeçalho com filtros */}
       <div style={{ background: '#fff', borderBottom: '1px solid #f0ede8' }}>
         <div className="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
-          <h2 className="text-sm font-bold uppercase tracking-wider" style={{ color: 'var(--muted-foreground)' }}>
-            Cardápio da semana
-          </h2>
+          <div>
+            <h2 className="text-sm font-bold uppercase tracking-wider" style={{ color: 'var(--muted-foreground)' }}>
+              Cardápio da semana
+            </h2>
+            <div className="flex flex-wrap items-center gap-2 mt-1.5">
+              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-sky-100 text-sky-800 border border-sky-200">
+                📌 Intenções ativas
+              </span>
+              <span 
+                className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-amber-100 text-amber-800 border border-amber-200"
+                title="Valores gerados para demonstração do sistema"
+              >
+                ⚡ Dados Simulados
+              </span>
+            </div>
+          </div>
           <FiltrosAlimentares filtros={filtros} setFiltros={setFiltros} />
         </div>
       </div>
