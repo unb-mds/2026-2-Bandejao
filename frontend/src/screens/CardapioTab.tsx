@@ -2,7 +2,15 @@ import { useState } from 'react'
 import MealContent from '@/components/MealContent'
 import FiltrosAlimentares from '@/components/FiltrosAlimentares'
 import { DIAS_SEMANA, DIAS_SEMANA_COMPLETO } from '@/data'
+import type { EstimativaApi } from '@/api'
+import { formatarInstanteImportacao } from '@/cardapios'
 import type { Campus, CardapioRefeicoes, Refeicao, RefeicaoData, FiltrosAlimentares as Filtros } from '@/types'
+import { refeicaoJaIniciada } from '@/utils'
+
+function formatarDataCurta(data: string): string {
+  const [, mes, dia] = data.split('-')
+  return `${dia}/${mes}`
+}
 
 export interface CardapioTabProps {
   campus: Campus
@@ -15,10 +23,13 @@ export interface CardapioTabProps {
   isPlanejada: (dia: number, ref: Refeicao) => boolean
   planejadosCount: number
   cardapio: RefeicaoData
-  togglePlanejada: (dia: number, refeicao: Refeicao) => void
+  togglePlanejada: (dia: number, refeicao: Refeicao) => void | Promise<void>
+  intencaoEnviando: boolean
+  erroIntencao: string
+  estimativa?: EstimativaApi
 }
 
-export default function CardapioTab({ campus, cardapioDia, diaSemana, setDiaSemana, diasDisponiveis, refeicao, setRefeicao, isPlanejada, planejadosCount, cardapio, togglePlanejada }: CardapioTabProps) {
+export default function CardapioTab({ campus, cardapioDia, diaSemana, setDiaSemana, diasDisponiveis, refeicao, setRefeicao, isPlanejada, planejadosCount, cardapio, togglePlanejada, intencaoEnviando, erroIntencao, estimativa }: CardapioTabProps) {
   const [filtros, setFiltros] = useState<Filtros>({
     vegetariano: false,
     vegetarianoEstrito: false,
@@ -34,17 +45,26 @@ export default function CardapioTab({ campus, cardapioDia, diaSemana, setDiaSema
             <h2 className="text-sm font-bold uppercase tracking-wider" style={{ color: 'var(--muted-foreground)' }}>
               Cardápio da semana
             </h2>
-            <div className="flex flex-wrap items-center gap-2 mt-1.5">
-              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-sky-100 text-sky-800 border border-sky-200">
-                📌 Intenções ativas
-              </span>
-              <span 
-                className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-amber-100 text-amber-800 border border-amber-200"
-                title="Valores gerados para demonstração do sistema"
-              >
-                ⚡ Dados Simulados
-              </span>
-            </div>
+            {estimativa && (
+              <div className="mt-1.5">
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-sky-100 text-sky-800 border border-sky-200">
+                    📌 {estimativa.status === 'disponivel'
+                      ? `${estimativa.contagem} intenç${estimativa.contagem === 1 ? 'ão ativa' : 'ões ativas'}`
+                      : 'Dados insuficientes para estimar'}
+                  </span>
+                  {estimativa.dados_simulados && (
+                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-amber-100 text-amber-800 border border-amber-200">
+                      ⚡ Dados Simulados
+                    </span>
+                  )}
+                </div>
+                <p className="mt-1 text-[0.7rem] leading-tight" style={{ color: 'var(--muted-foreground)' }}>
+                  {estimativa.mensagem} Período de {formatarDataCurta(estimativa.data_inicio)} a {formatarDataCurta(estimativa.data_fim)}, calculado em {formatarInstanteImportacao(estimativa.calculado_em)}.
+                  {estimativa.dados_simulados && ' Valores gerados para demonstração; não são intenções de usuários reais.'}
+                </p>
+              </div>
+            )}
           </div>
           <FiltrosAlimentares filtros={filtros} setFiltros={setFiltros} />
         </div>
@@ -161,11 +181,27 @@ export default function CardapioTab({ campus, cardapioDia, diaSemana, setDiaSema
 
       {/* Conteúdo da refeição — COM FILTRO */}
       <div className="px-4 pt-4 pb-6 max-w-5xl mx-auto">
-        {cardapio.itensApi && cardapio.itensApi.length > 0 && <button
-          className="mb-4 rounded-xl bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground"
-          aria-pressed={isPlanejada(diaSemana, refeicao)} onClick={() => togglePlanejada(diaSemana, refeicao)}>
-          {isPlanejada(diaSemana, refeicao) ? 'Remover do planejamento desta sessão' : 'Planejar esta refeição nesta sessão'}
-        </button>}
+        {cardapio.itensApi && cardapio.itensApi.length > 0 && (() => {
+          const planejada = isPlanejada(diaSemana, refeicao)
+          const iniciada = !planejada && !!cardapio.data && refeicaoJaIniciada(cardapio.data, refeicao)
+          return (
+            <div className="mb-4">
+              <button
+                className="rounded-xl bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground disabled:opacity-50"
+                aria-pressed={planejada}
+                disabled={iniciada || intencaoEnviando}
+                onClick={() => togglePlanejada(diaSemana, refeicao)}>
+                {intencaoEnviando ? 'Enviando…' : iniciada ? 'Refeição já iniciada' : planejada ? 'Remover do planejamento' : 'Planejar esta refeição'}
+              </button>
+              {iniciada && (
+                <p className="mt-1 text-xs" style={{ color: 'var(--muted-foreground)' }}>
+                  A intenção só pode ser marcada antes do início do serviço desta refeição.
+                </p>
+              )}
+              {erroIntencao && <p role="alert" className="mt-1 text-xs text-red-600">{erroIntencao}</p>}
+            </div>
+          )
+        })()}
         <MealContent
           data={cardapio}
           dia={diaSemana}

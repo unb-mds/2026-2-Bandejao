@@ -31,6 +31,20 @@ export function temRefeicao(refeicao: RefeicaoData | undefined | null): boolean 
   return !(typeof prato === 'object' && prato?.nome === '—')
 }
 
+// Mesma tabela usada pelo backend (HORARIOS_INICIO_REFEICAO, fonte consultada em 15/10/2026: https://ru.unb.br/).
+const HORARIOS_INICIO: Record<Refeicao, [number, number]> = {
+  cafe: [7, 0],
+  almoco: [11, 0],
+  jantar: [17, 0],
+}
+
+export function refeicaoJaIniciada(data: string, tipo: Refeicao, agora: Date = new Date()): boolean {
+  const [hora, minuto] = HORARIOS_INICIO[tipo]
+  const inicio = new Date(`${data}T00:00:00`)
+  inicio.setHours(hora, minuto, 0, 0)
+  return agora >= inicio
+}
+
 export function getCurrentMealInfo(): { tipo: Refeicao; status: 'agora' | 'proxima' | 'encerrado' } {
   const now = new Date()
   const mins = now.getHours() * 60 + now.getMinutes()

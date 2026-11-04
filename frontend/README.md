@@ -35,7 +35,8 @@ Em Linux/macOS, use `cp .env.example .env`. Abra <http://localhost:5173>. `VITE_
 | Dieta e alérgenos | Filtros locais sobre os itens retornados, usando `tipo_dieta` e os marcadores `contem_*`. O filtro ovolactovegetariano inclui também itens vegetarianos estritos; as demais classes permanecem exatas, conforme D02. |
 | Avaliações | Nota geral e comentário são enviados à API com a identidade anônima do navegador. O histórico consulta somente a refeição selecionada, mostra data/hora em Brasília e permanece após recarregar a página. |
 | Reclamações | A tela envia categoria e descrição à API com identidade anônima. Há confirmação de sucesso/erro; não existe lista pública nem encaminhamento automático ao RU. |
-| Planejamento | Demonstração por campus e data, apenas nesta sessão; sem persistência ou previsão. |
+| Planejamento | Marcar/desmarcar intenção de ir a uma refeição é enviado à API com a identidade anônima e persiste após recarregar. Bloqueado depois do início do serviço da refeição, conforme D03. |
+| Estimativa de movimento | A tela de cardápio mostra a contagem de intenções da refeição exibida, vinda da API; abaixo da amostra mínima (10), mostra "dados insuficientes". Quando os dados reais são insuficientes, cai para a amostra simulada, identificada como tal na tela. |
 | Lotação | Exemplos visuais e relatos desta sessão; sem consulta a dados reais nem estimativa operacional. |
 
 A convenção de domingo a sábado é uma escolha de apresentação da integração, não uma resolução de D01. O backend informa a última importação bem-sucedida, mas não o horário de funcionamento. A tela Hoje escolhe a refeição por faixas horárias do protótipo, sem afirmar que o restaurante está aberto.

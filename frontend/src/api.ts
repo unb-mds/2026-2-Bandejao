@@ -55,24 +55,30 @@ export interface ReclamacaoConfirmacaoApi {
   mensagem: string
 }
 
-export interface IntencaoPayload {
+export interface IntencaoApi {
   cardapio_id: number
-  refeicao: string
-  data: string
+  ativa: boolean
 }
 
-export interface IntencaoApi {
-  id: number
-  cardapio_id: number
-  identidade: string
-  criado_em: string
+export interface IntencaoPessoalApi extends IntencaoApi {
+  campus_id: number
+  data: string
+  tipo_refeicao: 'cafe_da_manha' | 'almoco' | 'jantar'
 }
 
 export interface EstimativaApi {
   cardapio_id: number
-  total_intencoes: number
-  estimativa_fila: string
-  dados_simulados?: boolean
+  campus_id: number
+  data: string
+  tipo_refeicao: 'cafe_da_manha' | 'almoco' | 'jantar'
+  data_inicio: string
+  data_fim: string
+  calculado_em: string
+  dados_simulados: boolean
+  amostra_minima: number
+  status: 'dados_insuficientes' | 'disponivel'
+  mensagem: string
+  contagem: number | null
 }
 
 interface Opcoes {
@@ -84,7 +90,7 @@ interface Opcoes {
   body?: string
 }
 
-type Parametros = Record<string, string | number | null | undefined>
+type Parametros = Record<string, string | number | boolean | null | undefined>
 const API_BASE_URL = import.meta.env?.VITE_API_BASE_URL || 'http://localhost:8000'
 
 interface ErroValidacaoApi {
@@ -208,24 +214,37 @@ export function salvarReclamacao(
   )
 }
 
-export function salvarIntencao(
-  cardapioId: number,
-  payload: IntencaoPayload,
-  identidade: string,
-  opcoes: Opcoes = {},
-) {
+export function marcarIntencao(cardapioId: number, identidade: string, opcoes: Opcoes = {}) {
   return requisitarJson<IntencaoApi>(
-    `cardapios/${cardapioId}/intencoes/`,
+    `cardapios/${cardapioId}/intencao/`,
     {},
     {
       ...opcoes,
-      method: 'POST',
-      body: JSON.stringify(payload),
-      headers: {
-        'Content-Type': 'application/json',
-        'X-Identidade': identidade,
-        ...opcoes.headers,
-      },
+      method: 'PUT',
+      headers: { 'X-Identidade': identidade, ...opcoes.headers },
+    },
+  )
+}
+
+export function desmarcarIntencao(cardapioId: number, identidade: string, opcoes: Opcoes = {}) {
+  return requisitarJson<IntencaoApi>(
+    `cardapios/${cardapioId}/intencao/`,
+    {},
+    {
+      ...opcoes,
+      method: 'DELETE',
+      headers: { 'X-Identidade': identidade, ...opcoes.headers },
+    },
+  )
+}
+
+export function listarIntencoes(filtros: Parametros, identidade: string, opcoes: Opcoes = {}) {
+  return requisitarJson<IntencaoPessoalApi[]>(
+    'intencoes/',
+    filtros,
+    {
+      ...opcoes,
+      headers: { 'X-Identidade': identidade, ...opcoes.headers },
     },
   )
 }

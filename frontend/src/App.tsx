@@ -10,8 +10,18 @@ import CardapioTab from '@/screens/CardapioTab'
 import LotacaoTab from '@/screens/LotacaoTab'
 
 import { DIAS_SEMANA } from './data'
-import { listarAvaliacoes, listarCampi, listarCardapios, salvarAvaliacao, salvarReclamacao } from './api'
-import type { CardapioApi } from './api'
+import {
+  desmarcarIntencao,
+  listarAvaliacoes,
+  listarCampi,
+  listarCardapios,
+  listarEstimativas,
+  listarIntencoes,
+  marcarIntencao,
+  salvarAvaliacao,
+  salvarReclamacao,
+} from './api'
+import type { CardapioApi, EstimativaApi } from './api'
 import { adaptarHistoricoAvaliacoes } from './avaliacoes'
 import { inicioSemana, dataDaSemana, montarSemana } from './cardapios'
 import { obterIdentidadeAnonima } from './identidade'
@@ -83,17 +93,88 @@ export default function App() {
   const [diaSemana, setDiaSemana] = useState<number>(new Date().getDay())
   const [tabAvaliar, setTabAvaliar] = useState<'form' | 'historico' | 'reclamacao'>('form')
 
-  const [refeicoesPlanejadas, setRefeicoesPlanejadas] = useState<Set<string>>(new Set())
-  const togglePlanejada = (dia: number, tipo: Refeicao) => {
-    const key = `${campus.id}:${dataDaSemana(semanaInicio, dia)}:${tipo}`
-    setRefeicoesPlanejadas(prev => {
-      const next = new Set(prev)
-      if (next.has(key)) next.delete(key)
-      else next.add(key)
-      return next
+  const tipoRefeicaoApi = (tipo: Refeicao): CardapioApi['tipo_refeicao'] => (tipo === 'cafe' ? 'cafe_da_manha' : tipo)
+  const cardapioIdPorChave = useMemo(() => {
+    const mapa = new Map<string, number>()
+    for (const c of cardapiosApi) mapa.set(`${c.data}:${c.tipo_refeicao}`, c.id)
+    return mapa
+  }, [cardapiosApi])
+  const cardapioIdDoDia = (dia: number, tipo: Refeicao): number | undefined =>
+    cardapioIdPorChave.get(`${dataDaSemana(semanaInicio, dia)}:${tipoRefeicaoApi(tipo)}`)
+
+  const [intencoesAtivas, setIntencoesAtivas] = useState<Set<number>>(new Set())
+  const [erroIntencoes, setErroIntencoes] = useState('')
+  const [intencaoPendente, setIntencaoPendente] = useState<number | null>(null)
+
+  useEffect(() => {
+    if (!campus.id || estadoCampi !== 'pronto') return
+    const controller = new AbortController()
+    listarIntencoes(
+      { campus_id: campus.id, data_inicio: semanaInicio, data_fim: dataDaSemana(semanaInicio, 6) },
+      obterIdentidadeAnonima(),
+      { signal: controller.signal },
+    ).then(resultado => {
+      if (controller.signal.aborted) return
+      setIntencoesAtivas(new Set(resultado.map(i => i.cardapio_id)))
+    }).catch((erro: unknown) => {
+      if (controller.signal.aborted) return
+      setErroIntencoes(erro instanceof Error ? erro.message : 'Erro ao carregar o planejamento.')
     })
+    return () => controller.abort()
+  }, [campus.id, semanaInicio, estadoCampi, tentativa])
+
+  const togglePlanejada = async (dia: number, tipo: Refeicao) => {
+    const cardapioId = cardapioIdDoDia(dia, tipo)
+    if (!cardapioId) return
+    setErroIntencoes('')
+    setIntencaoPendente(cardapioId)
+    try {
+      const ativa = intencoesAtivas.has(cardapioId)
+      const resultado = ativa
+        ? await desmarcarIntencao(cardapioId, obterIdentidadeAnonima())
+        : await marcarIntencao(cardapioId, obterIdentidadeAnonima())
+      setIntencoesAtivas(prev => {
+        const next = new Set(prev)
+        if (resultado.ativa) next.add(cardapioId)
+        else next.delete(cardapioId)
+        return next
+      })
+    } catch (erro) {
+      setErroIntencoes(erro instanceof Error ? erro.message : 'Não foi possível atualizar o planejamento.')
+    } finally {
+      setIntencaoPendente(null)
+    }
   }
-  const isPlanejada = (dia: number, tipo: Refeicao) => refeicoesPlanejadas.has(`${campus.id}:${dataDaSemana(semanaInicio, dia)}:${tipo}`)
+  const isPlanejada = (dia: number, tipo: Refeicao) => {
+    const cardapioId = cardapioIdDoDia(dia, tipo)
+    return cardapioId !== undefined && intencoesAtivas.has(cardapioId)
+  }
+
+  const [estimativasReais, setEstimativasReais] = useState<EstimativaApi[]>([])
+  const [estimativasSimuladas, setEstimativasSimuladas] = useState<EstimativaApi[]>([])
+
+  useEffect(() => {
+    if (!campus.id || estadoCampi !== 'pronto') return
+    const controller = new AbortController()
+    const filtros = { campus_id: campus.id, data_inicio: semanaInicio, data_fim: dataDaSemana(semanaInicio, 6) }
+    listarEstimativas(filtros, { signal: controller.signal })
+      .then(resultado => { if (!controller.signal.aborted) setEstimativasReais(resultado) })
+      .catch(() => { /* a estimativa é só um complemento visual; sem ela a tela continua utilizável */ })
+    listarEstimativas({ ...filtros, dados_simulados: true }, { signal: controller.signal })
+      .then(resultado => { if (!controller.signal.aborted) setEstimativasSimuladas(resultado) })
+      .catch(() => { /* idem */ })
+    return () => controller.abort()
+  }, [campus.id, semanaInicio, estadoCampi, tentativa])
+
+  const estimativaPorCardapioId = useMemo(() => {
+    const reais = new Map(estimativasReais.map(e => [e.cardapio_id, e] as const))
+    const simuladas = new Map(estimativasSimuladas.map(e => [e.cardapio_id, e] as const))
+    const mapa = new Map<number, EstimativaApi>()
+    for (const [id, real] of reais) {
+      mapa.set(id, real.status === 'disponivel' ? real : (simuladas.get(id)?.status === 'disponivel' ? simuladas.get(id)! : real))
+    }
+    return mapa
+  }, [estimativasReais, estimativasSimuladas])
 
   const [agora, setAgora] = useState(() => Date.now())
   useEffect(() => {
@@ -271,7 +352,7 @@ export default function App() {
   const hojeCardapio = cardapioSemana[hojeIdx]
   const mealInfo = getCurrentMealInfo()
   const hojeMeal = hojeCardapio[mealInfo.tipo]
-  const planejadosCount = [...refeicoesPlanejadas].filter(key => key.startsWith(`${campus.id}:`) && key.split(':')[1] >= semanaInicio && key.split(':')[1] <= dataDaSemana(semanaInicio, 6)).length
+  const planejadosCount = intencoesAtivas.size
 
   const diasPlanejadosHome = diasDisponiveis.map(d => ({
       dia: d,
@@ -319,7 +400,7 @@ export default function App() {
           </div>}
           {estadoCampi === 'pronto' && estadoCardapios === 'carregando' && <p role="status">Carregando cardápios…</p>}
           {estadoCampi === 'pronto' && estadoCardapios === 'pronto' && cardapiosApi.length === 0 && <p role="status">Nenhum cardápio publicado para esta semana. Isso não confirma que o RU esteja fechado.</p>}
-          <p className="text-xs text-muted-foreground">Reclamações são enviadas à API, sem lista pública nem encaminhamento automático ao RU. Planejamento é uma demonstração nesta versão, só nesta sessão. A tela de lotação usa exemplos, sem estimativa real.</p>
+          <p className="text-xs text-muted-foreground">Reclamações são enviadas à API, sem lista pública nem encaminhamento automático ao RU. O planejamento marca sua intenção de ir à refeição e é salvo pela API com sua identidade anônima. A tela de lotação usa exemplos, sem estimativa real.</p>
         </section>
         {tab === 'hoje' && estadoCampi === 'pronto' && estadoCardapios === 'pronto' && campus.id && (
           <div id="panel-hoje" role="tabpanel" aria-labelledby="tab-hoje">
@@ -351,7 +432,22 @@ export default function App() {
         )}
 
     {tab === 'cardapio' && estadoCampi === 'pronto' && estadoCardapios === 'pronto' && campus.id && (
-      <CardapioTab campus={campus} cardapioDia={cardapioDia} diaSemana={diaSemana} setDiaSemana={setDiaSemana} diasDisponiveis={diasDisponiveis} refeicao={refeicao} setRefeicao={setRefeicao} isPlanejada={isPlanejada} planejadosCount={planejadosCount} cardapio={cardapio} togglePlanejada={togglePlanejada} />
+      <CardapioTab
+        campus={campus}
+        cardapioDia={cardapioDia}
+        diaSemana={diaSemana}
+        setDiaSemana={setDiaSemana}
+        diasDisponiveis={diasDisponiveis}
+        refeicao={refeicao}
+        setRefeicao={setRefeicao}
+        isPlanejada={isPlanejada}
+        planejadosCount={planejadosCount}
+        cardapio={cardapio}
+        togglePlanejada={togglePlanejada}
+        intencaoEnviando={intencaoPendente !== null && intencaoPendente === cardapio.id}
+        erroIntencao={erroIntencoes}
+        estimativa={cardapio.id ? estimativaPorCardapioId.get(cardapio.id) : undefined}
+      />
     )}
 
     {tab === 'lotacao' && campus.id && (

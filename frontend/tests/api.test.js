@@ -2,9 +2,13 @@ import assert from 'node:assert/strict'
 import { test } from 'node:test'
 
 import {
+  desmarcarIntencao,
   listarAvaliacoes,
   listarCampi,
   listarCardapios,
+  listarEstimativas,
+  listarIntencoes,
+  marcarIntencao,
   requisitarJson,
   salvarAvaliacao,
   salvarReclamacao,
@@ -225,4 +229,115 @@ test('traduz o erro de janela fechada ao registrar reclamação', async () => {
     ),
     { message: 'O envio só é aceito a partir do início do serviço da refeição' },
   )
+})
+
+test('marca intenção com PUT, identidade no cabeçalho e sem corpo', async () => {
+  let urlRecebida
+  let opcoesRecebidas
+  const identidade = '123e4567-e89b-42d3-a456-426614174000'
+
+  const resultado = await marcarIntencao(42, identidade, {
+    baseUrl: 'https://api.exemplo.test',
+    fetchImpl: async (url, opcoes) => {
+      urlRecebida = new URL(url)
+      opcoesRecebidas = opcoes
+      return { ok: true, status: 200, json: async () => ({ cardapio_id: 42, ativa: true }) }
+    },
+  })
+
+  assert.equal(urlRecebida.pathname, '/cardapios/42/intencao/')
+  assert.equal(opcoesRecebidas.method, 'PUT')
+  assert.equal(opcoesRecebidas.headers['X-Identidade'], identidade)
+  assert.equal(opcoesRecebidas.body, undefined)
+  assert.deepEqual(resultado, { cardapio_id: 42, ativa: true })
+})
+
+test('desmarca intenção com DELETE e identidade no cabeçalho', async () => {
+  let urlRecebida
+  let opcoesRecebidas
+
+  const resultado = await desmarcarIntencao(42, '123e4567-e89b-42d3-a456-426614174000', {
+    baseUrl: 'https://api.exemplo.test',
+    fetchImpl: async (url, opcoes) => {
+      urlRecebida = new URL(url)
+      opcoesRecebidas = opcoes
+      return { ok: true, status: 200, json: async () => ({ cardapio_id: 42, ativa: false }) }
+    },
+  })
+
+  assert.equal(urlRecebida.pathname, '/cardapios/42/intencao/')
+  assert.equal(opcoesRecebidas.method, 'DELETE')
+  assert.deepEqual(resultado, { cardapio_id: 42, ativa: false })
+})
+
+test('traduz o erro de prazo encerrado ao marcar intenção', async () => {
+  await assert.rejects(
+    marcarIntencao(42, '123e4567-e89b-42d3-a456-426614174000', {
+      baseUrl: 'https://api.exemplo.test',
+      fetchImpl: async () => ({
+        ok: false,
+        status: 422,
+        json: async () => ({ detail: 'A intenção só pode ser marcada antes do início do serviço da refeição' }),
+      }),
+    }),
+    { message: 'A intenção só pode ser marcada antes do início do serviço da refeição' },
+  )
+})
+
+test('lista intenções pessoais da semana com identidade e filtros', async () => {
+  let urlRecebida
+  let opcoesRecebidas
+
+  const resultado = await listarIntencoes(
+    { campus_id: 2, data_inicio: '2026-11-02', data_fim: '2026-11-08' },
+    '123e4567-e89b-42d3-a456-426614174000',
+    {
+      baseUrl: 'https://api.exemplo.test',
+      fetchImpl: async (url, opcoes) => {
+        urlRecebida = new URL(url)
+        opcoesRecebidas = opcoes
+        return {
+          ok: true,
+          status: 200,
+          json: async () => [
+            { cardapio_id: 42, campus_id: 2, data: '2026-11-03', tipo_refeicao: 'almoco', ativa: true },
+          ],
+        }
+      },
+    },
+  )
+
+  assert.equal(urlRecebida.pathname, '/intencoes/')
+  assert.equal(urlRecebida.searchParams.get('campus_id'), '2')
+  assert.equal(opcoesRecebidas.headers['X-Identidade'], '123e4567-e89b-42d3-a456-426614174000')
+  assert.equal(resultado[0].cardapio_id, 42)
+})
+
+test('consulta estimativas por campus e período, real por padrão', async () => {
+  let urlRecebida
+
+  const resultado = await listarEstimativas(
+    { campus_id: 2, data_inicio: '2026-11-02', data_fim: '2026-11-08' },
+    {
+      baseUrl: 'https://api.exemplo.test',
+      fetchImpl: async (url) => {
+        urlRecebida = new URL(url)
+        return {
+          ok: true,
+          status: 200,
+          json: async () => [{
+            cardapio_id: 42, campus_id: 2, data: '2026-11-03', tipo_refeicao: 'almoco',
+            data_inicio: '2026-11-02', data_fim: '2026-11-08', calculado_em: '2026-11-03T10:00:00-03:00',
+            dados_simulados: false, amostra_minima: 10, status: 'dados_insuficientes',
+            mensagem: 'Dados insuficientes para estimar intenções; não representa a fila real.', contagem: null,
+          }],
+        }
+      },
+    },
+  )
+
+  assert.equal(urlRecebida.pathname, '/estimativas/')
+  assert.equal(urlRecebida.searchParams.has('dados_simulados'), false)
+  assert.equal(resultado[0].status, 'dados_insuficientes')
+  assert.equal(resultado[0].contagem, null)
 })
