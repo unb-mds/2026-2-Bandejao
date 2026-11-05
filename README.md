@@ -24,6 +24,9 @@ Aplicação para consulta ao cardápio semanal dos Restaurantes Universitários 
 - [Figma](https://www.figma.com/board/61OYJuLeyE3m3jwzSzfZ1W/Bandejao-2026-2?t=kVJg4rR4m3kIYsj7-0)
 - [Publicação e manutenção da GH Page](docs/github-pages.md)
 - [Publicação da aplicação no Render](docs/publicacao.md)
+- [Como contribuir](CONTRIBUTING.md)
+- [Código de Conduta](CODE_OF_CONDUCT.md)
+- [Licença](LICENSE)
 
 ## Status
 

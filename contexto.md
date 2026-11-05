@@ -64,11 +64,9 @@ O sistema é dividido em camadas:
 
 ## Convenções do projeto
 
-> A completar conforme o grupo definir. Sugestões:
-
-- Branches: uma branch por tarefa/issue (ex: `feature/extracao-cardapio`), sem commits diretos na `main`.
-- Pull Requests: obrigatórios para revisão antes de mesclar na `main`.
-- Issues: cada tarefa (organizacional ou técnica) deve ter uma issue própria, vinculada a um milestone (Release 1 ou Release 2) e, quando aplicável, atribuída a um responsável.
+- Branches: uma branch por tarefa/issue (ex: `docs/83-arquivos-organizacao`), sem commits diretos na `main`. Convenção completa em [CONTRIBUTING.md](CONTRIBUTING.md).
+- Pull Requests: obrigatórios para revisão antes de mesclar na `main`, com template em [.github/PULL_REQUEST_TEMPLATE.md](.github/PULL_REQUEST_TEMPLATE.md).
+- Issues: cada tarefa (organizacional ou técnica) deve ter uma issue própria, vinculada a um milestone (Release 1 ou Release 2) e, quando aplicável, atribuída a um responsável. Templates em [.github/ISSUE_TEMPLATE/](.github/ISSUE_TEMPLATE/).
 
 ## Comandos úteis
 
