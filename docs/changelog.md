@@ -1,5 +1,24 @@
 # Histórico de mudanças da documentação
 
+## 05/11/2026 — Documento da Sprint 05
+
+- Criado `docs/scrum/sprint05.md`, com objetivo, entregas, issues e
+critérios de aceitação da sprint, e entrada "Sprint 05" (e "Sprint 04",
+que estava fora do nav) no `mkdocs.yml`.
+- O documento registra apenas o que é comprovado no código e nos
+pull requests: intenções de refeição (issue 76, PR #85), estimativa
+(issue 77, PR #86), dados simulados (issue 78, PR #87), planejamento
+e rótulos ligados à API (issues 79 e 80, commit `fffe558` de 04/11)
+e arquivos de organização (issue 83, PR #89).
+- As reuniões de acompanhamento não foram registradas pelo grupo;
+o documento marca as seções de reunião como "a registrar", sem
+inventar datas, decisões ou resultados.
+- Limites conhecidos registrados no documento: semana de domingo a
+sábado no frontend, lotação ainda com exemplos, sincronização
+agendada aguardando `BACKEND_URL` e `IMPORTACAO_TOKEN`, publicação
+HTTPS aguardando ativação no Render e documentação geral ainda
+desatualizada sobre RF06/RF07.
+
 ## 27/10/2026 — Agendamento da sincronização a cada seis horas
 
 - Workflow do GitHub Actions executa a extração/importação às 00:23, 06:23, 12:23 e 18:23 UTC, ou manualmente.
