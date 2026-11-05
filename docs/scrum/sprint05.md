@@ -10,11 +10,12 @@ repositório e deixar a documentação da disciplina organizada.
 
 Os requisitos citados estão no [Documento de Requisitos](../Requisitos.md).
 
-> **Registro:** as atas e os resultados das reuniões de acompanhamento
-> desta sprint **não foram registrados pelo grupo**. As seções de
-> reunião marcadas como "a registrar" deverão ser preenchidas quando
-> as reuniões acontecerem. As entregas abaixo são apenas o que está
-> comprovado no código, nos commits e nos pull requests.
+> **Natureza deste documento:** é o planejamento da sprint. As
+> reuniões de acompanhamento ainda não foram realizadas/registradas;
+> a seção "Reuniões de acompanhamento" registra o que **está
+> planejado** para as reuniões, sem inventar decisões ou resultados.
+> As entregas abaixo são apenas o que está comprovado no código,
+> nos commits e nos pull requests.
 
 ## O que a sprint entrega
 
@@ -39,7 +40,7 @@ Os requisitos citados estão no [Documento de Requisitos](../Requisitos.md).
 | 81 | Revisão das marcações de alérgenos com PDFs reais | Dados | Pendente |
 | 82 | Conjunto de PDFs de referência | Dados | Pendente (parcial: 5 PDFs e regressão offline já existem) |
 | 83 | Arquivos de organização do repositório | Docs | Entregue (PR #89) |
-| 84 | Documento da Sprint 05 | Docs | Em andamento |
+| 84 | Documento da Sprint 05 | Docs | Entregue (PR #90) |
 
 ## Critérios de aceitação
 
@@ -75,14 +76,26 @@ Os requisitos citados estão no [Documento de Requisitos](../Requisitos.md).
    conduta, template de PR e templates de issue; README apontando
    para eles.
 
-## Reuniões de acompanhamento
+## Plano de acompanhamento
 
-- Reunião de abertura da sprint: **a registrar pelo grupo**.
-- Revisões semanais: **a registrar pelo grupo**.
-- Retrospectiva e encerramento: **a registrar pelo grupo**.
+O grupo acompanhará a sprint nas reuniões semanais previstas no
+planejamento da disciplina. As decisões e resultados dessas
+reuniões serão registrados aqui e na ata correspondente quando
+ocorrerem, com data e participantes reais indicados pelo grupo.
 
-Os resultados e decisões dessas reuniões serão acrescentados aqui
-e na ata correspondente quando forem registrados pelo grupo.
+A agenda prevista para o ciclo de acompanhamento é:
+
+1. **Abertura da sprint:** confirmar o escopo (issues 76 a 84) e a
+   ordem de entrega: backend das intenções e da estimativa primeiro
+   (76, 77, 78), depois a integração do frontend (79, 80), em
+   paralelo os dados (81, 82) e a organização (83, 84).
+2. **Telefonemas de verificação:** conferir se as entregas de
+   backend (76–78) estão na `main` e se há testes e migração, antes
+   de começar o frontend (79, 80).
+3. **Fechamento:** verificar quais critérios de aceitação foram
+   atingidos, quais issues restam pendentes (81, 82) e quais
+   pendências operacionais continuam fora do repositório (token da
+   sincronização e ativação no Render).
 
 ## Limites conhecidos
 
