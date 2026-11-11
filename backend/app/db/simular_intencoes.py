@@ -90,13 +90,25 @@ def main(argv: list[str] | None = None) -> int:
         comando.add_argument("--campus-id", type=_positivo, required=True)
         comando.add_argument("--data", type=_data_iso, required=True)
         comando.add_argument("--refeicao", choices=[tipo.value for tipo in TipoRefeicao], required=True)
+        comando.add_argument(
+            "--dry-run", action="store_true",
+            help="Mostra a quantidade prevista sem criar ou remover intenções.",
+        )
         if operacao == "criar":
             comando.add_argument("--quantidade", type=_quantidade, required=True)
     args = parser.parse_args(argv)
     try:
         with SessionLocal() as db:
             seletores = (db, args.campus_id, args.data, TipoRefeicao(args.refeicao))
-            if args.operacao == "criar":
+            if args.dry_run:
+                cardapio = _cardapio(*seletores)
+                quantidade = (
+                    args.quantidade if args.operacao == "criar"
+                    else db.query(Intencao).filter_by(
+                        cardapio_id=cardapio.id, simulada=True,
+                    ).count()
+                )
+            elif args.operacao == "criar":
                 quantidade = criar_simuladas(*seletores, args.quantidade)
             else:
                 quantidade = remover_simuladas(*seletores)
@@ -106,14 +118,17 @@ def main(argv: list[str] | None = None) -> int:
     except SQLAlchemyError:
         print("Falha no banco de dados; operação não concluída.", file=sys.stderr)
         return 1
-    print(json.dumps({
+    resumo = {
         "operacao": args.operacao,
         "campus_id": args.campus_id,
         "data": args.data.isoformat(),
         "refeicao": args.refeicao,
         "quantidade": quantidade,
         "dados_simulados": True,
-    }))
+    }
+    if args.dry_run:
+        resumo["dry_run"] = True
+    print(json.dumps(resumo))
     return 0
 
 

@@ -260,3 +260,37 @@ def test_modulo_executa_main_e_devolve_codigo_de_saida(db_session, refeicao, mon
         runpy.run_module('app.db.simular_intencoes', run_name='__main__')
     assert erro.value.code == 0
     assert json.loads(capsys.readouterr().out)['quantidade'] == 1
+
+
+@pytest.mark.parametrize('operacao,prevista', [('criar', 5), ('remover', 2)])
+def test_previa_nao_grava_nem_remove(db_session, refeicao, monkeypatch, capsys, operacao, prevista):
+    seletores = (db_session, refeicao.campus_id, refeicao.data, refeicao.tipo_refeicao)
+    simulacao.criar_simuladas(*seletores, 2)
+    real = Intencao(cardapio_id=refeicao.id, identidade=uuid4(), ativa=False)
+    db_session.add(real)
+    db_session.commit()
+    antes = {(r.id, r.identidade, r.ativa, r.simulada) for r in db_session.query(Intencao)}
+
+    def proibido():
+        pytest.fail('A prévia não pode confirmar uma transação de escrita')
+
+    monkeypatch.setattr(db_session, 'commit', proibido)
+    monkeypatch.setattr(simulacao, 'SessionLocal', lambda: db_session)
+    args = [*argumentos(refeicao, operacao), '--dry-run']
+    if operacao == 'criar':
+        args += ['--quantidade', '5']
+    assert simulacao.main(args) == 0
+    resumo = json.loads(capsys.readouterr().out)
+    assert resumo['dry_run'] is True
+    assert resumo['dados_simulados'] is True
+    assert resumo['quantidade'] == prevista
+    assert {(r.id, r.identidade, r.ativa, r.simulada) for r in db_session.query(Intencao)} == antes
+
+
+def test_previa_exige_refeicao_cadastrada(db_session, monkeypatch, capsys):
+    monkeypatch.setattr(simulacao, 'SessionLocal', lambda: db_session)
+    assert simulacao.main([
+        'remover', '--campus-id', '999', '--data', '2026-09-15',
+        '--refeicao', 'almoco', '--dry-run',
+    ]) == 1
+    assert 'Refeição não encontrada' in capsys.readouterr().err
