@@ -329,7 +329,7 @@ test('consulta estimativas por campus e período, real por padrão', async () =>
             cardapio_id: 42, campus_id: 2, data: '2026-11-03', tipo_refeicao: 'almoco',
             data_inicio: '2026-11-02', data_fim: '2026-11-08', calculado_em: '2026-11-03T10:00:00-03:00',
             dados_simulados: false, amostra_minima: 10, status: 'dados_insuficientes',
-            mensagem: 'Dados insuficientes para estimar intenções; não representa a fila real.', contagem: null,
+            mensagem: 'Dados insuficientes para estimar intenções; não representa a fila real.',
           }],
         }
       },
@@ -339,5 +339,6 @@ test('consulta estimativas por campus e período, real por padrão', async () =>
   assert.equal(urlRecebida.pathname, '/estimativas/')
   assert.equal(urlRecebida.searchParams.has('dados_simulados'), false)
   assert.equal(resultado[0].status, 'dados_insuficientes')
-  assert.equal(resultado[0].contagem, null)
+  assert.equal(resultado[0].contagem, undefined)
+  assert.equal(Object.prototype.hasOwnProperty.call(resultado[0], 'contagem'), false)
 })
