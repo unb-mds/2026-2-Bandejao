@@ -87,6 +87,12 @@ no projeto antes de avançar pelas migrações seguintes. O DDL do novo modelo
 também é compilado para PostgreSQL. Essas verificações não executam migrações em
 um PostgreSQL real nem validam uma publicação em produção.
 
+O teste integrado `tests/test_pdf_referencia.py` também usa o extrator real para
+verificar a preservação do cardápio quando um PDF falha. Antes de rodar a suíte,
+instale as dependências dos dois componentes, a partir da raiz do repositório:
+`python -m pip install -r backend/requirements.txt -r extracao/requirements.txt`.
+O workflow de CI já instala as duas listas.
+
 ## Estimativas de intenções — RF07
 
 `GET /estimativas/` é uma consulta pública, sem `X-Identidade`. Parâmetros:
@@ -191,3 +197,18 @@ somente dados reais. O comando não gera check-ins, horários de chegada ou fila
 A verificação local também executa a CLI em subprocessos com `DATABASE_URL`
 isolada em SQLite temporário, cobrindo criação, remoção e preservação de intenções
 reais. Isso não valida a execução em PostgreSQL real nem uma publicação.
+
+### Conferir antes de gerar ou remover
+
+Acrescente `--dry-run` a qualquer operação para consultar a quantidade prevista
+sem gravar ou remover registros. Por exemplo:
+
+```powershell
+python -m app.db.simular_intencoes criar --campus-id 1 --data 2026-11-04 --refeicao almoco --quantidade 10 --dry-run
+python -m app.db.simular_intencoes remover --campus-id 1 --data 2026-11-04 --refeicao almoco --dry-run
+```
+
+A prévia exige a mesma refeição cadastrada e os mesmos argumentos da execução.
+O JSON inclui `dry_run=true`; a quantidade representa o que seria criado ou
+removido naquele instante. Para executar, retire `--dry-run`. Como os dados podem
+mudar entre a consulta e a execução, a quantidade final da remoção pode variar.

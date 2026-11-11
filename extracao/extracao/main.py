@@ -17,6 +17,7 @@ from urllib.parse import urljoin
 
 from bs4 import BeautifulSoup
 import pdfplumber
+from pdfminer.pdftypes import PDFException
 from PIL import Image, ImageOps
 import requests
 
@@ -346,7 +347,11 @@ def extrair_cardapio(pdf: PdfCardapio, conteudo_pdf: bytes) -> ResultadoExtracao
     """Lê as páginas de café, almoço e jantar de um PDF já descoberto."""
     refeicoes: list[RefeicaoExtraida] = []
     avisos: list[str] = []
-    for indice, (tabela, alergenos_por_celula) in enumerate(_extrair_tabelas_com_alergenos(conteudo_pdf)):
+    try:
+        tabelas = _extrair_tabelas_com_alergenos(conteudo_pdf)
+    except PDFException as erro:
+        raise ErroExtracao("PDF inválido ou corrompido; não foi possível ler o cardápio.") from erro
+    for indice, (tabela, alergenos_por_celula) in enumerate(tabelas):
         if indice >= len(TIPOS_REFEICAO):
             avisos.append(f"Página {indice + 1} ignorada: tipo de refeição desconhecido.")
             continue
