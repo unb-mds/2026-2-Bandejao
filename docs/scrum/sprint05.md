@@ -38,7 +38,7 @@ Os requisitos citados estão no [Documento de Requisitos](../Requisitos.md).
 | 79 | Planejamento semanal e tela de estimativa ligados à API | Front | Entregue (commit `fffe558`, 04/11) |
 | 80 | Rótulos "intenções" e "dados simulados" | Front | Entregue (commit `fffe558`, 04/11) |
 | 81 | Revisão das marcações de alérgenos com PDFs reais | Dados | Pendente |
-| 82 | Conjunto de PDFs de referência | Dados | Pendente (parcial: 5 PDFs e regressão offline já existem) |
+| 82 | Conjunto de PDFs de referência | Dados | Pendente (parcial: 5 PDFs válidos com resultados esperados; falta o PDF de falha) |
 | 83 | Arquivos de organização do repositório | Docs | Entregue (PR #89) |
 | 84 | Documento da Sprint 05 | Docs | Entregue (PR #90) |
 
@@ -106,10 +106,14 @@ A agenda prevista para o ciclo de acompanhamento é:
 - A tela de lotação continua com exemplos e relatos desta sessão,
   sem consulta a dados reais; os números fictícios de lotação
   permanecem rotulados como exemplos.
-- A sincronização automática a cada seis horas depende de a
-  variável `BACKEND_URL` e do secret `IMPORTACAO_TOKEN` estarem
-  configurados no repositório, e a publicação em HTTPS depende da
-  ativação do ambiente no Render (issues 54 e 55).
-- A documentação geral (README, `contexto.md`, `docs/index.md`,
-  `docs/Arquitetura.md`) ainda descreve RF06/RF07 como pendentes e
-  será atualizada na próxima revisão de consistência.
+- Na execução consultada em 10/11/2026, `BACKEND_URL` estava
+  configurada, mas `IMPORTACAO_TOKEN` não estava disponível ao workflow.
+  A validação parou antes de extrair e importar os cardápios. A próxima
+  execução depende de o mesmo token estar configurado na API e no GitHub.
+- O Blueprint de hospedagem HTTPS foi integrado no PR 71. Na
+  verificação somente leitura de 10/11, a interface e os endpoints
+  `/health`, `/version`, `/campi/` e CORS da API retornaram HTTP 404.
+  Veja o [relatório](../evidencias/dados/publicacao-https-2026-11-11-utc.json)
+  e o histórico em `docs/verificacao-publicacao.md`.
+- README, `contexto.md`, `docs/index.md`, `docs/Arquitetura.md` e
+  `docs/Requisitos.md` foram alinhados ao estado implementado de RF06/RF07.

@@ -1,5 +1,17 @@
 # Histórico de mudanças da documentação
 
+## 10/11/2026 — Consistência da Release 2 e contrato da estimativa
+
+- README, contexto, página inicial, arquitetura e requisitos passam a
+  descrever planejamento e estimativas como funcionalidades integradas.
+- A documentação da Sprint 05 registra que a última execução consultada
+  da sincronização parou antes da importação: `BACKEND_URL` estava
+  configurada e `IMPORTACAO_TOKEN` não estava disponível ao workflow.
+- O tipo do frontend e o exemplo de resposta de estimativa refletem que
+  a API omite `contagem` quando há dados insuficientes.
+- A verificação pública de 10/11 recebeu HTTP 404 na interface e nos
+  endpoints da API; o resultado está em `evidencias/dados/publicacao-https-2026-11-11-utc.json`.
+
 ## 05/11/2026 — Documento da Sprint 05
 
 - Criado `docs/scrum/sprint05.md`, com objetivo, entregas, issues e

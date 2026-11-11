@@ -78,7 +78,7 @@ export interface EstimativaApi {
   amostra_minima: number
   status: 'dados_insuficientes' | 'disponivel'
   mensagem: string
-  contagem: number | null
+  contagem?: number
 }
 
 interface Opcoes {

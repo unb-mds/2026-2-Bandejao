@@ -4,18 +4,18 @@ Este arquivo dá contexto para ferramentas de IA (Claude Code e similares) traba
 
 ## Visão geral
 
-**Bandejão** é uma aplicação que centraliza o cardápio semanal dos Restaurantes Universitários (RU) da UnB, abrangendo todos os campi (Darcy Ribeiro, Ceilândia, Gama, Planaltina e Fazenda Água Limpa), permite filtrar refeições por restrição alimentar, avaliar refeições e registrar reclamações. Em uma segunda etapa, prevê planejamento antecipado dos dias e refeições no RU e estimativa de intenções por refeição, conforme D05.
+**Bandejão** é uma aplicação que centraliza o cardápio semanal dos Restaurantes Universitários (RU) da UnB, abrangendo todos os campi (Darcy Ribeiro, Ceilândia, Gama, Planaltina e Fazenda Água Limpa), permite filtrar refeições por restrição alimentar, avaliar refeições, registrar reclamações e salvar intenções de refeição para a semana. A API também apresenta estimativas por campus, data e refeição, conforme D05.
 
 Projeto acadêmico, desenvolvido por uma equipe de 7 integrantes.
 
 ## Escopo por release
 
 - **Release 1:** cardápio da semana, filtros alimentares (vegetariano, alergias), avaliação de refeições e registro independente de reclamações.
-- **Release 2:** planejamento semanal de dias e refeições no RU e estimativa de intenções por dia, refeição e campus, sem previsão de horário de chegada ou tempo de fila.
+- **Release 2:** planejamento semanal persistido pela API e estimativa de intenções por dia, refeição e campus, sem previsão de horário de chegada ou tempo de fila. Dados simulados são consultados separadamente e identificados.
 
 ## Decisões D01–D08 (Requisitos v1.2, 14/10/2026)
 
-Decisões tomadas pela equipe em `docs/Requisitos.md` (seção 7). O estado da implementação foi revisado em 27/10/2026; o histórico e a situação consolidada estão em `docs/scrum/sprint03.md`.
+Decisões tomadas pela equipe em `docs/Requisitos.md` (seção 7). O estado da implementação foi revisado em 10/11/2026; o histórico das entregas da Release 2 está em `docs/scrum/sprint05.md`.
 
 - **D01:** semana de segunda a domingo, fuso `America/Sao_Paulo`.
 - **D02:** filtro de dieta inclusivo — selecionar "ovolactovegetariano" também retorna itens "vegetariano estrito". As demais dietas continuam exatas. Implementado na API e na interface, com aviso sobre as limitações das marcações da fonte.
@@ -36,10 +36,11 @@ O sistema é dividido em camadas:
    - `GET /cardapios/` (filtros: `campus_id`, `data_inicio`/`data_fim`, `tipo_refeicao`, `tipo_dieta`, `excluir_alergenos` — implementa o filtro por restrição alimentar do RF03), `GET /cardapios/{cardapio_id}`
    - `GET /cardapios/{cardapio_id}/avaliacoes`, `POST /cardapios/{cardapio_id}/avaliacoes` (RF04/RF05)
    - `POST /cardapios/{cardapio_id}/reclamacoes/` (RF08) e `GET /equipe/reclamacoes/` (leitura interna por token da equipe).
-   - As rotas HTTP de check-in legado foram retiradas na Sprint 03; o modelo/tabela permanece até a migração para planejamento.
-   - A nova abordagem dos RF06/RF07 ainda não está implementada no backend.
-3. **Banco de dados** — armazena cardápios, avaliações e reclamações. O modelo `CheckIn`, já implementado em `backend/app/models/`, pertence à abordagem anterior da Release 2 e deverá ser substituído por uma entidade de planejamento semanal. Os demais modelos SQLAlchemy são `Campus`, `Cardapio`, `ItemCardapio`, `Avaliacao` e `Reclamacao`, além dos enums `TipoRefeicao`, `Categoria`, `TipoDieta` e `CategoriaReclamacao`. Migrações são gerenciadas por Alembic (`backend/alembic/`).
-4. **Frontend** (`/frontend`) — usa React 19, Vite 8, TypeScript e Tailwind v4, incorporando as telas de `marilluantunes/frontend-react`. Campi, cardápios e histórico de avaliações são consultados na API; filtros locais usam os marcadores publicados. Avaliações e reclamações são enviadas à API e persistidas. Planejamento e lotação seguem como demonstrações sem persistência integrada. O aviso de privacidade pode ser relido no rodapé. Veja `frontend/README.md` para estrutura e limites.
+   - `PUT`, `GET` e `DELETE /cardapios/{cardapio_id}/intencao/`, além de `GET /intencoes/` (RF06).
+   - `GET /estimativas/` (RF07); exige campus e período e usa o mínimo configurado de 10 intenções ativas. `dados_simulados=true` consulta somente os dados simulados.
+   - As rotas HTTP de check-in legado foram retiradas na Sprint 03; a tabela permanece como legado.
+3. **Banco de dados** — armazena cardápios, avaliações, reclamações e intenções. `Intencao` registra uma identidade anônima por refeição, com estado ativo/cancelado e marcador de simulação. `CheckIn` é legado. Os demais modelos SQLAlchemy são `Campus`, `Cardapio`, `ItemCardapio`, `Avaliacao` e `Reclamacao`, além dos enums `TipoRefeicao`, `Categoria`, `TipoDieta` e `CategoriaReclamacao`. Migrações são gerenciadas por Alembic (`backend/alembic/`).
+4. **Frontend** (`/frontend`) — usa React 19, Vite 8, TypeScript e Tailwind v4, incorporando as telas de `marilluantunes/frontend-react`. Campi, cardápios, avaliações, reclamações, planejamento e estimativas usam a API. As estimativas simuladas são identificadas na tela. A lotação continua demonstrativa, sem consulta a dados reais. O aviso de privacidade pode ser relido no rodapé. Veja `frontend/README.md` para estrutura e limites.
 
 ## Stack técnica
 
@@ -54,13 +55,12 @@ O sistema é dividido em camadas:
 - Segurança estática: Bandit para Python e CodeQL para JavaScript/TypeScript, conforme RNF05; ambos são obrigatórios no ruleset ativo da `main`, sem bypass.
 - Lint: Ruff (Python), Oxlint via `npm run lint` (frontend).
 
-## Pendências em 27/10/2026
+## Pendências em 10/11/2026
 
-- Alinhar integralmente a apresentação semanal do frontend à D01; o backend já tem utilitários temporais.
-- Implementar planejamento persistido e estimativa por intenções (RF06/RF07).
-- Comprovar sincronização contínua no host (issue 54). Os cinco PDFs reais e a reimportação foram validados em ambiente isolado.
-- Ativar e validar a hospedagem HTTPS (issue 55). A preparação da equipe está no PR 71; as URLs propostas retornaram 404 e o acesso Render não está disponível nesta entrega.
-- O aviso de privacidade da issue 53 está integrado pelo PR 72. Evidências e limites estão em `docs/privacidade.md` e `docs/verificacao-publicacao.md`.
+- A apresentação semanal ainda usa domingo a sábado, embora D01 defina segunda a domingo.
+- A sincronização agendada não importou cardápios na última execução consultada: `BACKEND_URL` estava configurada, mas `IMPORTACAO_TOKEN` não estava disponível ao workflow. Veja a [execução de 10/11](https://github.com/unb-mds/2026-2-Bandejao/actions/runs/42889503183).
+- A verificação pública de 10/11 recebeu HTTP 404 na interface e nos endpoints `/health`, `/version` e `/campi/` da API; não foi possível validar a hospedagem integrada. Veja o [relatório](docs/evidencias/dados/publicacao-https-2026-11-11-utc.json) e o [procedimento](docs/verificacao-publicacao.md).
+- As issues de dados #81 e #82 continuam abertas; a #82 já tem cinco PDFs válidos e resultados esperados, mas ainda falta o caso de falha exigido.
 
 ## Convenções do projeto
 
