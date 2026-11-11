@@ -87,6 +87,12 @@ no projeto antes de avançar pelas migrações seguintes. O DDL do novo modelo
 também é compilado para PostgreSQL. Essas verificações não executam migrações em
 um PostgreSQL real nem validam uma publicação em produção.
 
+O teste integrado `tests/test_pdf_referencia.py` também usa o extrator real para
+verificar a preservação do cardápio quando um PDF falha. Antes de rodar a suíte,
+instale as dependências dos dois componentes, a partir da raiz do repositório:
+`python -m pip install -r backend/requirements.txt -r extracao/requirements.txt`.
+O workflow de CI já instala as duas listas.
+
 ## Estimativas de intenções — RF07
 
 `GET /estimativas/` é uma consulta pública, sem `X-Identidade`. Parâmetros:
