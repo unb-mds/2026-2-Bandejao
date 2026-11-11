@@ -110,9 +110,10 @@ A agenda prevista para o ciclo de acompanhamento é:
   configurada, mas `IMPORTACAO_TOKEN` não estava disponível ao workflow.
   A validação parou antes de extrair e importar os cardápios. A próxima
   execução depende de o mesmo token estar configurado na API e no GitHub.
-- O Blueprint de hospedagem HTTPS foi integrado no PR 71. A
-  disponibilidade atual do site e da API não foi verificada nesta revisão;
-  o registro em `docs/verificacao-publicacao.md` contém a verificação de
-  27/10/2026.
+- O Blueprint de hospedagem HTTPS foi integrado no PR 71. Na
+  verificação somente leitura de 10/11, a interface e os endpoints
+  `/health`, `/version`, `/campi/` e CORS da API retornaram HTTP 404.
+  Veja o [relatório](../evidencias/dados/publicacao-https-2026-11-11-utc.json)
+  e o histórico em `docs/verificacao-publicacao.md`.
 - README, `contexto.md`, `docs/index.md`, `docs/Arquitetura.md` e
   `docs/Requisitos.md` foram alinhados ao estado implementado de RF06/RF07.

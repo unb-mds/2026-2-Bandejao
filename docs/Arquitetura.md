@@ -4,7 +4,7 @@
 
 **Escopo:** arquitetura das Releases 1 e 2
 
-**Estado do código consultado:** 10/11/2026 (após os PRs 85–90; operação da sincronização pendente de configuração)
+**Estado do código consultado:** 10/11/2026 (após os PRs 85–90; hospedagem retornou HTTP 404 na verificação pública)
 
 ## 1. Propósito e estado
 
@@ -166,7 +166,7 @@ A extração também pode ser iniciada fora do Docker com `python -m extracao.si
 
 ---
 
-*Documento revisado em 10/11/2026 para refletir o schema e os componentes da `main`. Os checks de código e documentação não comprovam a disponibilidade atual da hospedagem nem a operação da sincronização.*
+*Documento revisado em 10/11/2026 para refletir o schema e os componentes da `main`. Na verificação pública dessa data, a interface e os endpoints `/health`, `/version` e `/campi/` retornaram HTTP 404. Consulte o [relatório da publicação](verificacao-publicacao.md). Os checks de código e documentação não comprovam a operação da sincronização.*
 
 ## Situação de publicação em 27/10/2026
 

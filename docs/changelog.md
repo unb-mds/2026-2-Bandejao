@@ -9,6 +9,8 @@
   configurada e `IMPORTACAO_TOKEN` não estava disponível ao workflow.
 - O tipo do frontend e o exemplo de resposta de estimativa refletem que
   a API omite `contagem` quando há dados insuficientes.
+- A verificação pública de 10/11 recebeu HTTP 404 na interface e nos
+  endpoints da API; o resultado está em `evidencias/dados/publicacao-https-2026-11-11-utc.json`.
 
 ## 05/11/2026 — Documento da Sprint 05
 

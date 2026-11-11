@@ -10,6 +10,10 @@ O [PR 71](https://github.com/unb-mds/2026-2-Bandejao/pull/71), aberto por Gabrie
 
 As URLs propostas `https://bandejao-unb-g12.onrender.com` e `https://bandejao-unb-g12-api.onrender.com` retornaram HTTP 404 nesta verificação, inclusive `/health`, `/version` e consultas públicas. O [registro JSON](evidencias/dados/publicacao-https-2026-10-27.json) contém instante UTC, SHA esperado do PR e cada resultado. Um endereço terminar em `onrender.com` não comprova que o ambiente foi criado.
 
+## Reverificação em 10/11/2026
+
+O verificador somente leitura foi executado novamente contra os endereços configurados no repositório, esperando o commit `d69b1a3490c4fa1d5b2baba48ae19df61a562fad` da `main`. As cinco checagens falharam com HTTP 404: HTML da interface, healthcheck, versão, dados publicados e CORS. O [novo registro](evidencias/dados/publicacao-https-2026-11-11-utc.json) preserva as respostas e o instante UTC. Isso confirma que os endereços não serviam as rotas esperadas nessa consulta; sem acesso à conta Render, a causa não foi determinada.
+
 Não há acesso à conta Render nesta sessão. O Blueprint, os testes e o código de versão não substituem a ativação de serviços/banco, as migrações e a navegação externa exigidas por CA-RNF04-01. A issue deve permanecer aberta até essa evidência existir. O protótipo Vercel continua uma referência visual separada.
 
 ## Verificador somente leitura

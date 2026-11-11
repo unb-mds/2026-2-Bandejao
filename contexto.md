@@ -59,7 +59,7 @@ O sistema é dividido em camadas:
 
 - A apresentação semanal ainda usa domingo a sábado, embora D01 defina segunda a domingo.
 - A sincronização agendada não importou cardápios na última execução consultada: `BACKEND_URL` estava configurada, mas `IMPORTACAO_TOKEN` não estava disponível ao workflow. Veja a [execução de 10/11](https://github.com/unb-mds/2026-2-Bandejao/actions/runs/42889503183).
-- A disponibilidade atual do site e da API no Render não foi verificada. O histórico da publicação e os comandos de conferência estão em `docs/verificacao-publicacao.md`.
+- A verificação pública de 10/11 recebeu HTTP 404 na interface e nos endpoints `/health`, `/version` e `/campi/` da API; não foi possível validar a hospedagem integrada. Veja o [relatório](docs/evidencias/dados/publicacao-https-2026-11-11-utc.json) e o [procedimento](docs/verificacao-publicacao.md).
 - As issues de dados #81 e #82 continuam abertas; a #82 já tem cinco PDFs válidos e resultados esperados, mas ainda falta o caso de falha exigido.
 
 ## Convenções do projeto

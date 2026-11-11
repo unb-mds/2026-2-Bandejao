@@ -39,7 +39,7 @@ Aplicação para consulta ao cardápio semanal dos Restaurantes Universitários 
 
 ## Publicação da aplicação
 
-A configuração de hospedagem HTTPS foi integrada no [PR 71](https://github.com/unb-mds/2026-2-Bandejao/pull/71). O registro de verificação de 27/10/2026 encontrou respostas 404; a disponibilidade atual da aplicação e da API não foi conferida nesta revisão. A sincronização automática tem a URL da API configurada, mas a execução de [10/11/2026](https://github.com/unb-mds/2026-2-Bandejao/actions/runs/42889503183) falhou porque o secret `IMPORTACAO_TOKEN` não estava disponível para o workflow. A importação não foi iniciada. Consulte [verificação da publicação](docs/verificacao-publicacao.md) e [operação da sincronização](docs/evidencias/sincronizacao-issue-54.md).
+A configuração de hospedagem HTTPS foi integrada no [PR 71](https://github.com/unb-mds/2026-2-Bandejao/pull/71). Na verificação somente leitura de 10/11/2026, a interface e os endpoints públicos `/health`, `/version`, `/campi/` e CORS da API retornaram HTTP 404. A hospedagem não respondeu nos endereços esperados; veja o [relatório](docs/evidencias/dados/publicacao-https-2026-11-11-utc.json) e os [passos de verificação](docs/verificacao-publicacao.md). A sincronização automática tem a URL da API configurada, mas a execução de [10/11/2026](https://github.com/unb-mds/2026-2-Bandejao/actions/runs/42889503183) falhou porque o secret `IMPORTACAO_TOKEN` não estava disponível para o workflow. A importação não foi iniciada. Consulte também a [operação da sincronização](docs/evidencias/sincronizacao-issue-54.md).
 
 ## Como rodar o projeto
 
