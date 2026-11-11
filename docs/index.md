@@ -27,7 +27,7 @@ Esta entrega acadêmica apresenta a ideia e a organização da implementação. 
 
 Os Restaurantes Universitários da UnB publicam o cardápio da semana apenas em **PDF**, separado por campus e sem nenhum filtro. Quem tem restrição alimentar não encontra rápido uma opção adequada, não há como avaliar as refeições e a fila é imprevisível.
 
-O **Bandejão** centraliza o cardápio dos **5 campi** (Darcy Ribeiro, Ceilândia, Gama, Planaltina e Fazenda Água Limpa), permite filtrar por dieta e alérgenos, avaliar refeições e registrar reclamações. A segunda etapa prevê planejamento semanal e estimativa de intenções por campus, data e refeição, conforme D05.
+O **Bandejão** centraliza o cardápio dos **5 campi** (Darcy Ribeiro, Ceilândia, Gama, Planaltina e Fazenda Água Limpa), permite filtrar por dieta e alérgenos, avaliar refeições, registrar reclamações e salvar o planejamento semanal pela API. A estimativa de intenções segue D05 e não representa a fila real.
 
 ## 🧩 Épicos do produto
 
@@ -55,7 +55,7 @@ O **Bandejão** centraliza o cardápio dos **5 campi** (Darcy Ribeiro, Ceilândi
 
     ---
 
-    O usuário marca os dias e refeições em que pretende ir ao RU. A estimativa usa a quantidade de intenções por refeição, com amostra mínima de 10; não prevê horário de chegada nem tempo de fila. Implementação pendente.
+    O usuário marca os dias e refeições em que pretende ir ao RU. A estimativa usa intenções ativas, com amostra mínima de 10; dados simulados são consultados separadamente e identificados. Não prevê horário de chegada nem tempo de fila.
 
 </div>
 
