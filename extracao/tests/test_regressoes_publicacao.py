@@ -21,6 +21,23 @@ def test_publicacao_oficial_versionada_mantem_resultado_esperado(campus):
     assert main.para_payload_importacao(resultado) == esperado
 
 
+def test_pdf_invalido_versionado_falha_com_mensagem_clara():
+    pasta = Path(__file__).parent / "fixtures" / "publicacao-2026-10-27"
+    esperado = json.loads((pasta / "invalido.pdf.json").read_text(encoding="utf-8"))
+    pdf = main.PdfCardapio("Gama", "https://exemplo.test/invalido.pdf",
+                          date(2026, 10, 26), date(2026, 11, 1))
+    with pytest.raises(main.ErroExtracao) as erro:
+        main.extrair_cardapio(pdf, (pasta / "invalido.pdf").read_bytes())
+    assert str(erro.value) == esperado["erro"]
+
+
+def test_conjunto_tem_seis_pdfs_com_resultado_esperado():
+    pasta = Path(__file__).parent / "fixtures" / "publicacao-2026-10-27"
+    pdfs = list(pasta.glob("*.pdf"))
+    assert len(pdfs) == 6
+    assert all(pdf.with_suffix(".pdf.json").is_file() for pdf in pdfs)
+
+
 @pytest.mark.parametrize("sufixo", ["", "-", "-1", "-2", "-12"])
 def test_descoberta_aceita_revisoes_numericas_dos_cinco_campi(sufixo):
     html = "".join(

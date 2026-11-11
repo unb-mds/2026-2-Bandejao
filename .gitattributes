@@ -1,0 +1,2 @@
+# Preserve inclusive os bytes das fixtures de PDF intencionalmente invalidas.
+*.pdf binary
