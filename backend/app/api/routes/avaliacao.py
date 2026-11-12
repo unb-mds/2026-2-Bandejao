@@ -3,6 +3,7 @@ from typing import Annotated
 from uuid import UUID
 
 from fastapi import APIRouter, Depends, HTTPException, Response
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
 from app.api.dependencias import exigir_janela_aberta, obter_identidade
@@ -59,10 +60,29 @@ def criar_avaliacao(
             **payload.model_dump(),
         )
         db.add(avaliacao)
+        try:
+            db.commit()
+        except IntegrityError:
+            # Outra requisição pode ter criado a mesma identidade/refeição no intervalo.
+            db.rollback()
+            avaliacao = (
+                db.query(Avaliacao)
+                .filter(
+                    Avaliacao.cardapio_id == cardapio_id,
+                    Avaliacao.identidade == identidade,
+                )
+                .one_or_none()
+            )
+            if avaliacao is None:
+                raise
+            avaliacao.nota = payload.nota
+            avaliacao.comentario = payload.comentario
+            response.status_code = 200
+            db.commit()
     else:
         avaliacao.nota = payload.nota
         avaliacao.comentario = payload.comentario
         response.status_code = 200
-    db.commit()
+        db.commit()
     db.refresh(avaliacao)
     return avaliacao
