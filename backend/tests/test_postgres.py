@@ -1,5 +1,6 @@
 """Verificações que dependem de um PostgreSQL de verdade."""
 
+from datetime import UTC, datetime
 import os
 from uuid import uuid4
 
@@ -9,7 +10,14 @@ from alembic import command
 from sqlalchemy.engine import make_url
 
 from app.core.config import settings
+from app.schemas.campus import normalizar_instante_utc
 from tests.test_migracao_identidade import configurar_alembic
+
+
+def test_instante_sem_fuso_continua_normalizado_em_utc():
+    instante = datetime(2026, 11, 12, 12)
+
+    assert normalizar_instante_utc(instante) == instante.replace(tzinfo=UTC)
 
 
 def test_engine_de_teste_usa_a_url_postgresql_configurada():
@@ -45,8 +53,9 @@ def test_migracoes_sobem_e_descem_no_postgresql(monkeypatch):
             query={**url_banco.query, "options": f"-csearch_path={schema}"}
         )
         engine_schema = sa.create_engine(url_schema)
-        monkeypatch.setattr(settings, "database_url", str(url_schema))
-        config = configurar_alembic(str(url_schema))
+        url_schema_text = url_schema.render_as_string(hide_password=False)
+        monkeypatch.setattr(settings, "database_url", url_schema_text)
+        config = configurar_alembic(url_schema_text)
 
         command.upgrade(config, "head")
 
