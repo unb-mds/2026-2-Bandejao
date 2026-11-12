@@ -198,6 +198,8 @@ def test_nao_existe_rota_publica_de_listagem_nem_de_leitura(
             response = client.get(caminho, headers={"X-Identidade": identidade})
             assert response.status_code in (404, 405)
             assert "Texto sigiloso." not in response.text
+            assert IDENTIDADE_1 not in response.text
+            assert IDENTIDADE_2 not in response.text
 
     nomes = {rota.path for rota in client.app.routes}
     assert "/cardapios/{cardapio_id}/reclamacoes/" in nomes
@@ -279,6 +281,8 @@ def test_equipe_le_reclamacoes_sem_identidade_e_com_filtros(
     assert todas.status_code == 200
     assert [r["descricao"] for r in todas.json()] == ["Fila lenta.", "Mesa suja."]
     assert all("identidade" not in r for r in todas.json())
+    assert IDENTIDADE_1 not in todas.text
+    assert IDENTIDADE_2 not in todas.text
     assert set(todas.json()[0]) == {"id", "cardapio_id", "categoria", "descricao", "criado_em"}
 
     por_categoria = client.get(
