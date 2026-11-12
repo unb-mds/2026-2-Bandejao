@@ -1,5 +1,6 @@
 from collections.abc import Callable, Generator
 from datetime import datetime
+import os
 
 import pytest
 from fastapi.testclient import TestClient
@@ -12,14 +13,21 @@ from app.db.session import Base, get_db
 from app.main import app
 
 
-@pytest.fixture()
-def db_session() -> Generator[Session, None, None]:
-    # StaticPool mantém a mesma conexão para o banco SQLite existir durante toda a requisição.
-    engine = create_engine(
+def criar_engine_teste(database_url: str | None = None):
+    """Usa PostgreSQL quando configurado e SQLite isolado no desenvolvimento local."""
+    url = database_url or os.getenv("TEST_DATABASE_URL")
+    if url:
+        return create_engine(url)
+    return create_engine(
         "sqlite://",
         connect_args={"check_same_thread": False},
         poolclass=StaticPool,
     )
+
+
+@pytest.fixture()
+def db_session() -> Generator[Session, None, None]:
+    engine = criar_engine_teste()
     testing_session_local = sessionmaker(autocommit=False, autoflush=False, bind=engine)
     Base.metadata.create_all(bind=engine)
 
@@ -29,6 +37,7 @@ def db_session() -> Generator[Session, None, None]:
     finally:
         session.close()
         Base.metadata.drop_all(bind=engine)
+        engine.dispose()
 
 
 @pytest.fixture()
