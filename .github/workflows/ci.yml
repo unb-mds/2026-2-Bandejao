@@ -30,6 +30,20 @@ permissions:
 jobs:
   testes-python:
     runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: bandejao
+          POSTGRES_PASSWORD: bandejao
+          POSTGRES_DB: bandejao
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U bandejao -d bandejao"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-python@v7
@@ -44,8 +58,13 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install -r backend/requirements.txt
           python -m pip install -r extracao/requirements.txt
-      - name: Testar API
+      - name: Testar API no SQLite
         working-directory: backend
+        run: python -m pytest
+      - name: Testar API no PostgreSQL
+        working-directory: backend
+        env:
+          TEST_DATABASE_URL: postgresql+psycopg://bandejao:bandejao@localhost:5432/bandejao
         run: python -m pytest
       - name: Testar extração
         working-directory: extracao
