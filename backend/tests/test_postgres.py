@@ -71,7 +71,9 @@ def test_migracoes_sobem_e_descem_no_postgresql(monkeypatch):
         } <= tabelas
 
         command.downgrade(config, "base")
-        assert sa.inspect(engine_schema).get_table_names() == []
+        assert sa.inspect(engine_schema).get_table_names() == ["alembic_version"]
+        with engine_schema.connect() as conexao:
+            assert conexao.scalar(sa.text("SELECT count(*) FROM alembic_version")) == 0
     finally:
         if engine_schema is not None:
             engine_schema.dispose()
