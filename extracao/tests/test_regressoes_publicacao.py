@@ -38,6 +38,47 @@ def test_conjunto_tem_seis_pdfs_com_resultado_esperado():
     assert all(pdf.with_suffix(".pdf.json").is_file() for pdf in pdfs)
 
 
+@pytest.mark.parametrize(
+    ("campus", "data_refeicao", "tipo_refeicao", "nome_item", "alergenos"),
+    [
+        (
+            "Darcy Ribeiro",
+            "2026-10-28",
+            "almoco",
+            "Lasanha à bolonhesa",
+            {"leite", "carne_suina", "gluten"},
+        ),
+        (
+            "Ceilândia",
+            "2026-10-29",
+            "jantar",
+            "Macarrão ao molho branco com PTS",
+            {"leite", "gluten", "soja"},
+        ),
+    ],
+)
+def test_pdfs_reais_preservam_todos_os_alergenos_agrupados(
+    campus, data_refeicao, tipo_refeicao, nome_item, alergenos
+):
+    pasta = Path(__file__).parent / "fixtures" / "publicacao-2026-10-27"
+    pdfs = main.descobrir_pdfs(
+        (pasta / "links.html").read_text(encoding="utf-8"), date(2026, 10, 27)
+    )
+    pdf = pdfs[campus]
+    nome_pdf = pdf.url.rsplit("/", 1)[-1]
+    payload = main.para_payload_importacao(
+        main.extrair_cardapio(pdf, (pasta / nome_pdf).read_bytes())
+    )
+    refeicao = next(
+        refeicao
+        for refeicao in payload["refeicoes"]
+        if refeicao["data"] == data_refeicao and refeicao["tipo_refeicao"] == tipo_refeicao
+    )
+    item = next(item for item in refeicao["itens"] if item["nome"] == nome_item)
+
+    assert set(item["alergenos"]) == alergenos
+
+
 @pytest.mark.parametrize("sufixo", ["", "-", "-1", "-2", "-12"])
 def test_descoberta_aceita_revisoes_numericas_dos_cinco_campi(sufixo):
     html = "".join(

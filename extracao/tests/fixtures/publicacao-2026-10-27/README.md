@@ -20,8 +20,8 @@ Não há confirmação dessa revisão até o momento; o critério segue pendente
 
 | PDF / campus | Resultado esperado | Revisão por pessoa |
 | --- | --- | --- |
-| Ceilândia | JSON ao lado do PDF | Pendente |
-| Darcy Ribeiro | JSON ao lado do PDF | Pendente |
+| Ceilândia | JSON ao lado do PDF | Alérgenos e dietas revisados em 16/11/2026 na issue 81 |
+| Darcy Ribeiro | JSON ao lado do PDF | Alérgenos e dietas revisados em 16/11/2026 na issue 81 |
 | Fazenda Água Limpa | JSON ao lado do PDF | Pendente |
 | Gama | JSON ao lado do PDF | Pendente |
 | Planaltina | JSON ao lado do PDF | Pendente |
