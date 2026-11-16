@@ -1,64 +1,82 @@
-# Relatório de Auditoria e Divergências — Extração de Cardápios e Alérgenos (RU/UnB)
+# Auditoria das marcações de dieta e alérgenos - issue 81
 
-**Issue Relacionada:** #81  
-**Data da Auditoria:** Terça-feira, 10/11/2026  
-**Campi Auditados:** Darcy Ribeiro / Ceilândia  
-**Módulo Analisado:** `extracao/extracao/main.py`  
-**Interface Validada:** Frontend Web (http://localhost:5173) vs. PDFs Oficiais do RU/UnB
+## Escopo
 
----
+Esta auditoria compara os PDFs oficiais do Restaurante Universitário com a saída
+do extrator para **Darcy Ribeiro** e **Ceilândia**, na semana de **26/10 a
+01/11/2026**. A conferência foi refeita em 16/11/2026 para atender a D02, RN03 e
+RN04.
 
-## 1. Contexto e Objetivo
+Os arquivos foram obtidos da página oficial do RU e permanecem versionados em
+`extracao/tests/fixtures/publicacao-2026-10-27/`. A origem dos cinco campi está
+registrada em `docs/evidencias/dados/sincronizacao-2026-10-27.json`.
 
-Este documento registra os resultados da auditoria técnica realizada sobre o sistema de extração automática dos cardápios semanais do Restaurante Universitário (RU) da Universidade de Brasília (UnB). O objetivo é identificar, classificar e documentar as divergências entre as informações nutricionais e de alérgenos publicadas nos documentos PDF oficiais e os dados efetivamente processados e exibidos na aplicação web em **Darcy Ribeiro / Ceilândia**.
+| Campus | Arquivo | SHA-256 |
+| --- | --- | --- |
+| Darcy Ribeiro | `Darcy-Ribeiro-Semana-02-26-10-a-01-11-2.pdf` | `048080a945826cf7b64281b195d3a3a3b0f48db9d1e1a04229374b8f7211eb83` |
+| Ceilândia | `Ceilandia-Semana-02-26-10-a-01-11-1.pdf` | `2f431622e3dd30904354a1e6527ee2c859a6b24ae6a7b057e50046cc911b87ec` |
 
----
+## Método de conferência
 
-## 2. Quadro Comparativo: Esperado (PDF Oficial) vs. Exibido no Sistema
+As três páginas de cada PDF - café da manhã, almoço e jantar - foram renderizadas
+e comparadas com o JSON produzido pelo extrator. A revisão considerou:
 
-A tabela abaixo consolida as inconsistências observadas na grade de terça-feira (10/11/2026) em **Darcy Ribeiro / Ceilândia**, demonstrando que o impacto estrutural é o mesmo nos dois campi:
+1. o campus, a data, a refeição e o nome do item;
+2. o tipo de dieta indicado pela linha da tabela;
+3. cada ícone exibido junto ao item e sua correspondência com a legenda do próprio PDF;
+4. a saída antes e depois da correção.
 
-| Campus | Refeição | Categoria / Dieta | Item / Preparação | Esperado (PDF Oficial) | Exibido no Sistema | Status / Severidade | Diagnóstico da Divergência |
-|---|---|---|---|---|---|---|---|
-| Darcy Ribeiro / Ceilândia | Café da Manhã | Bebida (Comum) | Leite integral OU Bebida de soja | Leite e derivados, Soja | Leite e derivados, Soja | OK | Extração correta para itens com ícones bem espaçados horizontalmente. |
-| Darcy Ribeiro / Ceilândia | Café da Manhã | Panificação (Comum) | Pão francês / careca / integral | Trigo/Glúten (3 ícones repetidos) | Trigo/Glúten (1 ícone consolidado) | OK | Deduplicação correta via `frozenset`. |
-| Darcy Ribeiro / Ceilândia | Café da Manhã | Complemento (Ovolacto) | Queijo muçarela | Leite e derivados | Leite + tag Ovolactovegetariano | OK | Tolerância ajustada capturou a célula corretamente. |
-| Darcy Ribeiro / Ceilândia | Jantar | Prato Principal (Ovolacto) | Bife de soja ao sugo gratinado | Soja, Leite e derivados | Apenas tag Ovolacto (sem alérgenos) | **Crítico** | Célula densa com múltiplos ícones agrupados; supressão total dos alérgenos. |
-| Darcy Ribeiro / Ceilândia | Almoço | Prato Principal (Padrão) | Lasanha à bolonhesa / Gratinados | Trigo/Glúten, Leite e derivados | Apenas o 1º alérgeno ou vazio | **Crítico** | Gargalo na seleção única (`min()`) e falha na leitura de subcolunas complexas do Almoço. |
-| Darcy Ribeiro / Ceilândia | Almoço | Guarnição (Comum) | Purê de batata com manteiga | Leite e derivados | Ausente (sem ícone) | **Crítico** | Ícones posicionados na divisória da subcoluna de guarnições descartados pelo parser. |
-| Darcy Ribeiro / Ceilândia | Jantar | Sopa / Caldo (Comum) | Sopa de macarrão com legumes | Trigo/Glúten, Soja (tempero) | Ausente na interface | **Crítico** | Páginas de jantar de Darcy Ribeiro / Ceilândia sofrem do mesmo desalinhamento vertical nas linhas finais. |
-| Darcy Ribeiro / Ceilândia | Almoço / Jantar | Geral (Múltiplas categorias) | Pratos compostos diversos | Todos os ícones da legenda | Alérgenos ausentes na interface | **Crítico** | Diferença estrutural sistêmica entre a grade da Página 1 (Café) e das Páginas 2/3 (Almoço/Jantar). |
+Não foram inferidos alérgenos pelo nome ou pelos ingredientes do prato. Uma
+marcação só foi aceita quando estava presente no PDF.
 
----
+## Divergências encontradas e resultado
 
-## 3. Análise Técnica das Causas Raiz (`extracao/extracao/main.py`)
+O problema afetava itens com dois ou três ícones agrupados. A tabela registra
+uma amostra representativa dos casos conferidos; os JSONs de regressão guardam a
+saída completa dos dois campi.
 
-A investigação do pipeline de extração (pdfplumber + Pillow) revelou quatro causas principais que afetam identicamente **Darcy Ribeiro / Ceilândia**:
+| Campus | Data / refeição | Item | Esperado no PDF | Antes da correção | Depois da correção |
+| --- | --- | --- | --- | --- | --- |
+| Darcy Ribeiro | 27/10, café | Ovos mexidos | Ovo; leite | Sem marcação | Ovo; leite |
+| Darcy Ribeiro | 28/10, almoço | Lasanha à bolonhesa | Leite; suíno; trigo/glúten | Sem marcação | Leite; suíno; trigo/glúten |
+| Darcy Ribeiro | 31/10, almoço | Empadão de legumes com ervilha gratinado | Ovo; leite; trigo/glúten | Apenas trigo/glúten | Ovo; leite; trigo/glúten |
+| Darcy Ribeiro | 29/10, jantar | Strogonoff de carne | Trigo/glúten; leite; cogumelo | Apenas cogumelo | Trigo/glúten; leite; cogumelo |
+| Ceilândia | 28/10, almoço | Lasanha à bolonhesa | Leite; suíno; trigo/glúten | Sem marcação | Leite; suíno; trigo/glúten |
+| Ceilândia | 29/10, jantar | Macarrão ao molho branco com PTS | Leite; trigo/glúten; soja | Sem marcação | Leite; trigo/glúten; soja |
+| Ceilândia | 30/10, almoço | Peixe ao molho bechamel gratinado | Trigo/glúten; leite | Sem marcação | Trigo/glúten; leite |
 
-### 3.1. Desalinhamento de Subcolunas no Almoço e Jantar (`estruturar_tabela`)
+Também foram conferidas as marcações de dieta. A linha "prato principal
+ovolactovegetariano" continua sendo extraída como `ovolactovegetariano`, e a
+linha "prato principal vegetariano estrito" como `vegetariano_estrito`. Não foi
+encontrada divergência de dieta nos dois PDFs auditados.
 
-- **O Problema:** Nas páginas de almoço e jantar de **Darcy Ribeiro / Ceilândia**, o layout do PDF utiliza estruturas de colunas e subcolunas mais densas que o café da manhã. A lógica de fallback (`coluna_valor = coluna - 1`) falha na correspondência exata.
-- **Consequência:** O dicionário `alergenos_por_celula` indexa os ícones usando coordenadas que divergem da consulta em `estruturar_tabela`, retornando conjuntos vazios (`frozenset()`).
+## Causa e correção
 
-### 3.2. Rigidez na Detecção Geográfica de Ícones (`_alergenos_por_celula`)
+O PDF armazena um ícone isolado como uma imagem quase quadrada. Quando dois ou
+três ícones aparecem lado a lado, eles são compactados em uma única imagem larga.
+O extrator descartava imagens com largura superior a 20 pontos para evitar os
+logotipos da página e, com isso, descartava também todos os grupos de alérgenos.
 
-- **O Problema:** A associação entre imagem e célula verifica estritamente se o centro geométrico do ícone (`centro_x`, `centro_y`) está dentro dos limites exatos da caixa.
-- **Consequência:** Ícones nas margens (comum em pratos compostos de **Darcy Ribeiro / Ceilândia**) são ignorados.
+A correção aplicada:
 
-### 3.3. Gargalo da Seleção Única (`min()`)
+- reconhece faixas com até quatro ícones pela proporção entre largura e altura;
+- divide a faixa em imagens individuais;
+- compara a cor saturada da borda com a legenda do próprio PDF;
+- mantém a assinatura visual anterior como alternativa quando a cor não for suficiente;
+- associa o conjunto completo à célula e elimina repetições.
 
-- **O Problema:** O algoritmo selecionava apenas a assinatura visual com a menor distância de Hamming por imagem, com corte rígido (`LIMIAR_DISTANCIA_ICONE = 25`).
-- **Consequência:** Variações de renderização nos PDFs de **Darcy Ribeiro / Ceilândia** elevam a distância acima de 25, descartando ícones válidos.
+Foram adicionados testes unitários para a separação de ícones agrupados e testes
+de regressão com os PDFs reais de Darcy Ribeiro e Ceilândia. As saídas esperadas
+dos cinco campi foram atualizadas porque a mesma correção recuperou marcações que
+estavam ausentes nas demais referências da semana.
 
-### 3.4. Células Mescladas e Densidade Gráfica
+## Limitações conhecidas
 
-- **O Problema:** Pratos principais elaborados em **Darcy Ribeiro / Ceilândia** geram aglomeração de ícones de alérgenos, confundindo o isolamento de bounding boxes.
-
----
-
-## 4. Recomendações e Próximos Passos
-
-1. **Alinhamento de Coordenadas:** Mapear ícones por interseção de área (bounding box) com a coluna da data correspondente em **Darcy Ribeiro / Ceilândia**.
-2. **Margem de Tolerância (`MARGEM_TOLERANCIA`):** Expandir os limites em 6px a 8px para capturar ícones nas bordas.
-3. **Calibração Visual:** Ajustar o limiar para lidar com variações de compressão nos PDFs de **Darcy Ribeiro / Ceilândia**.
-4. **Testes Automatizados:** Adicionar fixtures de regressão para validar que o processamento em **Darcy Ribeiro / Ceilândia** retorna os conjuntos completos.
+- A auditoria manual cobre esta publicação e os dois campi exigidos pela issue;
+  mudanças futuras no modelo dos PDFs ainda podem exigir nova calibração.
+- O extrator preserva somente as marcações publicadas pelo RU. Ausência de ícone
+  significa "não marcado na fonte", e não garante que o item seja livre do alérgeno.
+- Esta publicação tem dez símbolos e não apresenta um símbolo separado para
+  frutos do mar. O sistema não cria essa informação por inferência.
+- Textos ilegíveis na camada do PDF continuam sendo sinalizados para possível
+  revisão por OCR; essa limitação não altera os ícones conferidos nesta auditoria.
