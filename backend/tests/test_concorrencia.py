@@ -2,7 +2,7 @@
 
 from concurrent.futures import ThreadPoolExecutor
 import os
-from threading import Barrier
+from threading import Barrier, Lock
 from uuid import UUID
 
 import pytest
@@ -67,10 +67,17 @@ def clientes_independentes(db_session: Session):
 
 def _duas_requisicoes_simultaneas(engine, tabela, clientes, metodo, caminho, corpo=None):
     barreira = Barrier(2)
+    trava = Lock()
+    buscas_sincronizadas = 0
 
     def sincronizar_buscas(conexao, cursor, instrucao, parametros, contexto, varios):
+        nonlocal buscas_sincronizadas
         sql = " ".join(instrucao.lower().replace('"', "").split())
         if sql.startswith("select") and f"from {tabela}" in sql:
+            with trava:
+                if buscas_sincronizadas >= 2:
+                    return
+                buscas_sincronizadas += 1
             barreira.wait(timeout=15)
 
     event.listen(engine, "after_cursor_execute", sincronizar_buscas)
@@ -160,7 +167,9 @@ def test_avaliacoes_simultaneas_da_mesma_identidade_nao_duplicam(
         {"nota": 4, "comentario": "Requisição simultânea"},
     )
 
-    assert all(resposta.status_code in (200, 201) for resposta in respostas)
+    assert all(resposta.status_code in (200, 201) for resposta in respostas), [
+        (resposta.status_code, resposta.text) for resposta in respostas
+    ]
     db_session.expire_all()
     assert db_session.query(Avaliacao).filter_by(
         cardapio_id=cardapio.id, identidade=UUID(IDENTIDADE_1)
@@ -182,7 +191,9 @@ def test_intencoes_simultaneas_da_mesma_identidade_nao_duplicam(
         f"/cardapios/{cardapio.id}/intencao/",
     )
 
-    assert all(resposta.status_code == 200 for resposta in respostas)
+    assert all(resposta.status_code == 200 for resposta in respostas), [
+        (resposta.status_code, resposta.text) for resposta in respostas
+    ]
     db_session.expire_all()
     assert db_session.query(Intencao).filter_by(
         cardapio_id=cardapio.id, identidade=UUID(IDENTIDADE_1)
