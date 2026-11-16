@@ -110,7 +110,10 @@
           "categoria": "acompanhamento",
           "tipo_dieta": "padrao",
           "nome": "Ovos mexidos",
-          "alergenos": []
+          "alergenos": [
+            "leite",
+            "ovo"
+          ]
         },
         {
           "categoria": "acompanhamento",
@@ -240,7 +243,11 @@
           "categoria": "opcao_extra",
           "tipo_dieta": "comum",
           "nome": "Broa de milho",
-          "alergenos": []
+          "alergenos": [
+            "gluten",
+            "leite",
+            "ovo"
+          ]
         },
         {
           "categoria": "acompanhamento",
@@ -290,7 +297,11 @@
           "categoria": "opcao_extra",
           "tipo_dieta": "comum",
           "nome": "Broa de milho",
-          "alergenos": []
+          "alergenos": [
+            "gluten",
+            "leite",
+            "ovo"
+          ]
         },
         {
           "categoria": "acompanhamento",
@@ -467,7 +478,10 @@
           "categoria": "prato_principal",
           "tipo_dieta": "ovolactovegetariano",
           "nome": "Croquete de soja com queijo",
-          "alergenos": []
+          "alergenos": [
+            "leite",
+            "soja"
+          ]
         },
         {
           "categoria": "prato_principal",
@@ -493,7 +507,10 @@
           "categoria": "sobremesa",
           "tipo_dieta": "comum",
           "nome": "Mix de doces OPÇÃO: Fruta",
-          "alergenos": []
+          "alergenos": [
+            "amendoim",
+            "leite"
+          ]
         },
         {
           "categoria": "bebida",
@@ -529,13 +546,20 @@
           "categoria": "prato_principal",
           "tipo_dieta": "padrao",
           "nome": "Lasanha à bolonhesa",
-          "alergenos": []
+          "alergenos": [
+            "carne_suina",
+            "gluten",
+            "leite"
+          ]
         },
         {
           "categoria": "prato_principal",
           "tipo_dieta": "ovolactovegetariano",
           "nome": "Isca de soja ao sugo gratinada",
-          "alergenos": []
+          "alergenos": [
+            "leite",
+            "soja"
+          ]
         },
         {
           "categoria": "prato_principal",
@@ -666,7 +690,10 @@
           "categoria": "prato_principal",
           "tipo_dieta": "padrao",
           "nome": "Peixe ao molho bechamel gratinado",
-          "alergenos": []
+          "alergenos": [
+            "gluten",
+            "leite"
+          ]
         },
         {
           "categoria": "prato_principal",
@@ -743,7 +770,9 @@
           "tipo_dieta": "ovolactovegetariano",
           "nome": "Empadão de legumes com ervilha gratinado",
           "alergenos": [
-            "gluten"
+            "gluten",
+            "leite",
+            "ovo"
           ]
         },
         {
@@ -798,7 +827,10 @@
           "categoria": "molho_salada",
           "tipo_dieta": "comum",
           "nome": "Rosé / Limão",
-          "alergenos": []
+          "alergenos": [
+            "leite",
+            "ovo"
+          ]
         },
         {
           "categoria": "prato_principal",
@@ -813,7 +845,10 @@
           "categoria": "prato_principal",
           "tipo_dieta": "ovolactovegetariano",
           "nome": "Omelete de lentilha gratinado",
-          "alergenos": []
+          "alergenos": [
+            "leite",
+            "ovo"
+          ]
         },
         {
           "categoria": "prato_principal",
@@ -885,7 +920,10 @@
           "categoria": "prato_principal",
           "tipo_dieta": "ovolactovegetariano",
           "nome": "Fricassê de palmito com legumes",
-          "alergenos": []
+          "alergenos": [
+            "gluten",
+            "leite"
+          ]
         },
         {
           "categoria": "prato_principal",
@@ -961,7 +999,10 @@
           "categoria": "prato_principal",
           "tipo_dieta": "ovolactovegetariano",
           "nome": "Bife de soja a pizzaiolo",
-          "alergenos": []
+          "alergenos": [
+            "leite",
+            "soja"
+          ]
         },
         {
           "categoria": "prato_principal",
@@ -1039,7 +1080,10 @@
           "categoria": "prato_principal",
           "tipo_dieta": "ovolactovegetariano",
           "nome": "Ovos mexidos",
-          "alergenos": []
+          "alergenos": [
+            "leite",
+            "ovo"
+          ]
         },
         {
           "categoria": "prato_principal",
@@ -1110,14 +1154,20 @@
           "tipo_dieta": "padrao",
           "nome": "Strogonoff de carne",
           "alergenos": [
-            "cogumelo"
+            "cogumelo",
+            "gluten",
+            "leite"
           ]
         },
         {
           "categoria": "prato_principal",
           "tipo_dieta": "ovolactovegetariano",
           "nome": "Macarrão ao molho branco com PTS",
-          "alergenos": []
+          "alergenos": [
+            "gluten",
+            "leite",
+            "soja"
+          ]
         },
         {
           "categoria": "prato_principal",
@@ -1200,7 +1250,10 @@
           "categoria": "prato_principal",
           "tipo_dieta": "ovolactovegetariano",
           "nome": "Lasanha de brócolis",
-          "alergenos": []
+          "alergenos": [
+            "gluten",
+            "leite"
+          ]
         },
         {
           "categoria": "prato_principal",
@@ -1278,13 +1331,19 @@
           "categoria": "prato_principal",
           "tipo_dieta": "ovolactovegetariano",
           "nome": "Delícia de lentilha",
-          "alergenos": []
+          "alergenos": [
+            "gluten",
+            "leite"
+          ]
         },
         {
           "categoria": "prato_principal",
           "tipo_dieta": "vegetariano_estrito",
           "nome": "Yakissoba",
-          "alergenos": []
+          "alergenos": [
+            "gluten",
+            "soja"
+          ]
         },
         {
           "categoria": "sopa",
@@ -1346,13 +1405,20 @@
           "categoria": "prato_principal",
           "tipo_dieta": "padrao",
           "nome": "Empadão de frango",
-          "alergenos": []
+          "alergenos": [
+            "gluten",
+            "leite",
+            "ovo"
+          ]
         },
         {
           "categoria": "prato_principal",
           "tipo_dieta": "ovolactovegetariano",
           "nome": "Bife de soja ao sugo gratinada",
-          "alergenos": []
+          "alergenos": [
+            "leite",
+            "soja"
+          ]
         },
         {
           "categoria": "prato_principal",

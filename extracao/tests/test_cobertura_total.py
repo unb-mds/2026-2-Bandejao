@@ -4,6 +4,7 @@ import sys
 
 import pytest
 import requests
+from PIL import Image
 
 from extracao import main, sincronizar
 from extracao.main import ErroExtracao, PdfCardapio, ResultadoExtracao
@@ -33,6 +34,17 @@ def test_helpers_visuais_comparam_stream_e_assinaturas():
     assert imagem.size == (2, 2)
     assert len(assinatura) == 256
     assert main._distancia_assinaturas([True, False], [False, False]) == 1
+    assert main._assinatura_cor(imagem) is None
+
+    imagem_colorida = Image.new("RGB", (8, 8), (240, 40, 20))
+    assinatura_cor = main._assinatura_cor(imagem_colorida)
+    assert assinatura_cor is not None
+    assert main._distancia_cores(assinatura_cor, assinatura_cor) == 0
+    assert main._segmentar_icones(imagem_colorida, 1) == [imagem_colorida]
+    assert [segmento.size for segmento in main._segmentar_icones(imagem_colorida, 2)] == [
+        (4, 8),
+        (4, 8),
+    ]
 
 
 def test_alergenos_por_celula_reconhece_icone_e_ignora_imagens_fora_da_tabela(monkeypatch):
@@ -57,6 +69,7 @@ def test_alergenos_por_celula_reconhece_icone_e_ignora_imagens_fora_da_tabela(mo
     ]
     monkeypatch.setattr(main, "_imagem_do_stream", lambda stream: stream)
     monkeypatch.setattr(main, "_assinatura_visual", lambda imagem: imagem)
+    monkeypatch.setattr(main, "_assinatura_cor", lambda imagem: None)
     monkeypatch.setattr(
         main,
         "_distancia_assinaturas",
@@ -91,6 +104,7 @@ def test_alergenos_por_celula_reconhece_legenda_atual_de_dez_icones(monkeypatch)
     Pagina.images = referencias + [icone_leite]
     monkeypatch.setattr(main, "_imagem_do_stream", lambda stream: [stream])
     monkeypatch.setattr(main, "_assinatura_visual", lambda imagem: imagem)
+    monkeypatch.setattr(main, "_assinatura_cor", lambda imagem: None)
     monkeypatch.setattr(
         main,
         "_distancia_assinaturas",
@@ -99,6 +113,58 @@ def test_alergenos_por_celula_reconhece_legenda_atual_de_dez_icones(monkeypatch)
 
     assert main._alergenos_por_celula(Pagina(), Tabela()) == {
         (0, 0): frozenset({"leite"})
+    }
+
+
+def test_alergenos_por_celula_separa_icones_agrupados_pela_cor(monkeypatch):
+    class Linha:
+        cells = [(0, 0, 30, 30)]
+
+    class Tabela:
+        rows = [Linha()]
+
+    class Pagina:
+        height = 100
+
+    cores = [
+        (20, 120, 60),
+        (40, 170, 245),
+        (250, 120, 10),
+        (240, 40, 20),
+        (110, 200, 30),
+        (205, 130, 10),
+        (110, 30, 25),
+        (225, 180, 105),
+        (250, 215, 85),
+        (245, 160, 155),
+    ]
+    referencias = [
+        {
+            "top": 90,
+            "width": 30,
+            "x0": indice,
+            "stream": Image.new("RGB", (10, 10), cor),
+        }
+        for indice, cor in enumerate(cores)
+    ]
+    grupo = Image.new("RGB", (20, 10))
+    grupo.paste(cores[0], (0, 0, 10, 10))
+    grupo.paste(cores[1], (10, 0, 20, 10))
+    Pagina.images = referencias + [
+        {
+            "top": 1,
+            "bottom": 11,
+            "height": 10,
+            "width": 20,
+            "x0": 1,
+            "x1": 21,
+            "stream": grupo,
+        }
+    ]
+    monkeypatch.setattr(main, "_imagem_do_stream", lambda stream: stream)
+
+    assert main._alergenos_por_celula(Pagina(), Tabela()) == {
+        (0, 0): frozenset({"cogumelo", "leite"})
     }
 
 
