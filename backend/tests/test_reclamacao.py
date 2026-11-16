@@ -66,8 +66,13 @@ def test_grava_o_instante_do_envio_e_remove_espacos_das_pontas(
     assert response.status_code == 201
     reclamacao = db_session.query(Reclamacao).one()
     assert reclamacao.descricao == "Faltou talher."
-    # O SQLite devolve o instante sem fuso; o valor gravado é o relógio de Brasília.
-    assert reclamacao.criado_em.replace(tzinfo=FUSO_BRASILIA) == instante
+    # O SQLite devolve o instante sem fuso; o PostgreSQL devolve um instante com fuso.
+    criado_em = reclamacao.criado_em
+    if criado_em.tzinfo is None:
+        criado_em = criado_em.replace(tzinfo=FUSO_BRASILIA)
+    else:
+        criado_em = criado_em.astimezone(FUSO_BRASILIA)
+    assert criado_em == instante
 
 
 @pytest.mark.parametrize("tamanho", [1, 1000])
