@@ -66,8 +66,13 @@ def test_grava_o_instante_do_envio_e_remove_espacos_das_pontas(
     assert response.status_code == 201
     reclamacao = db_session.query(Reclamacao).one()
     assert reclamacao.descricao == "Faltou talher."
-    # O SQLite devolve o instante sem fuso; o valor gravado é o relógio de Brasília.
-    assert reclamacao.criado_em.replace(tzinfo=FUSO_BRASILIA) == instante
+    # O SQLite devolve o instante sem fuso; o PostgreSQL devolve um instante com fuso.
+    criado_em = reclamacao.criado_em
+    if criado_em.tzinfo is None:
+        criado_em = criado_em.replace(tzinfo=FUSO_BRASILIA)
+    else:
+        criado_em = criado_em.astimezone(FUSO_BRASILIA)
+    assert criado_em == instante
 
 
 @pytest.mark.parametrize("tamanho", [1, 1000])
@@ -198,6 +203,8 @@ def test_nao_existe_rota_publica_de_listagem_nem_de_leitura(
             response = client.get(caminho, headers={"X-Identidade": identidade})
             assert response.status_code in (404, 405)
             assert "Texto sigiloso." not in response.text
+            assert IDENTIDADE_1 not in response.text
+            assert IDENTIDADE_2 not in response.text
 
     nomes = {rota.path for rota in client.app.routes}
     assert "/cardapios/{cardapio_id}/reclamacoes/" in nomes
@@ -279,6 +286,8 @@ def test_equipe_le_reclamacoes_sem_identidade_e_com_filtros(
     assert todas.status_code == 200
     assert [r["descricao"] for r in todas.json()] == ["Fila lenta.", "Mesa suja."]
     assert all("identidade" not in r for r in todas.json())
+    assert IDENTIDADE_1 not in todas.text
+    assert IDENTIDADE_2 not in todas.text
     assert set(todas.json()[0]) == {"id", "cardapio_id", "categoria", "descricao", "criado_em"}
 
     por_categoria = client.get(

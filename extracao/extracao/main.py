@@ -51,6 +51,9 @@ ALERGENOS_LEGENDA = (
 # de onze posições para PDFs antigos que tragam os dois símbolos.
 ALERGENOS_LEGENDA_ATUAL = ALERGENOS_LEGENDA[:-1]
 LIMIAR_DISTANCIA_ICONE = 25
+LIMIAR_DISTANCIA_COR = 30
+ALTURA_MAXIMA_ICONE = 22
+MAXIMO_ICONES_AGRUPADOS = 4
 PADRAO_PERIODO = re.compile(
     r"semana-\d+-(?P<inicio_dia>\d{1,2})-(?P<inicio_mes>\d{1,2})-a-"
     r"(?P<fim_dia>\d{1,2})-(?P<fim_mes>\d{1,2})(?:-\d+)?-?\.pdf$",
@@ -185,6 +188,49 @@ def _distancia_assinaturas(esquerda: list[bool], direita: list[bool]) -> int:
     return sum(valor_esquerda != valor_direita for valor_esquerda, valor_direita in zip(esquerda, direita))
 
 
+def _assinatura_cor(imagem: Image.Image) -> tuple[float, float, float] | None:
+    """Resume a cor saturada da borda, que identifica o alérgeno na legenda."""
+    rgb = imagem.convert("RGB")
+    hsv = imagem.convert("HSV")
+    cores = [
+        cor
+        for cor, (_, saturacao, brilho) in zip(
+            rgb.get_flattened_data(), hsv.get_flattened_data()
+        )
+        if saturacao >= 80 and brilho >= 80
+    ]
+    if not cores:
+        return None
+    return tuple(sum(cor[indice] for cor in cores) / len(cores) for indice in range(3))
+
+
+def _distancia_cores(
+    esquerda: tuple[float, float, float], direita: tuple[float, float, float]
+) -> float:
+    quadrados = (
+        (valor_esquerda - valor_direita) ** 2
+        for valor_esquerda, valor_direita in zip(esquerda, direita)
+    )
+    return sum(quadrados) ** 0.5
+
+
+def _segmentar_icones(imagem: Image.Image, quantidade: int) -> list[Image.Image]:
+    """Separa imagens que o PDF compactou como uma faixa de dois ou mais ícones."""
+    if quantidade == 1:
+        return [imagem]
+    return [
+        imagem.crop(
+            (
+                round(imagem.width * indice / quantidade),
+                0,
+                round(imagem.width * (indice + 1) / quantidade),
+                imagem.height,
+            )
+        )
+        for indice in range(quantidade)
+    ]
+
+
 def _alergenos_por_celula(pagina: object, tabela: object) -> dict[tuple[int, int], frozenset[str]]:
     """Associa os ícones de alérgeno às células usando a legenda do próprio PDF."""
     imagens = pagina.images
@@ -204,27 +250,67 @@ def _alergenos_por_celula(pagina: object, tabela: object) -> dict[tuple[int, int
     if legenda is None:
         return {}
 
-    assinaturas = [
-        (alergeno, _assinatura_visual(_imagem_do_stream(imagem["stream"])))
-        for alergeno, imagem in zip(legenda, referencias)
-    ]
+    assinaturas = []
+    for alergeno, referencia in zip(legenda, referencias):
+        imagem_referencia = _imagem_do_stream(referencia["stream"])
+        assinaturas.append(
+            (alergeno, _assinatura_visual(imagem_referencia), _assinatura_cor(imagem_referencia))
+        )
     encontrados: dict[tuple[int, int], set[str]] = {}
     for imagem in imagens:
-        if imagem["top"] > pagina.height * 0.8 or imagem["width"] > 20:
+        if imagem["top"] > pagina.height * 0.8:
             continue
-        assinatura = _assinatura_visual(_imagem_do_stream(imagem["stream"]))
-        distancia, alergeno = min(
-            (_distancia_assinaturas(assinatura, referencia), nome)
-            for nome, referencia in assinaturas
-        )
-        if distancia > LIMIAR_DISTANCIA_ICONE:
+
+        altura = imagem.get("height")
+        if altura is None:
+            # Compatibilidade com objetos simplificados usados por integrações e testes.
+            if imagem["width"] > 20:
+                continue
+            quantidade = 1
+        else:
+            proporcao = imagem["width"] / altura if altura else 0
+            quantidade = round(proporcao)
+            if (
+                altura > ALTURA_MAXIMA_ICONE
+                or quantidade < 1
+                or quantidade > MAXIMO_ICONES_AGRUPADOS
+                or abs(proporcao - quantidade) > 0.25
+            ):
+                continue
+
+        imagem_extraida = _imagem_do_stream(imagem["stream"])
+        alergenos_da_imagem: set[str] = set()
+        for segmento in _segmentar_icones(imagem_extraida, quantidade):
+            assinatura_cor = _assinatura_cor(segmento)
+            candidatos_cor = [
+                (_distancia_cores(assinatura_cor, referencia_cor), nome)
+                for nome, _, referencia_cor in assinaturas
+                if assinatura_cor is not None and referencia_cor is not None
+            ]
+            if candidatos_cor:
+                distancia_cor, alergeno_cor = min(candidatos_cor)
+                if distancia_cor <= LIMIAR_DISTANCIA_COR:
+                    alergenos_da_imagem.add(alergeno_cor)
+                    continue
+
+            assinatura_visual = _assinatura_visual(segmento)
+            distancia_visual, alergeno_visual = min(
+                (_distancia_assinaturas(assinatura_visual, referencia_visual), nome)
+                for nome, referencia_visual, _ in assinaturas
+            )
+            if distancia_visual <= LIMIAR_DISTANCIA_ICONE:
+                alergenos_da_imagem.add(alergeno_visual)
+
+        if not alergenos_da_imagem:
             continue
         centro_x = (imagem["x0"] + imagem["x1"]) / 2
         centro_y = (imagem["top"] + imagem["bottom"]) / 2
         for indice_linha, linha in enumerate(tabela.rows):
             for indice_coluna, limites in enumerate(linha.cells):
                 if limites and limites[0] <= centro_x <= limites[2] and limites[1] <= centro_y <= limites[3]:
-                    encontrados.setdefault((indice_linha, indice_coluna), set()).add(alergeno)
+                    encontrados.setdefault((indice_linha, indice_coluna), set()).update(
+                        alergenos_da_imagem
+                    )
                     break
     return {celula: frozenset(alergenos) for celula, alergenos in encontrados.items()}
 
