@@ -1,5 +1,22 @@
 # Histórico de mudanças da documentação
 
+## 17/11/2026 — Registro de evidências dos requisitos (#100)
+
+- A seção de rastreabilidade de `docs/Requisitos.md` tem evidência, data, commit (`326569c`) e estado para cada RF01–RF08 e RNF01–RNF06.
+- Registra como concluídas as issues #94, #95, #99 e #81 (PRs #103 a #106). RNF01 segue não verificado (#96) e a #97 ainda não tem evidência própria.
+- RNF02 e RNF04 ficam pendentes até a publicação funcionar: em 16 e 17/11, a interface e a API publicadas responderam HTTP 404.
+
+## 17/11/2026 — Roteiro manual de ponta a ponta (#98)
+
+- Criado `testes/roteiros/roteiro-ponta-a-ponta.md`, com os 8 passos (cardápio, filtros por dieta e alérgeno, avaliação, histórico, reclamação, intenção e estimativa) e campos para esperado, obtido, data e commit.
+- Registrada a tentativa de execução de 16 e 17/11 contra a `main` `326569c`: a aplicação integrada e a API responderam HTTP 404, então os fluxos ficaram bloqueados. O protótipo Vercel respondeu HTTP 200, mas não foi usado como evidência.
+
+## 17/11/2026 — Falhas simuladas na sincronização (#97)
+
+- `backend/tests/test_falhas_sincronizacao.py` executa a sincronização contra a API de teste com os PDFs oficiais versionados, em quatro cenários: PDF corrompido em um campus, página do RU fora do ar, token recusado e a mesma publicação processada duas vezes.
+- O resultado de cada cenário, com data e commit, está em `evidencias/falhas-sincronizacao-2026-11-17.md`.
+
+
 ## 10/11/2026 — Consistência da Release 2 e contrato da estimativa
 
 - README, contexto, página inicial, arquitetura e requisitos passam a
