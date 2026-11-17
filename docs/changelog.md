@@ -1,5 +1,11 @@
 # Histórico de mudanças da documentação
 
+## 17/11/2026 — Registro de evidências dos requisitos (#100)
+
+- A seção de rastreabilidade de `docs/Requisitos.md` tem evidência, data, commit (`326569c`) e estado para cada RF01–RF08 e RNF01–RNF06.
+- Registra como concluídas as issues #94, #95, #99 e #81 (PRs #103 a #106). RNF01 segue não verificado (#96) e a #97 ainda não tem evidência própria.
+- RNF02 e RNF04 ficam pendentes até a publicação funcionar: em 16 e 17/11, a interface e a API publicadas responderam HTTP 404.
+
 ## 10/11/2026 — Consistência da Release 2 e contrato da estimativa
 
 - README, contexto, página inicial, arquitetura e requisitos passam a
