@@ -54,6 +54,7 @@ nav:
   - Verificação da publicação: verificacao-publicacao.md
   - Evidência SAST: evidencias/sast-issue-60.md
   - Evidência da sincronização: evidencias/sincronizacao-issue-54.md
+  - Evidência do roteiro ponta a ponta: evidencias/roteiro-ponta-a-ponta-2026-11-17.md
   - Protótipos: prototipos.md
   - Estudos:
       - Visão geral: estudos/README.md
