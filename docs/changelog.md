@@ -1,5 +1,10 @@
 # Histórico de mudanças da documentação
 
+## 17/11/2026 — Falhas simuladas na sincronização (#97)
+
+- `backend/tests/test_falhas_sincronizacao.py` executa a sincronização contra a API de teste com os PDFs oficiais versionados, em quatro cenários: PDF corrompido em um campus, página do RU fora do ar, token recusado e a mesma publicação processada duas vezes.
+- O resultado de cada cenário, com data e commit, está em `evidencias/falhas-sincronizacao-2026-11-17.md`.
+
 ## 10/11/2026 — Consistência da Release 2 e contrato da estimativa
 
 - README, contexto, página inicial, arquitetura e requisitos passam a
