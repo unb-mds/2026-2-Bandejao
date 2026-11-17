@@ -1,5 +1,11 @@
 # Histórico de mudanças da documentação
 
+## 17/11/2026 — Roteiro manual de ponta a ponta (#98)
+
+- Criado `testes/roteiros/roteiro-ponta-a-ponta.md`, com os 8 passos (cardápio, filtros por dieta e alérgeno, avaliação, histórico, reclamação, intenção e estimativa) e campos para esperado, obtido, data e commit.
+- Registrada a tentativa de execução de 16 e 17/11 contra a `main` `326569c`: a aplicação integrada e a API responderam HTTP 404, então os fluxos ficaram bloqueados. O protótipo Vercel respondeu HTTP 200, mas não foi usado como evidência.
+- O teste mobile relatado em 16/11 fica como relato, sem aparelho, navegador ou commit registrados.
+
 ## 10/11/2026 — Consistência da Release 2 e contrato da estimativa
 
 - README, contexto, página inicial, arquitetura e requisitos passam a
