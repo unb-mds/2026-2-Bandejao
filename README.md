@@ -30,16 +30,15 @@ Aplicação para consulta ao cardápio semanal dos Restaurantes Universitários 
 
 ## Status
 
-🚧 Em desenvolvimento — situação revisada em 10/11/2026
+🚧 Em desenvolvimento — situação revisada em 17/11/2026
 
-- **Protótipo Vercel:** [Aceder ao Protótipo](https://frontend-react-tan-gamma.vercel.app)
+- **Aplicação publicada:** [abrir o Bandejão](https://bandejao-unb-g12.onrender.com). API em [bandejao-unb-g12-api.onrender.com](https://bandejao-unb-g12-api.onrender.com) (`/health`, `/version`).
 - O frontend local usa React 19, Vite 8, TypeScript e Tailwind v4, incorporando as telas da equipe de [marilluantunes/frontend-react](https://github.com/marilluantunes/frontend-react). Campi, cardápios, avaliações, reclamações e planejamento de refeições usam a API. As estimativas reais são consultadas por padrão; dados simulados são separados e identificados na tela. A lotação continua demonstrativa, sem consulta a dados reais.
-- Consulte [estrutura, execução e limites do frontend](frontend/README.md). O protótipo Vercel externo é uma publicação separada.
-
+- Consulte [estrutura, execução e limites do frontend](frontend/README.md). O [protótipo Vercel](https://frontend-react-tan-gamma.vercel.app) externo é uma publicação visual separada.
 
 ## Publicação da aplicação
 
-A configuração de hospedagem HTTPS foi integrada no [PR 71](https://github.com/unb-mds/2026-2-Bandejao/pull/71). Na verificação somente leitura de 10/11/2026, a interface e os endpoints públicos `/health`, `/version`, `/campi/` e CORS da API retornaram HTTP 404. A hospedagem não respondeu nos endereços esperados; veja o [relatório](docs/evidencias/dados/publicacao-https-2026-11-11-utc.json) e os [passos de verificação](docs/verificacao-publicacao.md). A sincronização automática tem a URL da API configurada, mas a execução de [10/11/2026](https://github.com/unb-mds/2026-2-Bandejao/actions/runs/42889503183) falhou porque o secret `IMPORTACAO_TOKEN` não estava disponível para o workflow. A importação não foi iniciada. Consulte também a [operação da sincronização](docs/evidencias/sincronizacao-issue-54.md).
+A hospedagem HTTPS ([PR 71](https://github.com/unb-mds/2026-2-Bandejao/pull/71)) está ativa desde 17/11/2026: interface, API e banco PostgreSQL respondem publicamente nos endereços acima. A sincronização automática importou cardápios reais do RU nesse dia para 4 dos 5 campi (Darcy Ribeiro, Gama, Planaltina e Fazenda Água Limpa); Ceilândia ficou pendente porque o site oficial do RU não publicou o PDF daquele campus na semana — sem relação com o código do Bandejão. Veja a [execução da sincronização](https://github.com/unb-mds/2026-2-Bandejao/actions/runs/44095602679), os [passos de verificação](docs/verificacao-publicacao.md) e a [operação da sincronização](docs/evidencias/sincronizacao-issue-54.md).
 
 ## Como rodar o projeto
 
