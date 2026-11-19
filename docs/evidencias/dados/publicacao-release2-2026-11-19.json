@@ -2,7 +2,7 @@
   "data_local": "19/11/2026",
   "base_fonte": "17397beb184a708fdf5ab9991a6e51801ecf514b",
   "verificacao_automatica": {
-    "instante_utc": "2026-11-19T19:22:26.641281-03:00",
+    "instante_utc": "2026-11-19T22:22:26.641281Z",
     "frontend": "https://bandejao-unb-g12.onrender.com",
     "api": "https://bandejao-unb-g12-api.onrender.com",
     "commit_esperado": "17397beb184a708fdf5ab9991a6e51801ecf514b",
