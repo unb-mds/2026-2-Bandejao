@@ -36,6 +36,13 @@ A verificação da interface com API simulada cobriu segunda–domingo, o prazo
 em Brasília, marcar/desmarcar e erro da estimativa em viewport de celular.
 Não representa execução em aparelho físico nem persistência em produção.
 
+O CI do [PR #115](https://github.com/unb-mds/2026-2-Bandejao/pull/115),
+revisão `ce78450`, terminou aprovado: [backend SQLite/PostgreSQL e frontend](https://github.com/unb-mds/2026-2-Bandejao/actions/runs/44628607610),
+[Bandit e CodeQL](https://github.com/unb-mds/2026-2-Bandejao/actions/runs/44628607327)
+e [build da documentação](https://github.com/unb-mds/2026-2-Bandejao/actions/runs/44628607331).
+O build local final `mkdocs build --strict` também passou. Checks automáticos
+não substituem revisão por outro integrante.
+
 ## Publicação e fechamento
 
 Em 19/11 a interface respondeu por HTTPS. A primeira consulta de saúde falhou
