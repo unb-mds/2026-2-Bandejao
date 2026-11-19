@@ -37,10 +37,14 @@ reproduzem a fonte e não garantem ausência de ingredientes.
 
 - 206 testes backend em SQLite, 3 exclusivos de PostgreSQL ignorados
   localmente; 59 da extração; cobertura 100% em ambos.
-- 45 testes frontend em UTC e `Pacific/Auckland`; TypeScript, Oxlint e Vite
+- 48 testes frontend após revisão; regressões de datas também verificadas em
+  UTC e `Pacific/Auckland`; TypeScript, Oxlint e Vite
   aprovados. PostgreSQL 16 e SAST são executados no CI.
 - Fluxos corrigidos verificados em Chrome 390 × 844 com API simulada,
   incluindo falha 503 sem contagem antiga. [Evidência](evidencias/verificacao-issue-101.md).
+- A revisão corrigiu também a falha parcial: indisponibilidade exclusiva da
+  simulação preserva a resposta real atual. Falhas da consulta real continuam
+  sendo exibidas, sem reutilizar resultado antigo.
 - Scripts k6 versionados, sem relatório medido de RNF01 disponível. Roteiro
   manual completo em celular físico e janela de disponibilidade de RNF04
   ainda sem comprovação. Isso não é aceite global dos requisitos.

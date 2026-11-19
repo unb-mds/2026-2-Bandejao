@@ -27,6 +27,8 @@ comprovação de deploy ou aceite de todos os requisitos.
   do fuso do dispositivo (#113).
 - Atualização de estimativas após marcar/desmarcar, erro visível e remoção de
   contagens antigas ao trocar consulta ou após falha (#114).
+- Falha exclusiva da consulta simulada preserva a resposta real atual,
+  incluindo o estado de dados insuficientes sem contagem (#114).
 
 ### Demonstração
 

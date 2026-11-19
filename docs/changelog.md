@@ -1,4 +1,11 @@
 # Histórico de mudanças da documentação
+## Ajustes após revisão dos PRs #115 e #116
+
+- README do frontend declara que a semana segunda–domingo em Brasília segue D01.
+- Falha exclusiva da simulação preserva a resposta real atual; regressões cobrem contagem válida, amostra insuficiente, falha real e cancelamento. Suíte frontend: 48 aprovados; TypeScript, Oxlint, Vite e build estrito MkDocs aprovados.
+- `instante_utc` da evidência de 19/11 convertido de `19:22:26.641281-03:00` para o mesmo instante `22:22:26.641281Z`.
+- A branch da #116 incorpora os ajustes da #115; tag de preparação e rascunho acompanham o novo commit. Integração e publicação continuam aguardando revisão.
+
 ## 19/11/2026 — Preparação da Release 2 e Sprint 06 (#102)
 
 - Sprint 06 adicionada à navegação, com entregas #94–#102, evidências e pendências reais, sem inventar reuniões ou aceite.

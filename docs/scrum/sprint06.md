@@ -43,6 +43,11 @@ e [build da documentação](https://github.com/unb-mds/2026-2-Bandejao/actions/r
 O build local final `mkdocs build --strict` também passou. Checks automáticos
 não substituem revisão por outro integrante.
 
+Após os ajustes da revisão dos PRs #115/#116, a suíte frontend passou a 48
+testes, incluindo a preservação da estimativa real quando somente a consulta
+simulada falha. README alinhado explicitamente a D01 e instante da evidência
+normalizado para UTC, preservando o mesmo momento registrado.
+
 ## Publicação e fechamento
 
 Em 19/11 a interface respondeu por HTTPS. A primeira consulta de saúde falhou
