@@ -53,3 +53,15 @@ Brasília. A API foi interceptada apenas nesse navegador, sem banco real.
 Esta execução prova os fluxos corrigidos com respostas controladas. Não
 substitui o roteiro completo em celular físico, persistência real ou teste de
 carga. A medição k6 de RNF01 continua sem relatório disponível.
+
+## Ajustes após revisão
+
+O README agora afirma explicitamente que o frontend segue D01. A revisão
+também identificou que uma falha exclusiva da consulta simulada descartava
+uma estimativa real válida. Dois testes novos reproduziram a falha antes da
+correção. A simulação passou a ser opcional: a resposta real atual é mantida,
+inclusive `dados_insuficientes` sem contagem. Falhas da consulta real e
+cancelamentos continuam sendo propagados.
+
+Após a correção: 48 testes frontend aprovados; TypeScript, Oxlint e build
+Vite aprovados. O resultado de 45 testes acima descreve a execução anterior.
