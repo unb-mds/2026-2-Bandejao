@@ -1,4 +1,12 @@
 # Histórico de mudanças da documentação
+## 19/11/2026 — Preparação da Release 2 e Sprint 06 (#102)
+
+- Sprint 06 adicionada à navegação, com entregas #94–#102, evidências e pendências reais, sem inventar reuniões ou aceite.
+- Criados o changelog do produto na raiz e as [notas da Release 2](release-2.md). README separa funcionalidades integradas, demonstrações e exclusões.
+- Verificação pública de 19/11: interface acessível; primeira consulta de saúde com falha de conexão/TLS e repetição HTTP 200; API informa `b5b345d`, anterior à fonte preparada. [Registro completo](evidencias/dados/publicacao-release2-2026-11-19.json).
+- Rascunho da release e tag de preparação não comprovam deploy; a tag e as notas devem ser atualizadas para o commit efetivamente publicado após revisão e integração.
+- RNF01 e o roteiro completo em celular físico permanecem sem evidência suficiente; um retorno HTTP 200 isolado não comprova a janela de RNF04.
+
 ## 19/11/2026 — Correções após a verificação (#101)
 
 - Semana do frontend alinhada a segunda–domingo, no fuso de Brasília (#112).
