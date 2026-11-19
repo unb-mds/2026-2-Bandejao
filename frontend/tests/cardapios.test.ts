@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
-import { adaptarCardapio, alergenosDoItem, dataDaSemana, dietaCompativelComFiltros, formatarInstanteImportacao, inicioSemana, montarSemana } from '../src/cardapios.ts'
+import { adaptarCardapio, alergenosDoItem, dataDaSemana, dietaCompativelComFiltros, formatarInstanteImportacao, indiceDiaSemana, inicioSemana, montarSemana } from '../src/cardapios.ts'
 import type { CardapioApi, ItemApi } from '../src/api.ts'
 import type { FiltrosAlimentares } from '../src/types.ts'
 
@@ -14,6 +14,23 @@ const cardapio: CardapioApi = {
   id: 7, campus_id: 2, data: '2026-09-30', tipo_refeicao: 'almoco',
   fonte_pdf_url: 'https://ru.unb.br/cardapio.pdf', itens: [item],
 }
+
+test('semana começa na segunda e termina no domingo, incluindo virada de ano', () => {
+  for (const [data, inicio, indice] of [
+    ['2026-11-16', '2026-11-16', 0],
+    ['2026-11-19', '2026-11-16', 3],
+    ['2026-11-22', '2026-11-16', 6],
+    ['2027-01-01', '2026-12-28', 4],
+  ] as const) {
+    const instante = new Date(`${data}T12:00:00-03:00`)
+    assert.equal(inicioSemana(instante), inicio)
+    assert.equal(indiceDiaSemana(instante), indice)
+    assert.equal(dataDaSemana(inicio, indice), data)
+  }
+  const semana = montarSemana([], '2026-11-16')
+  assert.equal(semana[0].almoco.data, '2026-11-16')
+  assert.equal(semana[6].almoco.data, '2026-11-22')
+})
 
 test('filtro ovolacto inclui a classe vegetariana estrita e mantém as demais classes fora', () => {
   const filtros: FiltrosAlimentares = { vegetariano: true, vegetarianoEstrito: false, alergenos: [] }
@@ -32,18 +49,18 @@ test('filtro vegetariano estrito permanece exato e ausência de dieta selecionad
 })
 
 test('não mistura duas semanas que tenham o mesmo dia da semana', () => {
-  const semana = montarSemana([cardapio, { ...cardapio, id: 8, data: '2026-10-07' }], '2026-09-27')
-  assert.equal(semana[3].almoco.id, 7)
-  assert.equal(semana[3].almoco.data, '2026-09-30')
+  const semana = montarSemana([cardapio, { ...cardapio, id: 8, data: '2026-10-07' }], '2026-09-28')
+  assert.equal(semana[2].almoco.id, 7)
+  assert.equal(semana[2].almoco.data, '2026-09-30')
   assert.equal(semana.flatMap(dia => Object.values(dia)).some(refeicao => refeicao.id === 8), false)
 })
 
 test('mapeia café da manhã sem criar almoço ou jantar fictícios', () => {
-  const semana = montarSemana([{ ...cardapio, tipo_refeicao: 'cafe_da_manha' }], '2026-09-27')
-  assert.equal(semana[3].cafe.id, 7)
-  assert.deepEqual(semana[3].almoco.itensApi, [])
-  assert.equal(semana[3].almoco.id, undefined)
-  assert.deepEqual(montarSemana([], '2026-09-27')[0].jantar.itensApi, [])
+  const semana = montarSemana([{ ...cardapio, tipo_refeicao: 'cafe_da_manha' }], '2026-09-28')
+  assert.equal(semana[2].cafe.id, 7)
+  assert.deepEqual(semana[2].almoco.itensApi, [])
+  assert.equal(semana[2].almoco.id, undefined)
+  assert.deepEqual(montarSemana([], '2026-09-28')[0].jantar.itensApi, [])
 })
 
 test('preserva todos os itens, categorias, dietas e origem sem deduzir ingredientes', () => {
@@ -65,8 +82,8 @@ test('traduz somente marcadores positivos da API para os filtros da interface', 
 })
 
 test('intervalo semanal atravessa mês e ano sem deslocar a data local', () => {
-  assert.equal(inicioSemana(new Date('2027-01-01T12:00:00')), '2026-12-27')
-  assert.equal(dataDaSemana('2026-12-27', 6), '2027-01-02')
+  assert.equal(inicioSemana(new Date('2027-01-01T12:00:00')), '2026-12-28')
+  assert.equal(dataDaSemana('2026-12-28', 6), '2027-01-03')
 })
 
 test('apresenta a última importação no fuso de Brasília', () => {
