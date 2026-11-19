@@ -30,11 +30,24 @@ Aplicação para consulta ao cardápio semanal dos Restaurantes Universitários 
 
 ## Status
 
-🚧 Em desenvolvimento — situação revisada em 17/11/2026
+Release 2 preparada em 19/11/2026 — aguardando revisão, integração e publicação da revisão final.
 
 - **Aplicação publicada:** [abrir o Bandejão](https://bandejao-unb-g12.onrender.com). API em [bandejao-unb-g12-api.onrender.com](https://bandejao-unb-g12-api.onrender.com) (`/health`, `/version`).
 - O frontend local usa React 19, Vite 8, TypeScript e Tailwind v4, incorporando as telas da equipe de [marilluantunes/frontend-react](https://github.com/marilluantunes/frontend-react). Campi, cardápios, avaliações, reclamações e planejamento de refeições usam a API. As estimativas reais são consultadas por padrão; dados simulados são separados e identificados na tela. A lotação continua demonstrativa, sem consulta a dados reais.
 - Consulte [estrutura, execução e limites do frontend](frontend/README.md). O [protótipo Vercel](https://frontend-react-tan-gamma.vercel.app) externo é uma publicação visual separada.
+
+## Conteúdo da Release 2
+
+| Situação | Conteúdo |
+|---|---|
+| Integrado à API | Campus e cardápio semanal, filtros, origem/última importação, avaliações e histórico, reclamações, planejamento persistido e estimativas de intenções. Semana de segunda a domingo, no fuso de Brasília. |
+| Demonstração | Aba Lotação com exemplos e relatos da sessão; intenções simuladas geradas por comando explícito e identificadas na tela. O protótipo Vercel é separado. |
+| Fora desta versão | Login, horário de chegada, medição de fila/tempo de espera, serviço suspenso, consulta posterior de reclamação pelo autor e encaminhamento automático ao RU. |
+| Verificação ainda incompleta | Relatório de carga k6, roteiro completo em celular físico e comprovação da janela de disponibilidade de RNF04. |
+
+Consulte o [changelog do produto](CHANGELOG.md), as [notas da versão](docs/release-2.md), a [Sprint 06](docs/scrum/sprint06.md) e as [correções verificadas](docs/evidencias/verificacao-issue-101.md). Ausência de marcação de alérgeno não garante ausência do ingrediente; estimativas de intenções não medem a fila real.
+
+Em 19/11 a API respondeu por HTTPS e informou o commit `b5b345d`, anterior à base `17397be` desta preparação. A versão fonte preparada e a versão hospedada devem ser conferidas separadamente. [Evidência da consulta](docs/evidencias/dados/publicacao-release2-2026-11-19.json).
 
 ## Publicação da aplicação
 

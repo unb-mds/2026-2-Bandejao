@@ -129,3 +129,10 @@ cd extracao && pytest
 - O cardápio do RU não possui API oficial e é publicado apenas em PDF — o processo de extração é sensível a mudanças no formato de publicação. O site do RU avisa que o cardápio está sujeito a alterações sem aviso prévio.
 - A estimativa de intenções (Release 2) depende de volume suficiente de planejamentos registrados por dia, refeição e campus; nas fases iniciais os dados podem ser insuficientes. Não representa medição da fila real.
 - A abordagem de check-in no momento da refeição foi substituída pelo planejamento antecipado para reduzir a fricção de uso: o usuário registra suas intenções uma vez por semana, em vez de precisar lembrar de fazer check-in diariamente.
+
+## Fechamento da Release 2 — 19/11/2026
+
+- Correções da #101: semana de segunda a domingo em Brasília; prazo de intenções e refeição corrente independem do fuso do dispositivo; estimativas são atualizadas após escrita e falhas não conservam contagens antigas (#112–#114).
+- Notas em `docs/release-2.md`, changelog do produto em `CHANGELOG.md`, Sprint 06 em `docs/scrum/sprint06.md` e evidências em `docs/evidencias/verificacao-issue-101.md`.
+- Tag de preparação/rascunho da GitHub Release não comprovam publicação. API pública em 19/11 informou `b5b345d`, anterior à base `17397be`; atualizar tag e notas para o commit efetivamente implantado ao publicar a release final.
+- Relatório k6 de RNF01, roteiro completo em celular físico e janela inteira de RNF04 ainda sem comprovação suficiente. Não tratar essas pendências como aceite.

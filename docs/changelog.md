@@ -1,4 +1,19 @@
 # Histórico de mudanças da documentação
+## Ajustes após revisão dos PRs #115 e #116
+
+- README do frontend declara que a semana segunda–domingo em Brasília segue D01.
+- Falha exclusiva da simulação preserva a resposta real atual; regressões cobrem contagem válida, amostra insuficiente, falha real e cancelamento. Suíte frontend: 48 aprovados; TypeScript, Oxlint, Vite e build estrito MkDocs aprovados.
+- `instante_utc` da evidência de 19/11 convertido de `19:22:26.641281-03:00` para o mesmo instante `22:22:26.641281Z`.
+- A branch da #116 incorpora os ajustes da #115; tag de preparação e rascunho acompanham o novo commit. Integração e publicação continuam aguardando revisão.
+
+## 19/11/2026 — Preparação da Release 2 e Sprint 06 (#102)
+
+- Sprint 06 adicionada à navegação, com entregas #94–#102, evidências e pendências reais, sem inventar reuniões ou aceite.
+- Criados o changelog do produto na raiz e as [notas da Release 2](release-2.md). README separa funcionalidades integradas, demonstrações e exclusões.
+- Verificação pública de 19/11: interface acessível; primeira consulta de saúde com falha de conexão/TLS e repetição HTTP 200; API informa `b5b345d`, anterior à fonte preparada. [Registro completo](evidencias/dados/publicacao-release2-2026-11-19.json).
+- Rascunho da release e tag de preparação não comprovam deploy; a tag e as notas devem ser atualizadas para o commit efetivamente publicado após revisão e integração.
+- RNF01 e o roteiro completo em celular físico permanecem sem evidência suficiente; um retorno HTTP 200 isolado não comprova a janela de RNF04.
+
 ## 19/11/2026 — Correções após a verificação (#101)
 
 - Semana do frontend alinhada a segunda–domingo, no fuso de Brasília (#112).

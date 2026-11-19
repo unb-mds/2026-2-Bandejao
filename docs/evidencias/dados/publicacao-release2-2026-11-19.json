@@ -1,0 +1,60 @@
+{
+  "data_local": "19/11/2026",
+  "base_fonte": "17397beb184a708fdf5ab9991a6e51801ecf514b",
+  "verificacao_automatica": {
+    "instante_utc": "2026-11-19T22:22:26.641281Z",
+    "frontend": "https://bandejao-unb-g12.onrender.com",
+    "api": "https://bandejao-unb-g12-api.onrender.com",
+    "commit_esperado": "17397beb184a708fdf5ab9991a6e51801ecf514b",
+    "checagens": [
+      {
+        "checagem": "frontend_https",
+        "resultado": "aprovado",
+        "detalhe": "HTML da aplicação acessível por HTTPS; renderização requer navegador."
+      },
+      {
+        "checagem": "api_health",
+        "resultado": "falhou",
+        "detalhe": "Falha de conexão ou de verificação do certificado TLS."
+      },
+      {
+        "checagem": "versao",
+        "resultado": "falhou",
+        "detalhe": "O commit retornado pela API difere do esperado."
+      },
+      {
+        "checagem": "dados_publicados",
+        "resultado": "aprovado",
+        "detalhe": {
+          "campi": 5,
+          "refeicoes": 84,
+          "itens": 751
+        }
+      },
+      {
+        "checagem": "cors",
+        "resultado": "aprovado",
+        "detalhe": "GET e preflight de avaliação autorizam a origem; nenhum POST foi enviado."
+      }
+    ],
+    "aprovado": false,
+    "limite": "Não substitui navegação externa, conferência visual da versão e persistência real."
+  },
+  "reconsulta_somente_leitura": [
+    {
+      "corpo": {
+        "status": "ok"
+      },
+      "url": "https://bandejao-unb-g12-api.onrender.com/health",
+      "status": 200
+    },
+    {
+      "corpo": {
+        "version": "b5b345d7690c8b543dac44f7929a315925da0911"
+      },
+      "url": "https://bandejao-unb-g12-api.onrender.com/version",
+      "status": 200
+    }
+  ],
+  "conclusao": "Interface e API acessiveis; API informa versao anterior a base main verificada. Nenhuma escrita em producao. Falha transitoria de conexao/TLS preservada no resultado original."
+}
