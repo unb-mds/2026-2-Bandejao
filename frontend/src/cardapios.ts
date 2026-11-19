@@ -26,20 +26,22 @@ export function dietaCompativelComFiltros(tipoDieta: string, filtros: FiltrosAli
     || (filtros.vegetarianoEstrito && tipoDieta === 'vegetariano_estrito')
 }
 export function dataLocal(data: Date): string {
-  return `${data.getFullYear()}-${String(data.getMonth() + 1).padStart(2, '0')}-${String(data.getDate()).padStart(2, '0')}`
+  const partes = new Intl.DateTimeFormat('en-CA', {
+    timeZone: 'America/Sao_Paulo', year: 'numeric', month: '2-digit', day: '2-digit',
+  }).formatToParts(data)
+  const campo = (tipo: string) => partes.find(parte => parte.type === tipo)!.value
+  return `${campo('year')}-${campo('month')}-${campo('day')}`
 }
 export function inicioSemana(data: Date): string {
-  const inicio = new Date(data)
-  inicio.setDate(inicio.getDate() - indiceDiaSemana(data))
-  return dataLocal(inicio)
+  return dataDaSemana(dataLocal(data), -indiceDiaSemana(data))
 }
 export function indiceDiaSemana(data: Date): number {
-  return (data.getDay() + 6) % 7
+  return (new Date(`${dataLocal(data)}T12:00:00Z`).getUTCDay() + 6) % 7
 }
 export function dataDaSemana(inicio: string, dia: number): string {
-  const data = new Date(`${inicio}T12:00:00`)
-  data.setDate(data.getDate() + dia)
-  return dataLocal(data)
+  const data = new Date(`${inicio}T12:00:00Z`)
+  data.setUTCDate(data.getUTCDate() + dia)
+  return data.toISOString().slice(0, 10)
 }
 export function formatarInstanteImportacao(instante: string): string {
   const data = new Date(instante)
