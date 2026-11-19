@@ -15,7 +15,6 @@ import {
   listarAvaliacoes,
   listarCampi,
   listarCardapios,
-  listarEstimativas,
   listarIntencoes,
   marcarIntencao,
   salvarAvaliacao,
@@ -23,7 +22,8 @@ import {
 } from './api'
 import type { CardapioApi, EstimativaApi } from './api'
 import { adaptarHistoricoAvaliacoes } from './avaliacoes'
-import { inicioSemana, dataDaSemana, montarSemana } from './cardapios'
+import { carregarEstimativas } from './estimativas'
+import { inicioSemana, dataDaSemana, indiceDiaSemana, montarSemana } from './cardapios'
 import { obterIdentidadeAnonima } from './identidade'
 import { registroAvisoPrivacidade } from './privacidade'
 import type { Campus } from './types'
@@ -90,7 +90,7 @@ export default function App() {
   }, [campus.id, semanaInicio, estadoCampi, tentativa])
   const [refeicao, setRefeicao] = useState<Refeicao>(() => getCurrentMealInfo().tipo)
   const [tab, setTab] = useState<'hoje' | 'cardapio' | 'lotacao' | 'avaliar'>('hoje')
-  const [diaSemana, setDiaSemana] = useState<number>(new Date().getDay())
+  const [diaSemana, setDiaSemana] = useState<number>(indiceDiaSemana(new Date()))
   const [tabAvaliar, setTabAvaliar] = useState<'form' | 'historico' | 'reclamacao'>('form')
 
   const tipoRefeicaoApi = (tipo: Refeicao): CardapioApi['tipo_refeicao'] => (tipo === 'cafe' ? 'cafe_da_manha' : tipo)
@@ -133,6 +133,7 @@ export default function App() {
       const resultado = ativa
         ? await desmarcarIntencao(cardapioId, obterIdentidadeAnonima())
         : await marcarIntencao(cardapioId, obterIdentidadeAnonima())
+      setRevisaoEstimativas(prev => prev + 1)
       setIntencoesAtivas(prev => {
         const next = new Set(prev)
         if (resultado.ativa) next.add(cardapioId)
@@ -150,31 +151,31 @@ export default function App() {
     return cardapioId !== undefined && intencoesAtivas.has(cardapioId)
   }
 
-  const [estimativasReais, setEstimativasReais] = useState<EstimativaApi[]>([])
-  const [estimativasSimuladas, setEstimativasSimuladas] = useState<EstimativaApi[]>([])
+  const [revisaoEstimativas, setRevisaoEstimativas] = useState(0)
+  const chaveEstimativas = `${consultaAtual}:${revisaoEstimativas}`
+  const [resultadoEstimativas, setResultadoEstimativas] = useState<{
+    chave: string; dados: Map<number, EstimativaApi>; erro: string
+  }>({ chave: '', dados: new Map(), erro: '' })
 
   useEffect(() => {
     if (!campus.id || estadoCampi !== 'pronto') return
     const controller = new AbortController()
     const filtros = { campus_id: campus.id, data_inicio: semanaInicio, data_fim: dataDaSemana(semanaInicio, 6) }
-    listarEstimativas(filtros, { signal: controller.signal })
-      .then(resultado => { if (!controller.signal.aborted) setEstimativasReais(resultado) })
-      .catch(() => { /* a estimativa é só um complemento visual; sem ela a tela continua utilizável */ })
-    listarEstimativas({ ...filtros, dados_simulados: true }, { signal: controller.signal })
-      .then(resultado => { if (!controller.signal.aborted) setEstimativasSimuladas(resultado) })
-      .catch(() => { /* idem */ })
+    carregarEstimativas(filtros, controller.signal)
+      .then(dados => {
+        if (!controller.signal.aborted) setResultadoEstimativas({ chave: chaveEstimativas, dados, erro: '' })
+      })
+      .catch(erro => {
+        if (!controller.signal.aborted) setResultadoEstimativas({
+          chave: chaveEstimativas, dados: new Map(),
+          erro: erro instanceof Error ? erro.message : 'Não foi possível consultar as estimativas.',
+        })
+      })
     return () => controller.abort()
-  }, [campus.id, semanaInicio, estadoCampi, tentativa])
+  }, [campus.id, semanaInicio, estadoCampi, chaveEstimativas])
 
-  const estimativaPorCardapioId = useMemo(() => {
-    const reais = new Map(estimativasReais.map(e => [e.cardapio_id, e] as const))
-    const simuladas = new Map(estimativasSimuladas.map(e => [e.cardapio_id, e] as const))
-    const mapa = new Map<number, EstimativaApi>()
-    for (const [id, real] of reais) {
-      mapa.set(id, real.status === 'disponivel' ? real : (simuladas.get(id)?.status === 'disponivel' ? simuladas.get(id)! : real))
-    }
-    return mapa
-  }, [estimativasReais, estimativasSimuladas])
+  const estimativasAtuais = resultadoEstimativas.chave === chaveEstimativas
+  const estimativaPorCardapioId = estimativasAtuais ? resultadoEstimativas.dados : new Map<number, EstimativaApi>()
 
   const [agora, setAgora] = useState(() => Date.now())
   useEffect(() => {
@@ -348,9 +349,9 @@ export default function App() {
     : '—'
 
   const hoje = new Date(agora)
-  const hojeIdx = hoje.getDay()
+  const hojeIdx = indiceDiaSemana(hoje)
   const hojeCardapio = cardapioSemana[hojeIdx]
-  const mealInfo = getCurrentMealInfo()
+  const mealInfo = getCurrentMealInfo(hoje)
   const hojeMeal = hojeCardapio[mealInfo.tipo]
   const planejadosCount = intencoesAtivas.size
 
@@ -389,7 +390,7 @@ export default function App() {
           {(tab === 'hoje' || tab === 'cardapio') && <label className="flex flex-wrap items-center gap-3 text-sm font-semibold">
             Semana do cardápio
             <input className="rounded-lg border border-border bg-card px-3 py-2" type="date" value={semanaInicio}
-              onChange={e => { if (e.target.value) { setSemanaInicio(inicioSemana(new Date(`${e.target.value}T12:00:00`))); setTab('cardapio') } }} />
+              onChange={e => { if (e.target.value) { setSemanaInicio(inicioSemana(new Date(`${e.target.value}T12:00:00-03:00`))); setTab('cardapio') } }} />
             <span className="text-muted-foreground font-normal">Até {new Date(`${dataDaSemana(semanaInicio, 6)}T12:00:00`).toLocaleDateString('pt-BR')}</span>
           </label>}
           {estadoCampi === 'carregando' && <p role="status">Carregando campi…</p>}
@@ -400,6 +401,7 @@ export default function App() {
           </div>}
           {estadoCampi === 'pronto' && estadoCardapios === 'carregando' && <p role="status">Carregando cardápios…</p>}
           {estadoCampi === 'pronto' && estadoCardapios === 'pronto' && cardapiosApi.length === 0 && <p role="status">Nenhum cardápio publicado para esta semana. Isso não confirma que o RU esteja fechado.</p>}
+          {estimativasAtuais && resultadoEstimativas.erro && <p role="alert">Não foi possível atualizar as estimativas: {resultadoEstimativas.erro}</p>}
           <p className="text-xs text-muted-foreground">Reclamações são enviadas à API, sem lista pública nem encaminhamento automático ao RU. O planejamento marca sua intenção de ir à refeição e é salvo pela API com sua identidade anônima. A tela de lotação usa exemplos, sem estimativa real.</p>
         </section>
         {tab === 'hoje' && estadoCampi === 'pronto' && estadoCardapios === 'pronto' && campus.id && (
@@ -418,7 +420,7 @@ export default function App() {
               totalAvaliacoes={historicoAtual.length}
               avaliacoesHoje={historicoAtual.filter(a => {
                 if (!hojeMeal || a.refeicao !== hojeMeal.label) return false
-                const hojeStr = hoje.toLocaleDateString('pt-BR')
+                const hojeStr = hoje.toLocaleDateString('pt-BR', { timeZone: 'America/Sao_Paulo' })
                 return a.data === hojeStr || a.data === 'hoje'
               })}
               onVerCardapio={() => { setSemanaInicio(inicioSemana(new Date())); setTab('cardapio'); setDiaSemana(hojeIdx); setRefeicao(mealInfo.tipo) }}

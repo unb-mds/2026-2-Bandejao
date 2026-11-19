@@ -13,8 +13,8 @@ export const ALERGENOS_MAP: Record<string, { label: string; emoji: string; color
   cogumelo:   { label: 'Cogumelo',     emoji: '🍄', color: '#8B7355' },
 }
 
-export const DIAS_SEMANA = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb']
-export const DIAS_SEMANA_COMPLETO = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado']
+export const DIAS_SEMANA = ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom']
+export const DIAS_SEMANA_COMPLETO = ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado', 'Domingo']
 
 // ═══════════════════════════════════════════════════════════════
 // Lotação

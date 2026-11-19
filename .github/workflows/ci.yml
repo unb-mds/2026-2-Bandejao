@@ -86,7 +86,14 @@ jobs:
         run: npm ci
       - name: Testar cliente da API
         working-directory: frontend
+        env:
+          TZ: UTC
         run: npm test
+      - name: Verificar datas fora do fuso de Brasilia
+        working-directory: frontend
+        env:
+          TZ: Pacific/Auckland
+        run: npx tsx --test tests/cardapios.test.ts tests/utils.test.ts
       - name: Analisar código
         working-directory: frontend
         run: npm run lint

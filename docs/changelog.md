@@ -1,4 +1,11 @@
 # Histórico de mudanças da documentação
+## 19/11/2026 — Correções após a verificação (#101)
+
+- Semana do frontend alinhada a segunda–domingo, no fuso de Brasília (#112).
+- Prazo das intenções, refeição corrente e cabeçalhos usam Brasília, mesmo em dispositivos com outro fuso (#113).
+- Estimativas são atualizadas após marcar/desmarcar; falhas aparecem e resultados antigos são descartados (#114).
+- Regressões automáticas e [registro da verificação](evidencias/verificacao-issue-101.md), sem inclusão de recursos após o congelamento.
+
 
 ## 17/11/2026 — Registro de evidências dos requisitos (#100)
 

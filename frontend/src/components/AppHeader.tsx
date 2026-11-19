@@ -61,7 +61,7 @@ export default function AppHeader({ campus, campi, hoje, mediaGeral, totalAvalia
           <div className="max-w-5xl mx-auto flex flex-wrap items-center gap-x-4 gap-y-0.5 text-[10px] mono" style={{ color: 'rgba(168,213,181,0.7)' }}>
             <span>📍 {campus.name}</span>
             <span aria-hidden="true" className="opacity-30">·</span>
-            <span>📅 {hoje.toLocaleDateString('pt-BR', { weekday: 'short', day: 'numeric', month: 'short' })}</span>
+            <span>📅 {hoje.toLocaleDateString('pt-BR', { timeZone: 'America/Sao_Paulo', weekday: 'short', day: 'numeric', month: 'short' })}</span>
             <span aria-hidden="true" className="opacity-30">·</span>
             <span>⭐ {mediaGeral}/5 ({totalAvaliacoes} aval.)</span>
             {planejadosCount > 0 && <>

@@ -3,7 +3,7 @@ import MealContent from '@/components/MealContent'
 import FiltrosAlimentares from '@/components/FiltrosAlimentares'
 import { DIAS_SEMANA, DIAS_SEMANA_COMPLETO } from '@/data'
 import type { EstimativaApi } from '@/api'
-import { formatarInstanteImportacao } from '@/cardapios'
+import { dataDaSemana, dataLocal, formatarInstanteImportacao } from '@/cardapios'
 import type { Campus, CardapioRefeicoes, Refeicao, RefeicaoData, FiltrosAlimentares as Filtros } from '@/types'
 import { refeicaoJaIniciada } from '@/utils'
 
@@ -82,12 +82,9 @@ export default function CardapioTab({ campus, cardapioDia, diaSemana, setDiaSema
             }}
             className="no-scrollbar">
             {diasDisponiveis.map((d, i) => {
-              const hojeD = new Date().getDay()
-              const base = new Date(`${cardapioDia.cafe.data}T12:00:00`)
-              base.setDate(base.getDate() - diaSemana + d)
-              const dia = String(base.getDate()).padStart(2, '0')
-              const mes = String(base.getMonth() + 1).padStart(2, '0')
-              const isHoje = d === hojeD && base.toDateString() === new Date().toDateString()
+              const data = dataDaSemana(cardapioDia.cafe.data!, d - diaSemana)
+              const [, mes, dia] = data.split('-')
+              const isHoje = data === dataLocal(new Date())
               const isAtivo = d === diaSemana
               const isFirst = i === 0
               const isLast = i === diasDisponiveis.length - 1

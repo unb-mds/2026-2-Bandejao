@@ -40,14 +40,20 @@ const HORARIOS_INICIO: Record<Refeicao, [number, number]> = {
 
 export function refeicaoJaIniciada(data: string, tipo: Refeicao, agora: Date = new Date()): boolean {
   const [hora, minuto] = HORARIOS_INICIO[tipo]
-  const inicio = new Date(`${data}T00:00:00`)
-  inicio.setHours(hora, minuto, 0, 0)
+  const inicio = new Date(`${data}T${String(hora).padStart(2, '0')}:${String(minuto).padStart(2, '0')}:00-03:00`)
   return agora >= inicio
 }
 
-export function getCurrentMealInfo(): { tipo: Refeicao; status: 'agora' | 'proxima' | 'encerrado' } {
-  const now = new Date()
-  const mins = now.getHours() * 60 + now.getMinutes()
+export function minutosEmBrasilia(now: Date): number {
+  const partes = new Intl.DateTimeFormat('pt-BR', {
+    timeZone: 'America/Sao_Paulo', hour: '2-digit', minute: '2-digit', hourCycle: 'h23',
+  }).formatToParts(now)
+  const campo = (tipo: string) => Number(partes.find(parte => parte.type === tipo)!.value)
+  return campo('hour') * 60 + campo('minute')
+}
+
+export function getCurrentMealInfo(now: Date = new Date()): { tipo: Refeicao; status: 'agora' | 'proxima' | 'encerrado' } {
+  const mins = minutosEmBrasilia(now)
 
   // Café: 07:00 às 09:30
   if (mins >= 7 * 60 && mins <= 9 * 60 + 30) return { tipo: 'cafe', status: 'agora' }
