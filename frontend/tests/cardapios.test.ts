@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
-import { adaptarCardapio, alergenosDoItem, dataDaSemana, dietaCompativelComFiltros, formatarInstanteImportacao, indiceDiaSemana, inicioSemana, montarSemana } from '../src/cardapios.ts'
+import { adaptarCardapio, alergenosDoItem, dataDaSemana, dataLocal, dietaCompativelComFiltros, formatarInstanteImportacao, indiceDiaSemana, inicioSemana, montarSemana } from '../src/cardapios.ts'
 import type { CardapioApi, ItemApi } from '../src/api.ts'
 import type { FiltrosAlimentares } from '../src/types.ts'
 
@@ -30,6 +30,16 @@ test('semana começa na segunda e termina no domingo, incluindo virada de ano', 
   const semana = montarSemana([], '2026-11-16')
   assert.equal(semana[0].almoco.data, '2026-11-16')
   assert.equal(semana[6].almoco.data, '2026-11-22')
+})
+
+test('virada do dia e da semana considera Brasília em qualquer fuso do navegador', () => {
+  const domingo = new Date('2026-11-23T02:59:59Z')
+  assert.equal(dataLocal(domingo), '2026-11-22')
+  assert.equal(inicioSemana(domingo), '2026-11-16')
+  assert.equal(indiceDiaSemana(domingo), 6)
+  const segunda = new Date('2026-11-23T03:00:00Z')
+  assert.equal(inicioSemana(segunda), '2026-11-23')
+  assert.equal(indiceDiaSemana(segunda), 0)
 })
 
 test('filtro ovolacto inclui a classe vegetariana estrita e mantém as demais classes fora', () => {
