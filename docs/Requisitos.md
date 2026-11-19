@@ -253,6 +253,25 @@ A tabela acima é um registro de evidência disponível, não uma aprovação do
 
 Não foram inventados links de issues, atas, entrevistas ou aprovações nesta revisão. Acrescentar esses registros conforme ocorrerem.
 
+### Atualização de evidências — 19/11/2026
+
+Complemento à matriz histórica de 17/11, sem alterar o resultado observado
+naquela data. Base fonte `17397be`, correções da #101 no
+[PR #115](https://github.com/unb-mds/2026-2-Bandejao/pull/115).
+
+| Requisito | Evidência adicional | Resultado / limite |
+|---|---|---|
+| RF01, RF02, RF06 | [Correções e regressões](evidencias/verificacao-issue-101.md), commits `ecf898e`, `bf7ca41`, `304cd88` | Semana segunda–domingo e regras em Brasília, independentes do fuso do dispositivo |
+| RF07 | Mesma evidência, commits `d3b1975` e `b3bb83a` | Estimativas atualizadas após intenção; erro visível, sem contagem antiga |
+| RF04, RF06, RNF03 | [CI SQLite/PostgreSQL](https://github.com/unb-mds/2026-2-Bandejao/actions/runs/44628607610) no PR #115 | Check aprovado com migrações e concorrência em PostgreSQL 16 |
+| RNF02, RNF03 | [Quatro falhas da sincronização](evidencias/falhas-sincronizacao-2026-11-17.md) | Evidência #97 disponível; preservação offline não comprova periodicidade contínua em produção |
+| RNF04 | [Consulta pública de 19/11](evidencias/dados/publicacao-release2-2026-11-19.json) | HTTPS acessível; saúde 200 na repetição. API informa `b5b345d`, anterior à fonte preparada. Sem comprovação da janela inteira de disponibilidade |
+| RNF01 | Scripts de `testes/carga/` | Sem relatório k6 disponível; permanece não verificado |
+| RNF05 | [Bandit e CodeQL do PR #115](https://github.com/unb-mds/2026-2-Bandejao/actions/runs/44628607327) | Ambos aprovados |
+
+O roteiro manual completo em aparelho físico continua sem evidência suficiente.
+Não há aceite global dos requisitos nesta atualização.
+
 ## 7. Decisões
 
 As decisões abaixo orientam a implementação desta versão. Critério: menor atrito para o usuário e menor esforço de implementação, para caber nas cerca de 6 semanas até a Release 2.
