@@ -3,7 +3,7 @@ import MealContent from '@/components/MealContent'
 import FiltrosAlimentares from '@/components/FiltrosAlimentares'
 import { DIAS_SEMANA, DIAS_SEMANA_COMPLETO } from '@/data'
 import type { EstimativaApi } from '@/api'
-import { formatarInstanteImportacao } from '@/cardapios'
+import { formatarInstanteImportacao, indiceDiaSemana } from '@/cardapios'
 import type { Campus, CardapioRefeicoes, Refeicao, RefeicaoData, FiltrosAlimentares as Filtros } from '@/types'
 import { refeicaoJaIniciada } from '@/utils'
 
@@ -82,7 +82,7 @@ export default function CardapioTab({ campus, cardapioDia, diaSemana, setDiaSema
             }}
             className="no-scrollbar">
             {diasDisponiveis.map((d, i) => {
-              const hojeD = new Date().getDay()
+              const hojeD = indiceDiaSemana(new Date())
               const base = new Date(`${cardapioDia.cafe.data}T12:00:00`)
               base.setDate(base.getDate() - diaSemana + d)
               const dia = String(base.getDate()).padStart(2, '0')

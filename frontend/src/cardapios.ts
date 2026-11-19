@@ -30,8 +30,11 @@ export function dataLocal(data: Date): string {
 }
 export function inicioSemana(data: Date): string {
   const inicio = new Date(data)
-  inicio.setDate(inicio.getDate() - inicio.getDay())
+  inicio.setDate(inicio.getDate() - indiceDiaSemana(data))
   return dataLocal(inicio)
+}
+export function indiceDiaSemana(data: Date): number {
+  return (data.getDay() + 6) % 7
 }
 export function dataDaSemana(inicio: string, dia: number): string {
   const data = new Date(`${inicio}T12:00:00`)

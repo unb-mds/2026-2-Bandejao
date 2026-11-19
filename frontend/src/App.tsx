@@ -23,7 +23,7 @@ import {
 } from './api'
 import type { CardapioApi, EstimativaApi } from './api'
 import { adaptarHistoricoAvaliacoes } from './avaliacoes'
-import { inicioSemana, dataDaSemana, montarSemana } from './cardapios'
+import { inicioSemana, dataDaSemana, indiceDiaSemana, montarSemana } from './cardapios'
 import { obterIdentidadeAnonima } from './identidade'
 import { registroAvisoPrivacidade } from './privacidade'
 import type { Campus } from './types'
@@ -90,7 +90,7 @@ export default function App() {
   }, [campus.id, semanaInicio, estadoCampi, tentativa])
   const [refeicao, setRefeicao] = useState<Refeicao>(() => getCurrentMealInfo().tipo)
   const [tab, setTab] = useState<'hoje' | 'cardapio' | 'lotacao' | 'avaliar'>('hoje')
-  const [diaSemana, setDiaSemana] = useState<number>(new Date().getDay())
+  const [diaSemana, setDiaSemana] = useState<number>(indiceDiaSemana(new Date()))
   const [tabAvaliar, setTabAvaliar] = useState<'form' | 'historico' | 'reclamacao'>('form')
 
   const tipoRefeicaoApi = (tipo: Refeicao): CardapioApi['tipo_refeicao'] => (tipo === 'cafe' ? 'cafe_da_manha' : tipo)
@@ -348,7 +348,7 @@ export default function App() {
     : '—'
 
   const hoje = new Date(agora)
-  const hojeIdx = hoje.getDay()
+  const hojeIdx = indiceDiaSemana(hoje)
   const hojeCardapio = cardapioSemana[hojeIdx]
   const mealInfo = getCurrentMealInfo()
   const hojeMeal = hojeCardapio[mealInfo.tipo]
