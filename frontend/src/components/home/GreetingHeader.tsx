@@ -1,11 +1,11 @@
-import { getSaudacao } from '@/utils'
+import { getSaudacao, minutosEmBrasilia } from '@/utils'
 
 export interface GreetingHeaderProps {
   hoje: Date
 }
 
 export default function GreetingHeader({ hoje }: GreetingHeaderProps) {
-  const saudacao = getSaudacao(hoje.getHours())
+  const saudacao = getSaudacao(Math.floor(minutosEmBrasilia(hoje) / 60))
   return (
     <>
         {/* Greeting */}

@@ -44,12 +44,16 @@ export function refeicaoJaIniciada(data: string, tipo: Refeicao, agora: Date = n
   return agora >= inicio
 }
 
-export function getCurrentMealInfo(now: Date = new Date()): { tipo: Refeicao; status: 'agora' | 'proxima' | 'encerrado' } {
+export function minutosEmBrasilia(now: Date): number {
   const partes = new Intl.DateTimeFormat('pt-BR', {
     timeZone: 'America/Sao_Paulo', hour: '2-digit', minute: '2-digit', hourCycle: 'h23',
   }).formatToParts(now)
   const campo = (tipo: string) => Number(partes.find(parte => parte.type === tipo)!.value)
-  const mins = campo('hour') * 60 + campo('minute')
+  return campo('hour') * 60 + campo('minute')
+}
+
+export function getCurrentMealInfo(now: Date = new Date()): { tipo: Refeicao; status: 'agora' | 'proxima' | 'encerrado' } {
+  const mins = minutosEmBrasilia(now)
 
   // Café: 07:00 às 09:30
   if (mins >= 7 * 60 && mins <= 9 * 60 + 30) return { tipo: 'cafe', status: 'agora' }

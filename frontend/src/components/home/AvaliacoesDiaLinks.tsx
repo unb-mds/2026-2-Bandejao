@@ -1,3 +1,5 @@
+import { minutosEmBrasilia } from '@/utils'
+
 export interface AvaliacoesDiaLinksProps {
   hoje: Date
   onVerHistorico: () => void
@@ -8,7 +10,7 @@ export default function AvaliacoesDiaLinks({ hoje, onVerHistorico }: AvaliacoesD
     <>
         {/* ── AVALIAÇÕES DO DIA — links rápidos ── */}
         {(() => {
-          const h = hoje.getHours() + hoje.getMinutes() / 60
+          const h = minutosEmBrasilia(hoje) / 60
           const links: { emoji: string; label: string }[] = []
           if (h >= 7) links.push({ emoji: "☕", label: "Café da Manhã" })
           if (h >= 11) links.push({ emoji: "🍽️", label: "Almoço" })

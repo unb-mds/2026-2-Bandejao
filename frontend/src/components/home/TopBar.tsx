@@ -10,6 +10,7 @@ export default function TopBar({ hoje, campusName, restauranteName }: TopBarProp
   const dataFormatada = useMemo(
     () =>
       hoje.toLocaleDateString("pt-BR", {
+        timeZone: 'America/Sao_Paulo',
         weekday: "long",
         day: "numeric",
         month: "long",

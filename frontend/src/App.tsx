@@ -420,7 +420,7 @@ export default function App() {
               totalAvaliacoes={historicoAtual.length}
               avaliacoesHoje={historicoAtual.filter(a => {
                 if (!hojeMeal || a.refeicao !== hojeMeal.label) return false
-                const hojeStr = hoje.toLocaleDateString('pt-BR')
+                const hojeStr = hoje.toLocaleDateString('pt-BR', { timeZone: 'America/Sao_Paulo' })
                 return a.data === hojeStr || a.data === 'hoje'
               })}
               onVerCardapio={() => { setSemanaInicio(inicioSemana(new Date())); setTab('cardapio'); setDiaSemana(hojeIdx); setRefeicao(mealInfo.tipo) }}
