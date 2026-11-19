@@ -31,14 +31,46 @@ test('simulação só substitui amostra real insuficiente e mantém seu rótulo'
   assert.equal(valor?.dados_simulados, true)
 })
 
-test('falha em qualquer consulta é propagada em vez de produzir contagem antiga', async () => {
-  for (const falhaSimulada of [false, true]) {
-    const consultar: typeof listarEstimativas = async params => {
-      if (!!params.dados_simulados === falhaSimulada) throw new Error('API indisponível')
-      return [real]
-    }
-    await assert.rejects(carregarEstimativas(filtros, new AbortController().signal, consultar), /API indisponível/)
+test('falha da consulta real é propagada mesmo com simulação disponível', async () => {
+  const consultar: typeof listarEstimativas = async params => {
+    if (!params.dados_simulados) throw new Error('API indisponível')
+    return [{ ...real, dados_simulados: true, contagem: 50 }]
   }
+  await assert.rejects(carregarEstimativas(filtros, new AbortController().signal, consultar), /API indisponível/)
+})
+
+test('falha apenas da simulação preserva a contagem real válida e sua origem', async () => {
+  const consultar: typeof listarEstimativas = async params => {
+    if (params.dados_simulados) throw new Error('Simulação indisponível')
+    return [real]
+  }
+  const resultado = await carregarEstimativas(filtros, new AbortController().signal, consultar)
+  assert.deepEqual(resultado.get(7), real)
+  assert.equal(resultado.get(7)?.contagem, 10)
+  assert.equal(resultado.get(7)?.dados_simulados, false)
+})
+
+test('falha da simulação preserva dados insuficientes sem inventar contagem', async () => {
+  const insuficiente = { ...real, cardapio_id: 8, status: 'dados_insuficientes' as const, contagem: undefined }
+  const consultar: typeof listarEstimativas = async params => {
+    if (params.dados_simulados) throw new Error('Simulação indisponível')
+    return [real, insuficiente]
+  }
+  const resultado = await carregarEstimativas(filtros, new AbortController().signal, consultar)
+  assert.deepEqual(resultado.get(7), real)
+  assert.deepEqual(resultado.get(8), insuficiente)
+})
+
+test('cancelamento da consulta simulada não é tratado como falha opcional', async () => {
+  const controller = new AbortController()
+  const consultar: typeof listarEstimativas = async params => {
+    if (params.dados_simulados) {
+      controller.abort()
+      throw new DOMException('Consulta cancelada', 'AbortError')
+    }
+    return [real]
+  }
+  await assert.rejects(carregarEstimativas(filtros, controller.signal, consultar), { name: 'AbortError' })
 })
 
 test('envia mesmo campus, semana e sinal de cancelamento a ambas as consultas', async () => {
