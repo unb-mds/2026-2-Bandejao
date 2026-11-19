@@ -8,7 +8,12 @@ export async function carregarEstimativas(
 ): Promise<Map<number, EstimativaApi>> {
   const [reais, simuladas] = await Promise.all([
     consultar(filtros, { signal }),
-    consultar({ ...filtros, dados_simulados: true }, { signal }),
+    consultar({ ...filtros, dados_simulados: true }, { signal }).catch(erro => {
+      // A demonstração é opcional: sua falha não invalida a resposta real.
+      // Cancelamentos continuam sendo propagados para a consulta descartada.
+      if (signal.aborted) throw erro
+      return []
+    }),
   ])
   const demonstracao = new Map(simuladas.map(e => [e.cardapio_id, e]))
   return new Map(reais.map(real => {
