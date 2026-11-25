@@ -30,7 +30,7 @@ Aplicação para consulta ao cardápio semanal dos Restaurantes Universitários 
 
 ## Status
 
-Release 2 preparada em 19/11/2026 — aguardando revisão, integração e publicação da revisão final.
+Release 2 publicada em 25/11/2026 — a hospedagem foi atualizada manualmente para o commit final da revisão (sem auto-deploy, pois o Render está conectado por URL pública, não pela integração com o GitHub).
 
 - **Aplicação publicada:** [abrir o Bandejão](https://bandejao-unb-g12.onrender.com). API em [bandejao-unb-g12-api.onrender.com](https://bandejao-unb-g12-api.onrender.com) (`/health`, `/version`).
 - O frontend local usa React 19, Vite 8, TypeScript e Tailwind v4, incorporando as telas da equipe de [marilluantunes/frontend-react](https://github.com/marilluantunes/frontend-react). Campi, cardápios, avaliações, reclamações e planejamento de refeições usam a API. As estimativas reais são consultadas por padrão; dados simulados são separados e identificados na tela. A lotação continua demonstrativa, sem consulta a dados reais.
@@ -47,11 +47,11 @@ Release 2 preparada em 19/11/2026 — aguardando revisão, integração e public
 
 Consulte o [changelog do produto](CHANGELOG.md), as [notas da versão](docs/release-2.md), a [Sprint 06](docs/scrum/sprint06.md) e as [correções verificadas](docs/evidencias/verificacao-issue-101.md). Ausência de marcação de alérgeno não garante ausência do ingrediente; estimativas de intenções não medem a fila real.
 
-Em 19/11 a API respondeu por HTTPS e informou o commit `b5b345d`, anterior à base `17397be` desta preparação. A versão fonte preparada e a versão hospedada devem ser conferidas separadamente. [Evidência da consulta](docs/evidencias/dados/publicacao-release2-2026-11-19.json).
+Em 19/11 a API respondeu por HTTPS e informou o commit `b5b345d`, anterior à base `17397be` desta preparação; a versão fonte e a hospedada precisavam ser conferidas separadamente. [Evidência da consulta](docs/evidencias/dados/publicacao-release2-2026-11-19.json). **Atualização de 25/11:** o deploy manual foi refeito para o commit final `3fc3a69`; `/version` da API confere com a `main`.
 
 ## Publicação da aplicação
 
-A hospedagem HTTPS ([PR 71](https://github.com/unb-mds/2026-2-Bandejao/pull/71)) está ativa desde 17/11/2026: interface, API e banco PostgreSQL respondem publicamente nos endereços acima. A sincronização automática importou cardápios reais do RU nesse dia para 4 dos 5 campi (Darcy Ribeiro, Gama, Planaltina e Fazenda Água Limpa); Ceilândia ficou pendente porque o site oficial do RU não publicou o PDF daquele campus na semana — sem relação com o código do Bandejão. Veja a [execução da sincronização](https://github.com/unb-mds/2026-2-Bandejao/actions/runs/44095602679), os [passos de verificação](docs/verificacao-publicacao.md) e a [operação da sincronização](docs/evidencias/sincronizacao-issue-54.md).
+A hospedagem HTTPS ([PR 71](https://github.com/unb-mds/2026-2-Bandejao/pull/71)) está ativa desde 17/11/2026, com atualização manual em 25/11/2026 para o commit final da Release 2 (`3fc3a69`): interface, API e banco PostgreSQL respondem publicamente nos endereços acima. A sincronização automática importou cardápios reais do RU para os 5 campi, incluindo Ceilândia (pendente em 17/11 por ausência de publicação no site do RU naquela semana, sem relação com o código do Bandejão, e já resolvida em importações seguintes). Veja os [passos de verificação](docs/verificacao-publicacao.md) e a [operação da sincronização](docs/evidencias/sincronizacao-issue-54.md).
 
 ## Como rodar o projeto
 

@@ -272,6 +272,23 @@ naquela data. Base fonte `17397be`, correções da #101 no
 O roteiro manual completo em aparelho físico continua sem evidência suficiente.
 Não há aceite global dos requisitos nesta atualização.
 
+### Atualização de evidências — 25/11/2026
+
+Complemento à matriz de 17/11 e ao registro de 19/11, sem alterar os
+resultados observados naquelas datas. A hospedagem usa conexão por
+repositório público (sem auto-deploy do GitHub), então a versão publicada
+só avança com um redeploy manual no Render.
+
+| Requisito | Evidência adicional | Resultado / limite |
+|---|---|---|
+| RNF04 | Consulta direta a `https://bandejao-unb-g12-api.onrender.com/version` em 25/11/2026 | API informa `3fc3a69`, igual ao HEAD da `main` no momento da entrega. A defasagem registrada em 19/11 (API em `b5b345d`) está resolvida. Janela de disponibilidade contínua ainda sem comprovação. |
+| RNF02 | Consulta direta a `/campi/` em 25/11/2026 | Os 5 campi, incluindo Ceilândia, têm `ultima_importacao_em` de datas recentes (25/11 para Ceilândia e Fazenda Água Limpa) — a lacuna de Ceilândia registrada em 17/11 (ausência de publicação no site do RU naquela semana) não se repetiu. Periodicidade de 6 em 6 horas ao longo de dias não comprovada por execuções `schedule` registradas em evidência própria. |
+| RNF01 | — | Sem relatório k6 disponível; permanece não verificado. |
+
+O roteiro manual completo em aparelho físico e a medição de desempenho
+(RNF01) continuam sem evidência suficiente. Não há aceite global dos
+requisitos nesta atualização.
+
 ## 7. Decisões
 
 As decisões abaixo orientam a implementação desta versão. Critério: menor atrito para o usuário e menor esforço de implementação, para caber nas cerca de 6 semanas até a Release 2.

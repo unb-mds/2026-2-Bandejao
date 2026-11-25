@@ -129,7 +129,7 @@ Não há uma entidade separada `Refeicao`: `Cardapio` representa uma refeição 
 | Banco de dados | PostgreSQL 16 |
 | Frontend | React 19, TypeScript/TSX, Vite 8 e Tailwind CSS v4; cliente HTTP tipado, plugin Tailwind no Vite e checagem de tipos antes do build |
 | Ambiente local | Docker Compose com banco, API e frontend; extração periódica no perfil opcional `sincronizacao` |
-| CI e publicação | `.github/workflows/ci.yml` executa testes, lint e build quando há alterações da aplicação. `.github/workflows/sast.yml` executa Bandit e CodeQL, obrigatórios no ruleset ativo da `main`. `.github/workflows/docs.yml` valida e publica o MkDocs. O Blueprint da hospedagem HTTPS foi integrado no PR 71; a disponibilidade atual do serviço não foi conferida nesta revisão. |
+| CI e publicação | `.github/workflows/ci.yml` executa testes, lint e build quando há alterações da aplicação. `.github/workflows/sast.yml` executa Bandit e CodeQL, obrigatórios no ruleset ativo da `main`. `.github/workflows/docs.yml` valida e publica o MkDocs. O Blueprint da hospedagem HTTPS foi integrado no PR 71 e está ativo desde 17/11/2026; em 25/11/2026 a hospedagem foi atualizada manualmente para o commit final da Release 2 (`3fc3a69`), confirmado em `/version`. A conexão com o Render é por repositório público, sem auto-deploy do GitHub. |
 
 
 ## 8. Interfaces relevantes
@@ -171,3 +171,7 @@ A extração também pode ser iniciada fora do Docker com `python -m extracao.si
 ## Situação de publicação em 27/10/2026
 
 A preparação de HTTPS está no PR 71 da equipe; o ambiente proposto ainda não responde como aplicação integrada. URLs verificadas retornaram 404 e não há acesso Render nesta entrega. Consulte [verificação de publicação](verificacao-publicacao.md) para protocolo, evidências e ativação. A sincronização da issue 54 foi corrigida e validada com cinco PDFs reais e reimportação isolada; o workflow periódico está versionado, mas sua operação depende da API publicada e dos valores protegidos no GitHub. O aviso de [privacidade](privacidade.md) cobre a identidade do navegador e os envios persistidos.
+
+## Situação de publicação em 25/11/2026
+
+A hospedagem está ativa desde 17/11/2026 e foi atualizada manualmente em 25/11/2026 para o commit final da Release 2: `/version` da API confere com o HEAD da `main` (`3fc3a69`), e `/campi/` mostra importações reais recentes dos 5 campi. Os 404 registrados em 27/10, 10/11, 16/11 e 17/11 ficam como histórico das tentativas anteriores; não foram apagados. Continuam sem evidência: o relatório de carga k6 (RNF01) e o roteiro manual completo em aparelho físico.
