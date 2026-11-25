@@ -100,3 +100,13 @@ jobs:
       - name: Compilar frontend
         working-directory: frontend
         run: npm run build
+
+  deploy:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: [testes-python, frontend]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Disparar deploy da API no Render
+        run: curl -fsS -X POST "${{ secrets.RENDER_DEPLOY_HOOK_API }}"
+      - name: Disparar deploy do frontend no Render
+        run: curl -fsS -X POST "${{ secrets.RENDER_DEPLOY_HOOK_FRONTEND }}"
